@@ -95,8 +95,8 @@ class ConnectionStatusWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 1.w),
-                  CustomIconWidget(
-                    iconName: 'keyboard_arrow_down',
+                  Icon(
+                    Icons.keyboard_arrow_down,
                     size: 4.w,
                     color: AppTheme.textSecondary,
                   ),
@@ -132,8 +132,8 @@ class ConnectionStatusWidget extends StatelessWidget {
         color: iconColor,
         shape: BoxShape.circle,
       ),
-      child: CustomIconWidget(
-        iconName: 'account_balance_wallet',
+      child: Icon(
+        Icons.account_balance_wallet,
         size: 2.5.w,
         color: Colors.white,
       ),
@@ -169,8 +169,8 @@ class ConnectionStatusWidget extends StatelessWidget {
                     style: AppTheme.darkTheme.textTheme.bodyMedium,
                   ),
                   trailing: selectedNetwork == network
-                      ? CustomIconWidget(
-                          iconName: 'check',
+                      ? Icon(
+                          Icons.check,
                           size: 5.w,
                           color: AppTheme.accentTeal,
                         )

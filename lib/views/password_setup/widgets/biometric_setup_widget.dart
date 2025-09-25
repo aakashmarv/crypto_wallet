@@ -78,10 +78,10 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
           ),
           title: Row(
             children: [
-              CustomIconWidget(
-                iconName: Theme.of(context).platform == TargetPlatform.iOS
-                    ? 'face'
-                    : 'fingerprint',
+              Icon(
+                Theme.of(context).platform == TargetPlatform.iOS
+                    ? Icons.face
+                    : Icons.fingerprint,
                 color: AppTheme.accentTeal,
                 size: 24,
               ),
@@ -165,10 +165,10 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
         children: [
           Row(
             children: [
-              CustomIconWidget(
-                iconName: Theme.of(context).platform == TargetPlatform.iOS
-                    ? 'face'
-                    : 'fingerprint',
+              Icon(
+                Theme.of(context).platform == TargetPlatform.iOS
+                    ? Icons.face
+                    : Icons.fingerprint,
                 color: _isBiometricAvailable
                     ? AppTheme.accentTeal
                     : AppTheme.textSecondary,

@@ -2235,8 +2235,8 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
               if (_isValid)
                 Row(
                   children: [
-                    CustomIconWidget(
-                      iconName: 'check_circle',
+                    Icon(
+                      Icons.check_circle,
                       color: AppTheme.successGreen,
                       size: 16,
                     ),

@@ -113,8 +113,8 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                     width: 6.w,
                     height: 6.w,
                     alignment: Alignment.center,
-                    child: CustomIconWidget(
-                      iconName: 'lock',
+                    child: Icon(
+                      Icons.lock,
                       size: 4.w,
                       color: widget.currentUrl.startsWith('https://')
                           ? AppTheme.successGreen
@@ -153,8 +153,8 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                         ),
                       ),
                     )
-                  : CustomIconWidget(
-                      iconName: 'refresh',
+                  : Icon(
+                      Icons.refresh,
                       size: 5.w,
                       color: AppTheme.textSecondary,
                     ),

@@ -23,6 +23,12 @@ class OnboardingPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconMap = {
+      'security': Icons.security,
+      'web': Icons.web,
+      'account_balance_wallet': Icons.account_balance_wallet,
+      'check_circle': Icons.check_circle,
+    };
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -48,8 +54,8 @@ class OnboardingPageWidget extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: CustomIconWidget(
-                    iconName: iconName,
+                  child: Icon(
+                    iconMap[iconName] ?? Icons.help_outline, // fallback
                     color: iconColor,
                     size: 12.w,
                   ),
@@ -89,8 +95,8 @@ class OnboardingPageWidget extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 1.h),
                           child: Row(
                             children: [
-                              CustomIconWidget(
-                                iconName: 'check_circle',
+                              Icon(
+                                Icons.check_circle,
                                 color: AppTheme.successGreen,
                                 size: 5.w,
                               ),

@@ -44,25 +44,25 @@ class BrowserNavigationControls extends StatelessWidget {
         children: [
           // Back Button
           _buildNavigationButton(
-            icon: 'arrow_back',
+            iconData: Icons.arrow_back,
             onTap: canGoBack ? onBack : null,
             isEnabled: canGoBack,
           ),
           // Forward Button
           _buildNavigationButton(
-            icon: 'arrow_forward',
+            iconData: Icons.arrow_forward,
             onTap: canGoForward ? onForward : null,
             isEnabled: canGoForward,
           ),
           // Home Button
           _buildNavigationButton(
-            icon: 'home',
+            iconData: Icons.home,
             onTap: onHome,
             isEnabled: true,
           ),
           // Bookmark Button
           _buildNavigationButton(
-            icon: isBookmarked ? 'bookmark' : 'bookmark_border',
+            iconData: isBookmarked ? Icons.bookmark : Icons.bookmark_border,
             onTap: onBookmark,
             isEnabled: true,
             color: isBookmarked ? AppTheme.accentTeal : null,
@@ -84,8 +84,8 @@ class BrowserNavigationControls extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomIconWidget(
-                  iconName: isSecure ? 'lock' : 'lock_open',
+                Icon(
+                 isSecure ? Icons.lock : Icons.lock_open,
                   size: 4.w,
                   color:
                       isSecure ? AppTheme.successGreen : AppTheme.warningOrange,
@@ -110,7 +110,7 @@ class BrowserNavigationControls extends StatelessWidget {
   }
 
   Widget _buildNavigationButton({
-    required String icon,
+    required IconData iconData,
     required VoidCallback? onTap,
     required bool isEnabled,
     Color? color,
@@ -130,8 +130,8 @@ class BrowserNavigationControls extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: CustomIconWidget(
-          iconName: icon,
+        child: Icon(
+          iconData,
           size: 5.w,
           color: color ??
               (isEnabled

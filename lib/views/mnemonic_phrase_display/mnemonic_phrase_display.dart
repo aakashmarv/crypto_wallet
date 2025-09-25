@@ -111,8 +111,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'security',
+            Icon(
+              Icons.security,
               color: AppTheme.accentTeal,
               size: 6.w,
             ),
@@ -175,8 +175,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'warning',
+            Icon(
+              Icons.warning,
               color: AppTheme.warningOrange,
               size: 6.w,
             ),
@@ -286,8 +286,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         children: [
           IconButton(
             onPressed: () => _showExitWarningDialog(),
-            icon: CustomIconWidget(
-              iconName: 'arrow_back',
+            icon: Icon(
+              Icons.arrow_back,
               color: AppTheme.textPrimary,
               size: 6.w,
             ),
@@ -339,8 +339,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'info',
+                  Icon(
+                    Icons.info,
                     color: AppTheme.textSecondary,
                     size: 4.w,
                   ),
@@ -390,8 +390,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
                   ),
                   if (_isPhraseRevealed && _allChecklistCompleted) ...[
                     SizedBox(width: 2.w),
-                    CustomIconWidget(
-                      iconName: 'arrow_forward',
+                    Icon(
+                      Icons.arrow_forward,
                       color: AppTheme.primaryDark,
                       size: 5.w,
                     ),
@@ -413,8 +413,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'warning',
+            Icon(
+              Icons.warning,
               color: AppTheme.warningOrange,
               size: 6.w,
             ),

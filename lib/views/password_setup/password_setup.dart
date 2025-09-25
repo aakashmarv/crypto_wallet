@@ -257,8 +257,8 @@ class _PasswordSetupState extends State<PasswordSetup>
                   width: 1,
                 ),
               ),
-              child: CustomIconWidget(
-                iconName: 'arrow_back',
+              child: Icon(
+                Icons.arrow_back,
                 color: AppTheme.textPrimary,
                 size: 20,
               ),
@@ -391,17 +391,16 @@ class _PasswordSetupState extends State<PasswordSetup>
                     _isPasswordVisible = !_isPasswordVisible;
                   });
                 },
-                icon: CustomIconWidget(
-                  iconName:
-                      _isPasswordVisible ? 'visibility_off' : 'visibility',
+                icon: Icon(
+                 _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
                   color: AppTheme.textSecondary,
                   size: 20,
                 ),
               ),
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
-                child: CustomIconWidget(
-                  iconName: 'lock',
+                child: Icon(
+                  Icons.lock,
                   color: AppTheme.textSecondary,
                   size: 20,
                 ),
@@ -453,8 +452,8 @@ class _PasswordSetupState extends State<PasswordSetup>
                       _confirmPasswordError.isEmpty)
                     Padding(
                       padding: EdgeInsets.only(right: 2.w),
-                      child: CustomIconWidget(
-                        iconName: 'check_circle',
+                      child: Icon(
+                        Icons.check_circle,
                         color: AppTheme.successGreen,
                         size: 20,
                       ),
@@ -465,10 +464,10 @@ class _PasswordSetupState extends State<PasswordSetup>
                         _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
                       });
                     },
-                    icon: CustomIconWidget(
-                      iconName: _isConfirmPasswordVisible
-                          ? 'visibility_off'
-                          : 'visibility',
+                    icon: Icon(
+                      _isConfirmPasswordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: AppTheme.textSecondary,
                       size: 20,
                     ),
@@ -477,8 +476,8 @@ class _PasswordSetupState extends State<PasswordSetup>
               ),
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
-                child: CustomIconWidget(
-                  iconName: 'lock_outline',
+                child: Icon(
+                 Icons.lock_outline,
                   color: AppTheme.textSecondary,
                   size: 20,
                 ),

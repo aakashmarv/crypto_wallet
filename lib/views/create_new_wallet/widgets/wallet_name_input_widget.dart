@@ -101,8 +101,8 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
               ),
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
-                child: CustomIconWidget(
-                  iconName: 'account_balance_wallet',
+                child: Icon(
+                  Icons.account_balance_wallet,
                   color:
                       _isValid ? AppTheme.accentTeal : AppTheme.textSecondary,
                   size: 20,
@@ -111,8 +111,8 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
               suffixIcon: _nameController.text.isNotEmpty
                   ? Padding(
                       padding: EdgeInsets.all(3.w),
-                      child: CustomIconWidget(
-                        iconName: _isValid ? 'check_circle' : 'error',
+                      child: Icon(
+                        _isValid ? Icons.check_circle : Icons.error,
                         color: _isValid
                             ? AppTheme.successGreen
                             : AppTheme.errorRed,
@@ -171,8 +171,8 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
             SizedBox(height: 1.h),
             Row(
               children: [
-                CustomIconWidget(
-                  iconName: 'info',
+                Icon(
+                  Icons.info,
                   color: AppTheme.accentTeal,
                   size: 16,
                 ),

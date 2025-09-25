@@ -35,8 +35,8 @@ class _SecurityWarningBannerState extends State<SecurityWarningBanner> {
               padding: EdgeInsets.all(4.w),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'warning',
+                  Icon(
+                    Icons.warning,
                     color: AppTheme.warningOrange,
                     size: 6.w,
                   ),
@@ -50,8 +50,8 @@ class _SecurityWarningBannerState extends State<SecurityWarningBanner> {
                       ),
                     ),
                   ),
-                  CustomIconWidget(
-                    iconName: _isExpanded ? 'expand_less' : 'expand_more',
+                  Icon(
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
                     color: AppTheme.warningOrange,
                     size: 6.w,
                   ),

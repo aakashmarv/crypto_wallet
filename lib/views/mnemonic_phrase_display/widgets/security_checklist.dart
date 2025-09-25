@@ -43,8 +43,8 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
         children: [
           Row(
             children: [
-              CustomIconWidget(
-                iconName: 'security',
+              Icon(
+                Icons.security,
                 color: AppTheme.accentTeal,
                 size: 6.w,
               ),
@@ -99,8 +99,8 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomIconWidget(
-                  iconName: 'warning',
+                Icon(
+                  Icons.warning,
                   color: AppTheme.warningOrange,
                   size: 4.w,
                 ),

@@ -99,8 +99,8 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                       color: AppTheme.warningOrange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: CustomIconWidget(
-                      iconName: 'shield',
+                    child: Icon(
+                      Icons.shield,
                       color: AppTheme.warningOrange,
                       size: 20,
                     ),
@@ -131,8 +131,8 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                   AnimatedRotation(
                     turns: _isExpanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 300),
-                    child: CustomIconWidget(
-                      iconName: 'keyboard_arrow_down',
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
                       color: AppTheme.textSecondary,
                       size: 24,
                     ),
@@ -169,6 +169,13 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
   }
 
   Widget _buildSecurityTip(String iconName, String title, String description) {
+    final iconMap = {
+      'security': Icons.security,
+      'visibility_off': Icons.visibility_off,
+      'verified_user': Icons.verified_user,
+      'backup': Icons.backup,
+    };
+
     return Container(
       margin: EdgeInsets.only(bottom: 3.h),
       child: Row(
@@ -180,8 +187,8 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
               color: AppTheme.accentTeal.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: CustomIconWidget(
-              iconName: iconName,
+            child: Icon(
+              iconMap[iconName] ?? Icons.help_outline,
               color: AppTheme.accentTeal,
               size: 16,
             ),

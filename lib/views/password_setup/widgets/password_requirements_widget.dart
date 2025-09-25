@@ -43,8 +43,8 @@ class PasswordRequirementsWidget extends StatelessWidget {
               padding: EdgeInsets.all(4.w),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'security',
+                  Icon(
+                    Icons.security,
                     color: AppTheme.accentTeal,
                     size: 20,
                   ),
@@ -58,10 +58,10 @@ class PasswordRequirementsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  CustomIconWidget(
-                    iconName: isExpanded
-                        ? 'keyboard_arrow_up'
-                        : 'keyboard_arrow_down',
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: AppTheme.textSecondary,
                     size: 20,
                   ),
@@ -121,8 +121,8 @@ class PasswordRequirementsWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: isValid
-              ? CustomIconWidget(
-                  iconName: 'check',
+              ? Icon(
+                  Icons.check,
                   color: AppTheme.textPrimary,
                   size: 12,
                 )

@@ -197,8 +197,8 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: CustomIconWidget(
-                  iconName: 'close',
+                icon: Icon(
+                  Icons.close,
                   color: AppTheme.textSecondary,
                   size: 6.w,
                 ),
@@ -241,8 +241,8 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
               ),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'error',
+                  Icon(
+                    Icons.error,
                     color: AppTheme.errorRed,
                     size: 4.w,
                   ),

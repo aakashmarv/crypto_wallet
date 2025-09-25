@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../theme/app_theme.dart';
 import '../../viewmodels/selectedIndex_controller.dart';
-import '../../widgets/custom_icon_widget.dart';
 import '../d_app_browser/d_app_browser.dart';
 import '../home/home_screen.dart';
 
@@ -65,8 +64,8 @@ class DashboardScreen extends StatelessWidget {
                 type: BottomNavigationBarType.fixed,
                 items: [
                   BottomNavigationBarItem(
-                    icon: CustomIconWidget(
-                      iconName: 'home',
+                    icon: Icon(
+                      Icons.home,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 0
                           ? AppTheme.accentTeal
@@ -75,8 +74,8 @@ class DashboardScreen extends StatelessWidget {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: CustomIconWidget(
-                      iconName: 'web',
+                    icon: Icon(
+                      Icons.web,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 1
                           ? AppTheme.accentTeal
@@ -85,8 +84,8 @@ class DashboardScreen extends StatelessWidget {
                     label: 'Browser',
                   ),
                   BottomNavigationBarItem(
-                    icon: CustomIconWidget(
-                      iconName: 'settings',
+                    icon: Icon(
+                      Icons.settings,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 2
                           ? AppTheme.accentTeal

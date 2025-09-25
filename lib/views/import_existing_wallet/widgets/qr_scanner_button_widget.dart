@@ -159,8 +159,8 @@ class _QrScannerButtonWidgetState extends State<QrScannerButtonWidget> {
                           color: AppTheme.errorRed.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: CustomIconWidget(
-                          iconName: 'close',
+                        child: Icon(
+                          Icons.close,
                           color: AppTheme.errorRed,
                           size: 20,
                         ),
@@ -487,8 +487,8 @@ class _QrScannerButtonWidgetState extends State<QrScannerButtonWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomIconWidget(
-              iconName: 'qr_code_scanner',
+            Icon(
+              Icons.qr_code_scanner,
               color: AppTheme.accentTeal,
               size: 24,
             ),

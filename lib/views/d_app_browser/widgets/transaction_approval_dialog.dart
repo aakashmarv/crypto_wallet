@@ -37,8 +37,8 @@ class TransactionApprovalDialog extends StatelessWidget {
                     color: AppTheme.warningOrange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: CustomIconWidget(
-                    iconName: 'warning',
+                  child: Icon(
+                    Icons.warning,
                     size: 6.w,
                     color: AppTheme.warningOrange,
                   ),
@@ -107,8 +107,8 @@ class TransactionApprovalDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'info',
+                  Icon(
+                    Icons.info,
                     size: 4.w,
                     color: AppTheme.accentTeal,
                   ),

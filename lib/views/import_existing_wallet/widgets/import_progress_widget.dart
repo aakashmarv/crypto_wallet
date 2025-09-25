@@ -86,8 +86,8 @@ class ImportProgressWidget extends StatelessWidget {
           SizedBox(height: 2.h),
           Row(
             children: [
-              CustomIconWidget(
-                iconName: 'info_outline',
+              Icon(
+                Icons.info_outline,
                 color: AppTheme.accentTeal,
                 size: 16,
               ),

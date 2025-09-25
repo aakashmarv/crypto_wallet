@@ -78,8 +78,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'warning',
+            Icon(
+              Icons.warning,
               color: AppTheme.warningOrange,
               size: 6.w,
             ),
@@ -137,8 +137,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               ),
               child: Column(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'visibility_off',
+                  Icon(
+                    Icons.visibility_off,
                     color: AppTheme.textSecondary,
                     size: 12.w,
                   ),
@@ -161,8 +161,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   SizedBox(height: 3.h),
                   ElevatedButton.icon(
                     onPressed: widget.onRevealToggle,
-                    icon: CustomIconWidget(
-                      iconName: 'visibility',
+                    icon: Icon(
+                      Icons.visibility,
                       color: AppTheme.primaryDark,
                       size: 5.w,
                     ),
@@ -194,16 +194,16 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   children: [
                     IconButton(
                       onPressed: widget.onRevealToggle,
-                      icon: CustomIconWidget(
-                        iconName: 'visibility_off',
+                      icon: Icon(
+                        Icons.visibility_off,
                         color: AppTheme.textSecondary,
                         size: 5.w,
                       ),
                     ),
                     IconButton(
                       onPressed: _copyPhraseToClipboard,
-                      icon: CustomIconWidget(
-                        iconName: 'copy_all',
+                      icon: Icon(
+                        Icons.copy_all,
                         color: AppTheme.accentTeal,
                         size: 5.w,
                       ),
@@ -288,8 +288,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               ),
               child: Row(
                 children: [
-                  CustomIconWidget(
-                    iconName: 'info',
+                  Icon(
+                    Icons.info,
                     color: AppTheme.accentTeal,
                     size: 4.w,
                   ),

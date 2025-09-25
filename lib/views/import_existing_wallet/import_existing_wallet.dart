@@ -112,8 +112,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         ),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'warning',
+            Icon(
+              Icons.warning,
               color: AppTheme.warningOrange,
               size: 24,
             ),
@@ -198,8 +198,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
       padding: EdgeInsets.symmetric(vertical: 0.5.h),
       child: Row(
         children: [
-          CustomIconWidget(
-            iconName: 'check_circle_outline',
+          Icon(
+            Icons.check_circle_outline,
             color: AppTheme.successGreen,
             size: 16,
           ),
@@ -380,8 +380,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
                   width: 1,
                 ),
               ),
-              child: CustomIconWidget(
-                iconName: 'arrow_back',
+              child: Icon(
+                Icons.arrow_back,
                 color: AppTheme.textPrimary,
                 size: 24,
               ),
@@ -410,8 +410,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomIconWidget(
-                  iconName: 'security',
+                Icon(
+                  Icons.security,
                   color: AppTheme.accentTeal,
                   size: 16,
                 ),
@@ -448,8 +448,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomIconWidget(
-              iconName: 'content_paste',
+            Icon(
+              Icons.content_paste,
               color: AppTheme.textSecondary,
               size: 20,
             ),
@@ -573,8 +573,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
             : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomIconWidget(
-              iconName: 'download',
+            Icon(
+              Icons.download,
               color: AppTheme.primaryDark,
               size: 20,
             ),
@@ -608,8 +608,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         children: [
           Row(
             children: [
-              CustomIconWidget(
-                iconName: 'help_outline',
+              Icon(
+                Icons.help_outline,
                 color: AppTheme.accentTeal,
                 size: 20,
               ),

@@ -13,6 +13,14 @@ class DAppBookmarkBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconMap = {
+      'swap_horiz': Icons.swap_horiz,
+      'collections': Icons.collections,
+      'trending_up': Icons.trending_up,
+      'account_balance': Icons.account_balance,
+      'restaurant': Icons.restaurant,
+    };
+
     final List<Map<String, dynamic>> popularDApps = [
       {
         'name': 'Uniswap',
@@ -104,11 +112,11 @@ class DAppBookmarkBar extends StatelessWidget {
                               width: 0.5,
                             ),
                           ),
-                          child: CustomIconWidget(
-                            iconName: dapp['icon'] as String,
-                            size: 6.w,
-                            color: dapp['color'] as Color,
-                          ),
+                          child: Icon(
+                      iconMap[dapp['icon']] ?? Icons.help_outline,
+                      size: 6.w,
+                      color: dapp['color'] as Color,
+                    ),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
