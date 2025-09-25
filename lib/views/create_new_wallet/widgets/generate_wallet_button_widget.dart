@@ -147,8 +147,8 @@ class _GenerateWalletButtonWidgetState extends State<GenerateWalletButtonWidget>
                                 ),
                               ),
                             ] else ...[
-                              CustomIconWidget(
-                                iconName: 'add_circle_outline',
+                              Icon(
+                                Icons.add_circle_outline_rounded,
                                 color: widget.isEnabled
                                     ? AppTheme.primaryDark
                                     : AppTheme.textSecondary,

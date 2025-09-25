@@ -146,11 +146,11 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
               color: AppTheme.successGreen.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: CustomIconWidget(
-              iconName: 'check_circle',
+            child: Icon(
+              Icons.check_circle,
               color: AppTheme.successGreen,
               size: 12.w,
-            ),
+            )
           ),
           SizedBox(height: 3.h),
           Text(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomIconWidget extends StatelessWidget {
+class CustomIconWidgetedgdsg extends StatelessWidget {
   final String iconName;
   final double size;
   final Color? color;

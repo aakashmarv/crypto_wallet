@@ -103,8 +103,8 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                       color: AppTheme.accentTeal.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: CustomIconWidget(
-                      iconName: 'shield',
+                    child: Icon(
+                      Icons.shield,
                       color: AppTheme.accentTeal,
                       size: 24,
                     ),
@@ -136,8 +136,8 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                   AnimatedRotation(
                     turns: _isExpanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 300),
-                    child: CustomIconWidget(
-                      iconName: 'keyboard_arrow_down',
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
                       color: AppTheme.accentTeal,
                       size: 24,
                     ),
@@ -178,8 +178,8 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                     ),
                     child: Row(
                       children: [
-                        CustomIconWidget(
-                          iconName: 'warning',
+                        Icon(
+                          Icons.warning,
                           color: AppTheme.warningOrange,
                           size: 20,
                         ),
@@ -208,6 +208,14 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
 
   Widget _buildSecurityFeature(
       String iconName, String title, String description) {
+    // Map string names to IconData
+    final Map<String, IconData> iconMap = {
+      'encrypted': Icons.enhanced_encryption_rounded,
+      'verified_user': Icons.verified_user,
+      'lock': Icons.lock,
+      // add more if needed
+    };
+    IconData iconData = iconMap[iconName] ?? Icons.help_outline;
     return Padding(
       padding: EdgeInsets.only(bottom: 2.h),
       child: Row(
@@ -219,8 +227,8 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
               color: AppTheme.successGreen.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: CustomIconWidget(
-              iconName: iconName,
+            child: Icon(
+              iconData,
               color: AppTheme.successGreen,
               size: 18,
             ),

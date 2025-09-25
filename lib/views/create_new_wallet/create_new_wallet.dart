@@ -124,8 +124,8 @@ class _CreateNewWalletState extends State<CreateNewWallet>
         ),
         title: Row(
           children: [
-            CustomIconWidget(
-              iconName: 'error',
+            Icon(
+              Icons.error,
               color: AppTheme.errorRed,
               size: 24,
             ),
@@ -173,8 +173,8 @@ class _CreateNewWalletState extends State<CreateNewWallet>
           ),
           title: Row(
             children: [
-              CustomIconWidget(
-                iconName: 'warning',
+              Icon(
+                Icons.warning,
                 color: AppTheme.warningOrange,
                 size: 24,
               ),

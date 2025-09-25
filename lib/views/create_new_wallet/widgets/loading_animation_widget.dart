@@ -151,8 +151,8 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
                       ],
                     ),
                     child: Center(
-                      child: CustomIconWidget(
-                        iconName: 'security',
+                      child: Icon(
+                        Icons.security,
                         color: AppTheme.primaryDark,
                         size: 32,
                       ),
@@ -244,9 +244,9 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildSecurityFeature('encrypted', 'Encrypted'),
-              _buildSecurityFeature('verified_user', 'Verified'),
-              _buildSecurityFeature('lock', 'Secured'),
+              _buildSecurityFeature(Icons.enhanced_encryption_rounded, 'Encrypted'),
+              _buildSecurityFeature(Icons.verified_user, 'Verified'),
+              _buildSecurityFeature(Icons.lock, 'Secured'),
             ],
           ),
         ],
@@ -254,7 +254,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
     );
   }
 
-  Widget _buildSecurityFeature(String iconName, String label) {
+  Widget _buildSecurityFeature(IconData iconData, String label) {
     return Column(
       children: [
         Container(
@@ -263,8 +263,8 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
             color: AppTheme.successGreen.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: CustomIconWidget(
-            iconName: iconName,
+          child: Icon(
+            iconData,
             color: AppTheme.successGreen,
             size: 20,
           ),

@@ -127,8 +127,8 @@ class ProgressIndicatorWidget extends StatelessWidget {
           ),
           child: Center(
             child: isCompleted
-                ? CustomIconWidget(
-                    iconName: 'check',
+                ? Icon(
+                    Icons.check,
                     color: AppTheme.primaryDark,
                     size: 16,
                   )
