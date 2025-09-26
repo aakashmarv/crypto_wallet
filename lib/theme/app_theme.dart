@@ -4,18 +4,37 @@ import 'package:google_fonts/google_fonts.dart';
 /// A class that contains all theme configurations for the cryptocurrency application.
 class AppTheme {
   AppTheme._();
+// static const Color accentTeal = Color(0xFF3c065e); // Main accent - Modern purple
+
 
   // Cryptocurrency-focused color palette
-  static const Color primaryDark = Color(0xFF1A1B23); // Deep background
-  static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
-  static const Color accentTeal = Color(0xFF00D4AA); // Trust-building teal
-  static const Color warningOrange = Color(0xFFFF6B35); // Alert color
-  static const Color successGreen = Color(0xFF00C896); // Success indicators
-  static const Color textPrimary = Color(0xFFFFFFFF); // High contrast text
-  static const Color textSecondary = Color(0xFFB8BCC8); // Supporting text
-  static const Color borderSubtle = Color(0xFF3A3D4A); // Minimal borders
-  static const Color surfaceElevated = Color(0xFF252831); // Modal backgrounds
-  static const Color errorRed = Color(0xFFFF6B6B); // Error states
+  // static const Color primaryDark = Color(0xFF1A1B23); // Deep background
+  // static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
+  // // static const Color accentTeal = Color(0xFF00D4AA); // Trust-building teal
+  // static const Color accentTeal = Color(0xFF455bff); // Trust-building teal
+  // static const Color warningOrange = Color(0xFFFF6B35); // Alert color
+  // static const Color successGreen = Color(0xFF00C896); // Success indicators
+  // static const Color textPrimary = Color(0xFFFFFFFF); // High contrast text
+  // static const Color textSecondary = Color(0xFFB8BCC8); // Supporting text
+  // static const Color borderSubtle = Color(0xFF3A3D4A); // Minimal borders
+  // static const Color surfaceElevated = Color(0xFF252831); // Modal backgrounds
+  // static const Color errorRed = Color(0xFFFF6B6B); // Error states
+
+
+  //  Premium Crypto Wallet
+  static const Color primaryDark = Color(0xFFFAFAFB); // Clean light background
+  static const Color secondaryDark = Color(0xFFFFFFFF); // Pure white card surfaces
+  static const Color accentTeal = Color(0xFF455bff); // Main accent - Modern blue
+  static const Color warningOrange = Color(0xFFFF6B35); // Warm gold for warnings
+  static const Color successGreen = Color(0xFF10B981); // Fresh success green
+  static const Color textPrimary = Color(0xFF111827); // Dark text for contrast
+  static const Color textSecondary = Color(0xFF6B7280); // Medium gray supporting text
+  static const Color borderSubtle = Color(0xFFE5E7EB); // Light gray borders
+  static const Color surfaceElevated = Color(0xFFFFFFFF); // White elevated surfaces
+  static const Color errorRed = Color(0xFFEF4444); // Clean error red
+  static const Color shadowColor = Color(0x1A000000); // Subtle light shadow
+  static const Color elevatedShadowColor = Color(0x1A000000);
+
 
   // Brand gradient colors
   static const LinearGradient brandGradient = LinearGradient(
@@ -23,10 +42,6 @@ class AppTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
-  // Shadow colors for depth
-  static const Color shadowColor = Color(0x33000000);
-  static const Color elevatedShadowColor = Color(0x1A000000);
 
   /// Dark theme optimized for cryptocurrency applications
   static ThemeData darkTheme = ThemeData(

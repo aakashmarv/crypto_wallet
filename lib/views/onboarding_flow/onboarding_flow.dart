@@ -126,18 +126,19 @@ class _OnboardingFlowState extends State<OnboardingFlow>
         curve: Curves.easeInOut,
       );
     } else {
-      // Get.offAllNamed(AppRoutes.createNewWallet);
-      _navigateToWalletSetup();
+      Get.offAllNamed(AppRoutes.createNewWallet);
+      // _navigateToWalletSetup();
     }
   }
 
   void _skipOnboarding() {
-    // Get.offAllNamed(AppRoutes.dashboard);
-    _navigateToWalletSetup();
+    Get.offAllNamed(AppRoutes.dashboard);
+    // _navigateToWalletSetup();
   }
 
   void _navigateToWalletSetup() {
     Get.offAllNamed(AppRoutes.createNewWallet);
+    // Get.offAllNamed(AppRoutes.dashboard);
   }
 
   @override
