@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../core/app_export.dart';
+import '../../widgets/app_button.dart';
 import './widgets/biometric_setup_widget.dart';
 import './widgets/password_requirements_widget.dart';
 import './widgets/password_strength_indicator_widget.dart';
@@ -258,7 +258,7 @@ class _PasswordSetupState extends State<PasswordSetup>
                 ),
               ),
               child: Icon(
-                Icons.arrow_back,
+                Platform.isIOS ? Icons.arrow_back_ios_new_rounded : Icons.arrow_back_rounded,
                 color: AppTheme.textPrimary,
                 size: 20,
               ),
@@ -493,43 +493,11 @@ class _PasswordSetupState extends State<PasswordSetup>
   }
 
   Widget _buildSetPasswordButton() {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
-      child: ElevatedButton(
-        onPressed: _canSetPassword ? _handleSetPassword : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor:
-              _canSetPassword ? AppTheme.accentTeal : AppTheme.borderSubtle,
-          foregroundColor:
-              _canSetPassword ? AppTheme.primaryDark : AppTheme.textSecondary,
-          padding: EdgeInsets.symmetric(vertical: 4.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: _canSetPassword ? 2 : 0,
-        ),
-        child: _isLoading
-            ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppTheme.primaryDark,
-                  ),
-                ),
-              )
-            : Text(
-                'Set Password',
-                style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-                  color: _canSetPassword
-                      ? AppTheme.primaryDark
-                      : AppTheme.textSecondary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-      ),
+    return AppButton(
+      label: "Set Password",
+      enabled: _canSetPassword,
+      isLoading: _isLoading,
+      onPressed: _handleSetPassword,
     );
   }
 }

@@ -36,7 +36,7 @@ class DashboardScreen extends StatelessWidget {
       return false;
     }
 
-    return true; // Double back press within 3 sec → app closes
+    return true;
   }
 
   @override
@@ -46,22 +46,70 @@ class DashboardScreen extends StatelessWidget {
       child: Obx(() {
         return Scaffold(
           key: _scaffoldKey,
-
-          // appBar: CustomAppBar(
-          //   title: _titles[index],
-          //   showMenu: index == 0,
-          //   onMenuTap: () {
-          //     _scaffoldKey.currentState?.openDrawer();
-          //   },
-          // ),
           body: _screens[_selectedIndexController.selectedIndex.value],
-            bottomNavigationBar:  BottomNavigationBar(
+            // bottomNavigationBar:  BottomNavigationBar(
+            //     currentIndex: _selectedIndexController.selectedIndex.value,
+            //     onTap: _selectedIndexController.changeTab,
+            //     backgroundColor: AppTheme.surfaceElevated,
+            //     selectedItemColor: AppTheme.accentTeal,
+            //     unselectedItemColor: AppTheme.textSecondary,
+            //     type: BottomNavigationBarType.fixed,
+            //     items: [
+            //       BottomNavigationBarItem(
+            //         icon: Icon(
+            //           Icons.home,
+            //           size: 6.w,
+            //           color: _selectedIndexController.selectedIndex.value == 0
+            //               ? AppTheme.accentTeal
+            //               : AppTheme.textSecondary,
+            //         ),
+            //         label: 'Home',
+            //       ),
+            //       BottomNavigationBarItem(
+            //         icon: Icon(
+            //           Icons.web,
+            //           size: 6.w,
+            //           color: _selectedIndexController.selectedIndex.value == 1
+            //               ? AppTheme.accentTeal
+            //               : AppTheme.textSecondary,
+            //         ),
+            //         label: 'Browser',
+            //       ),
+            //       BottomNavigationBarItem(
+            //         icon: Icon(
+            //           Icons.settings,
+            //           size: 6.w,
+            //           color: _selectedIndexController.selectedIndex.value == 2
+            //               ? AppTheme.accentTeal
+            //               : AppTheme.textSecondary,
+            //         ),
+            //         label: 'Settings',
+            //       ),
+            //     ],
+            //   ),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ✅ Top Divider
+              Container(
+                height: 1,
+                color: AppTheme.borderSubtle,
+              ),
+              BottomNavigationBar(
                 currentIndex: _selectedIndexController.selectedIndex.value,
                 onTap: _selectedIndexController.changeTab,
                 backgroundColor: AppTheme.surfaceElevated,
                 selectedItemColor: AppTheme.accentTeal,
                 unselectedItemColor: AppTheme.textSecondary,
                 type: BottomNavigationBarType.fixed,
+                selectedLabelStyle: TextStyle(
+                  fontSize: 11.sp, // Thoda bada text
+                  fontWeight: FontWeight.bold, // Bold for selected
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontSize: 10.sp, // Same size, normal weight
+                  fontWeight: FontWeight.normal,
+                ),
                 items: [
                   BottomNavigationBarItem(
                     icon: Icon(
@@ -94,127 +142,13 @@ class DashboardScreen extends StatelessWidget {
                     label: 'Settings',
                   ),
                 ],
-              ), );
+              ),
+            ],
+          ),
+
+        );
       }),
     );
-
-
-    // return WillPopScope(
-    //   onWillPop: _onWillPop,
-    //   child: Scaffold(
-    //     body: Obx(
-    //           () => _screens[_selectedIndexController.selectedIndex.value],
-    //     ),
-    //     bottomNavigationBar: Obx(
-    //           () => BottomNavigationBar(
-    //         currentIndex: _selectedIndexController.selectedIndex.value,
-    //         onTap: _selectedIndexController.changeTab,
-    //         backgroundColor: AppTheme.surfaceElevated,
-    //         selectedItemColor: AppTheme.accentTeal,
-    //         unselectedItemColor: AppTheme.textSecondary,
-    //         type: BottomNavigationBarType.fixed,
-    //         items: [
-    //           BottomNavigationBarItem(
-    //             icon: CustomIconWidget(
-    //               iconName: 'home',
-    //               size: 6.w,
-    //               color: _selectedIndexController.selectedIndex.value == 0
-    //                   ? AppTheme.accentTeal
-    //                   : AppTheme.textSecondary,
-    //             ),
-    //             label: 'Home',
-    //           ),
-    //           BottomNavigationBarItem(
-    //             icon: CustomIconWidget(
-    //               iconName: 'web',
-    //               size: 6.w,
-    //               color: _selectedIndexController.selectedIndex.value == 1
-    //                   ? AppTheme.accentTeal
-    //                   : AppTheme.textSecondary,
-    //             ),
-    //             label: 'DApp Browser',
-    //           ),
-    //           BottomNavigationBarItem(
-    //             icon: CustomIconWidget(
-    //               iconName: 'settings',
-    //               size: 6.w,
-    //               color: _selectedIndexController.selectedIndex.value == 2
-    //                   ? AppTheme.accentTeal
-    //                   : AppTheme.textSecondary,
-    //             ),
-    //             label: 'Settings',
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
 
-
-
-
-// class DashboardScreen extends StatelessWidget {
-//   DashboardScreen({super.key});
-//
-//   final SelectedIndexController controller = Get.put(SelectedIndexController());
-//
-//   final List<Widget> _screens = const [
-//     HomeScreen(),
-//     DAppBrowser(),
-//     SettingsScreen(),
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return WillPopScope(
-//       onWillPop: controller.onWillPop,
-//       child: Obx(() => Scaffold(
-//         key: controller.scaffoldKey,
-//         backgroundColor: AppTheme.primaryDark,
-//         body: _screens[controller.selectedIndex.value],
-//         bottomNavigationBar: BottomNavigationBar(
-//           currentIndex: controller.selectedIndex.value,
-//           backgroundColor: AppTheme.surfaceElevated,
-//           selectedItemColor: AppTheme.accentTeal,
-//           unselectedItemColor: AppTheme.textSecondary,
-//           type: BottomNavigationBarType.fixed,
-//           onTap: (index) => controller.changeTab(index),
-//           items: [
-//             BottomNavigationBarItem(
-//               icon: CustomIconWidget(
-//                 iconName: 'home',
-//                 size: 6.w,
-//                 color: controller.selectedIndex.value == 0
-//                     ? AppTheme.accentTeal
-//                     : AppTheme.textSecondary,
-//               ),
-//               label: 'Home',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: CustomIconWidget(
-//                 iconName: 'web',
-//                 size: 6.w,
-//                 color: controller.selectedIndex.value == 1
-//                     ? AppTheme.accentTeal
-//                     : AppTheme.textSecondary,
-//               ),
-//               label: 'DApp Browser',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: CustomIconWidget(
-//                 iconName: 'settings',
-//                 size: 6.w,
-//                 color: controller.selectedIndex.value == 2
-//                     ? AppTheme.accentTeal
-//                     : AppTheme.textSecondary,
-//               ),
-//               label: 'Settings',
-//             ),
-//           ],
-//         ),
-//       )),
-//     );
-//   }
-// }

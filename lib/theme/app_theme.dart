@@ -26,7 +26,8 @@ class AppTheme {
   static const Color secondaryDark = Color(0xFFFFFFFF); // Pure white card surfaces
   static const Color accentTeal = Color(0xFF455bff); // Main accent - Modern blue
   static const Color warningOrange = Color(0xFFFF6B35); // Warm gold for warnings
-  static const Color successGreen = Color(0xFF10B981); // Fresh success green
+  static const Color successGreen = Color(0xFF00C896); // Fresh success green
+  static const Color green = Color(0xFF068C06); // Fresh success green
   static const Color textPrimary = Color(0xFF111827); // Dark text for contrast
   static const Color textSecondary = Color(0xFF6B7280); // Medium gray supporting text
   static const Color borderSubtle = Color(0xFFE5E7EB); // Light gray borders
@@ -38,7 +39,7 @@ class AppTheme {
 
   // Brand gradient colors
   static const LinearGradient brandGradient = LinearGradient(
-    colors: [accentTeal, Color(0xFF0099CC)],
+    colors: [accentTeal, accentTeal],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../core/app_export.dart';
 import './widgets/generate_wallet_button_widget.dart';
 import './widgets/loading_animation_widget.dart';
@@ -275,7 +273,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                         //     ),
                         //   ),
                         // ),
-                        SizedBox(width: 4.w),
+                        // SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
                             'Create New Wallet',
@@ -328,7 +326,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                                 SizedBox(height: 1.h),
                                 Text(
                                   'Your wallet will be secured with industry-standard encryption and stored safely on your device.',
-                                  style: AppTheme.darkTheme.textTheme.bodyLarge
+                                  style: AppTheme.darkTheme.textTheme.bodyMedium
                                       ?.copyWith(
                                     color: AppTheme.textSecondary,
                                     height: 1.5,

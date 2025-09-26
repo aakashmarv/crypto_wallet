@@ -30,10 +30,10 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
         });
       },
       offset: const Offset(0, 40),
-      color: AppTheme.secondaryDark.withOpacity(0.95),
+      color: AppTheme.secondaryDark,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppTheme.successGreen, width: 1.2),
+        side: BorderSide(color: AppTheme.borderSubtle, width: 1.2),
       ),
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -76,19 +76,19 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(50), // fully rounded
-          border: Border.all(color: AppTheme.successGreen, width: 1.2),
+          border: Border.all(color: AppTheme.accentTeal, width: 1.2),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.shield_rounded, size: 16, color: AppTheme.successGreen),
+            Icon(Icons.shield_rounded, size: 16, color: AppTheme.accentTeal),
             SizedBox(width: 1.w),
             Text(
               _selected,
               style: GoogleFonts.inter(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.successGreen,
+                color: AppTheme.accentTeal,
               ),
             ),
             SizedBox(width: 1.w),
@@ -97,7 +97,7 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
               duration: const Duration(milliseconds: 200),
               child: Icon(
                 Icons.keyboard_arrow_down,
-                color: AppTheme.successGreen,
+                color: AppTheme.accentTeal,
                 size: 5.w,
               ),
             ),

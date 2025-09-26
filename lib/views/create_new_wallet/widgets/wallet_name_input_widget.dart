@@ -173,7 +173,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
               children: [
                 Icon(
                   Icons.info,
-                  color: AppTheme.accentTeal,
+                  color: AppTheme.successGreen,
                   size: 16,
                 ),
                 SizedBox(width: 2.w),
@@ -181,7 +181,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
                   child: Text(
                     'Great! Your wallet name looks good.',
                     style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                      color: AppTheme.accentTeal,
+                      color: AppTheme.successGreen,
                     ),
                   ),
                 ),

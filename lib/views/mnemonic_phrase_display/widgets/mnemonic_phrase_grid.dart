@@ -242,8 +242,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                       border: Border.all(
                         color: isSelected
                             ? AppTheme.accentTeal
-                            : AppTheme.borderSubtle,
-                        width: isSelected ? 2 : 1,
+                            : AppTheme.textSecondary,
+                        width: isSelected ? 1.5 : 0.5,
                       ),
                     ),
                     child: Column(

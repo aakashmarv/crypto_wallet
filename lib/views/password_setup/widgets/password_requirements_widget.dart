@@ -33,6 +33,14 @@ class PasswordRequirementsWidget extends StatelessWidget {
           color: AppTheme.borderSubtle,
           width: 1,
         ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppTheme.accentTeal.withOpacity(0.1), // slight alpha
+            AppTheme.successGreen.withOpacity(0.05),
+          ],
+        ),
       ),
       child: Column(
         children: [
@@ -86,7 +94,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
       child: Column(
         children: [
           Divider(
-            color: AppTheme.borderSubtle,
+            color: AppTheme.textSecondary,
             height: 1,
           ),
           SizedBox(height: 3.w),
@@ -116,7 +124,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
             color: isValid ? AppTheme.successGreen : Colors.transparent,
             border: Border.all(
               color: isValid ? AppTheme.successGreen : AppTheme.borderSubtle,
-              width: 2,
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(10),
           ),

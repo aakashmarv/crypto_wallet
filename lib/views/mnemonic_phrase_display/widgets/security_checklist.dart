@@ -37,6 +37,14 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
           color: AppTheme.borderSubtle,
           width: 1,
         ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppTheme.accentTeal.withOpacity(0.1), // slight alpha
+            AppTheme.successGreen.withOpacity(0.05),
+          ],
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

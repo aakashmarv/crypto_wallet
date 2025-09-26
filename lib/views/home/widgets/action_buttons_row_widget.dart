@@ -498,12 +498,12 @@ class _ActionButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 1.h),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppTheme.textSecondary.withOpacity(0.6),
-              AppTheme.textSecondary.withOpacity(0.3),
-            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+            colors: [
+              AppTheme.accentTeal.withValues(alpha: 0.1),
+              AppTheme.successGreen.withValues(alpha: 0.05),
+            ],
           ),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(

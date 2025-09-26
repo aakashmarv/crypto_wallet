@@ -51,9 +51,9 @@ class OnboardingNavigationWidget extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.accentTeal,
               foregroundColor: AppTheme.primaryDark,
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.2.h),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
               elevation: 4,
             ),

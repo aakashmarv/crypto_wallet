@@ -11,45 +11,41 @@ class WalletBalanceCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+      margin: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.h),
       padding: EdgeInsets.all(3.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.secondaryDark.withOpacity(0.8),
-            AppTheme.primaryDark.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderSubtle, width: 1),
-      ),
+      // decoration: BoxDecoration(
+      //   gradient: LinearGradient(
+      //     begin: Alignment.topLeft,
+      //     end: Alignment.bottomRight,
+      //     colors: [
+      //       AppTheme.accentTeal.withOpacity(0.1), // slight alpha
+      //       AppTheme.successGreen.withOpacity(0.05),
+      //     ],
+      //   ),
+      //   borderRadius: BorderRadius.circular(12),
+      //   border: Border.all(color: AppTheme.borderSubtle, width: 1),
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Ruby Token + Balance
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ruby',
-                style: GoogleFonts.inter(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              Text(
-                '0.00',
-                style: GoogleFonts.jetBrainsMono(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-            ],
+          Text(
+            '\$0.00',               // Amount
+            style: GoogleFonts.sourceSans3(
+              fontSize: 36.sp,
+              fontWeight: FontWeight.w900,
+              color: Colors.black,
+            ),
           ),
+          // Bottom change text
+          Text(
+            '+\$0(+0.00%)',
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+              color: AppTheme.textSecondary, // grey color
+            ),
+          ),
+
           SizedBox(height: 2.h),
           // Wallet Address
           Row(

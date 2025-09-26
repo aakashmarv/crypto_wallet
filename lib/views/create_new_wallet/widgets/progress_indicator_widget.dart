@@ -66,7 +66,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
                                   gradient: LinearGradient(
                                     colors: [
                                       AppTheme.accentTeal,
-                                      AppTheme.successGreen,
+                                      AppTheme.accentTeal,
                                     ],
                                   ),
                                 ),
@@ -111,18 +111,18 @@ class ProgressIndicatorWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 8.w,
-          height: 8.w,
+          width: 7.w,
+          height: 7.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isCompleted || isCurrent
                 ? (isCompleted ? AppTheme.successGreen : AppTheme.accentTeal)
-                : AppTheme.borderSubtle,
+                : AppTheme.borderSubtle.withOpacity(0.1),
             border: Border.all(
               color: isCompleted || isCurrent
                   ? (isCompleted ? AppTheme.successGreen : AppTheme.accentTeal)
                   : AppTheme.borderSubtle,
-              width: 2,
+              width: 1,
             ),
           ),
           child: Center(

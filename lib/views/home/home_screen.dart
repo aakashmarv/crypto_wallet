@@ -4,7 +4,6 @@ import 'package:cryptovault_pro/views/home/widgets/network_dropdown_widget.dart'
 import 'package:cryptovault_pro/views/home/widgets/wallet_balance_card_widget.dart';
 import 'package:cryptovault_pro/views/home/widgets/wallet_tabs_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -49,63 +48,66 @@ class _HomeScreenState extends State<HomeScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'amandev',
-                        style: GoogleFonts.inter(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
+                  Padding(
+                    padding:  EdgeInsets.only(left: 2.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'amandev',
+                          style: GoogleFonts.inter(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textPrimary,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Not Connected',
-                        style: GoogleFonts.inter(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppTheme.textSecondary,
+                        Text(
+                          'Not Connected',
+                          style: GoogleFonts.inter(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppTheme.textSecondary,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   // Dropdown
                   NetworkDropdownWidget(),
-
                 ],
               ),
             ),
           ),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1), // Divider height
+            child: Container(
+              color: AppTheme.borderSubtle, // Divider color
+              height: 1,
+            ),
           ),
         ),
       ),
+
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppTheme.primaryDark,
-              AppTheme.secondaryDark.withValues(alpha: 0.9),
-            ],
-          ),
+          // gradient: LinearGradient(
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          //   colors: [
+          //     AppTheme.primaryDark,
+          //     AppTheme.secondaryDark.withValues(alpha: 0.9),
+          //   ],
+          // ),
         ),
         child: SafeArea(
           child: Column(
             children: [
               // ✅ Wallet Balance Card
               const WalletBalanceCardWidget(),
-
               // ✅ Action Buttons
               const ActionButtonsRowWidget(),
-
               SizedBox(height: 2.h),
-
               // ✅ Tabs
               Expanded(
                 child: WalletTabsWidget(

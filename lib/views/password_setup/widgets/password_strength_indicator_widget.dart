@@ -52,7 +52,7 @@ class PasswordStrengthIndicatorWidget extends StatelessWidget {
       case 4:
         return AppTheme.successGreen;
       case 5:
-        return AppTheme.accentTeal;
+        return AppTheme.green;
       default:
         return AppTheme.errorRed;
     }

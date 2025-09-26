@@ -86,7 +86,7 @@ class OnboardingPageWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
 
-              SizedBox(height: 4.h),
+              SizedBox(height: 8.h),
 
               // Features List
               Column(
