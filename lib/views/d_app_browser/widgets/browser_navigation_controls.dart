@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
@@ -28,7 +29,7 @@ class BrowserNavigationControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 8.h,
+      height: 6.h,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
         color: AppTheme.surfaceElevated,
@@ -44,19 +45,19 @@ class BrowserNavigationControls extends StatelessWidget {
         children: [
           // Back Button
           _buildNavigationButton(
-            iconData: Icons.arrow_back,
+            iconData: LucideIcons.chevronLeft,
             onTap: canGoBack ? onBack : null,
             isEnabled: canGoBack,
           ),
           // Forward Button
           _buildNavigationButton(
-            iconData: Icons.arrow_forward,
+            iconData: LucideIcons.chevronRight,
             onTap: canGoForward ? onForward : null,
             isEnabled: canGoForward,
           ),
           // Home Button
           _buildNavigationButton(
-            iconData: Icons.home,
+            iconData: LucideIcons.house,
             onTap: onHome,
             isEnabled: true,
           ),
@@ -68,42 +69,42 @@ class BrowserNavigationControls extends StatelessWidget {
             color: isBookmarked ? AppTheme.accentTeal : null,
           ),
           // Security Indicator
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-            decoration: BoxDecoration(
-              color: isSecure
-                  ? AppTheme.successGreen.withValues(alpha: 0.1)
-                  : AppTheme.warningOrange.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color:
-                    isSecure ? AppTheme.successGreen : AppTheme.warningOrange,
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                 isSecure ? Icons.lock : Icons.lock_open,
-                  size: 4.w,
-                  color:
-                      isSecure ? AppTheme.successGreen : AppTheme.warningOrange,
-                ),
-                SizedBox(width: 1.w),
-                Text(
-                  isSecure ? 'Secure' : 'Unsecure',
-                  style: AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
-                    fontSize: 10.sp,
-                    color: isSecure
-                        ? AppTheme.successGreen
-                        : AppTheme.warningOrange,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Container(
+          //   padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          //   decoration: BoxDecoration(
+          //     color: isSecure
+          //         ? AppTheme.successGreen.withValues(alpha: 0.1)
+          //         : AppTheme.warningOrange.withValues(alpha: 0.1),
+          //     borderRadius: BorderRadius.circular(8),
+          //     border: Border.all(
+          //       color:
+          //           isSecure ? AppTheme.successGreen : AppTheme.warningOrange,
+          //       width: 1,
+          //     ),
+          //   ),
+          //   child: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       Icon(
+          //        isSecure ? Icons.lock : Icons.lock_open,
+          //         size: 4.w,
+          //         color:
+          //             isSecure ? AppTheme.successGreen : AppTheme.warningOrange,
+          //       ),
+          //       SizedBox(width: 1.w),
+          //       Text(
+          //         isSecure ? 'Secure' : 'Unsecure',
+          //         style: AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+          //           fontSize: 10.sp,
+          //           color: isSecure
+          //               ? AppTheme.successGreen
+          //               : AppTheme.warningOrange,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -119,16 +120,16 @@ class BrowserNavigationControls extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 12.w,
-        height: 6.h,
+        height: 4.h,
         decoration: BoxDecoration(
           color: isEnabled
               ? AppTheme.secondaryDark
               : AppTheme.secondaryDark.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: AppTheme.borderSubtle,
-            width: 1,
-          ),
+          // border: Border.all(
+          //   color: AppTheme.borderSubtle,
+          //   width: 1,
+          // ),
         ),
         child: Icon(
           iconData,

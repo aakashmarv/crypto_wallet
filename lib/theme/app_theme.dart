@@ -7,7 +7,7 @@ class AppTheme {
 // static const Color accentTeal = Color(0xFF3c065e); // Main accent - Modern purple
 
 
-  // Cryptocurrency-focused color palette
+  // Dark theme colors
   // static const Color primaryDark = Color(0xFF1A1B23); // Deep background
   // static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
   // // static const Color accentTeal = Color(0xFF00D4AA); // Trust-building teal
@@ -19,24 +19,31 @@ class AppTheme {
   // static const Color borderSubtle = Color(0xFF3A3D4A); // Minimal borders
   // static const Color surfaceElevated = Color(0xFF252831); // Modal backgrounds
   // static const Color errorRed = Color(0xFFFF6B6B); // Error states
+  // static const Color shadowColor = Color(0x1A000000); // Subtle light shadow
+  // static const Color elevatedShadowColor = Color(0x1A000000);
+  // static const Color green = Color(0xFF068C06); // Fresh success green
 
 
-  //  Premium Crypto Wallet
+  // light theme colors
   static const Color primaryDark = Color(0xFFFAFAFB); // Clean light background
   static const Color secondaryDark = Color(0xFFFFFFFF); // Pure white card surfaces
   static const Color accentTeal = Color(0xFF455bff); // Main accent - Modern blue
+  static const Color accentSecondry = Color(0xFFdde8ff);
+  static const Color accentTherd = Color(0xFFecf3ff);
   static const Color warningOrange = Color(0xFFFF6B35); // Warm gold for warnings
   static const Color successGreen = Color(0xFF00C896); // Fresh success green
   static const Color green = Color(0xFF068C06); // Fresh success green
   static const Color textPrimary = Color(0xFF111827); // Dark text for contrast
   static const Color textSecondary = Color(0xFF6B7280); // Medium gray supporting text
-  static const Color borderSubtle = Color(0xFFE5E7EB); // Light gray borders
+  static const Color borderSubtle = Color(0xFFD6D8DC); // Light gray borders
+  static const Color hintTextColor = Color(0xFFC9CACD);
   static const Color surfaceElevated = Color(0xFFFFFFFF); // White elevated surfaces
   static const Color errorRed = Color(0xFFEF4444); // Clean error red
   static const Color shadowColor = Color(0x1A000000); // Subtle light shadow
   static const Color elevatedShadowColor = Color(0x1A000000);
+  static const Color black = Color(0xFF000000);
 
-
+  // static const Color borderSubtle = Color(0xFFE5E7EB); // Light gray borders
   // Brand gradient colors
   static const LinearGradient brandGradient = LinearGradient(
     colors: [accentTeal, accentTeal],

@@ -2,6 +2,7 @@ import 'package:cryptovault_pro/views/setting/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
 import '../../theme/app_theme.dart';
 import '../../viewmodels/selectedIndex_controller.dart';
@@ -47,46 +48,6 @@ class DashboardScreen extends StatelessWidget {
         return Scaffold(
           key: _scaffoldKey,
           body: _screens[_selectedIndexController.selectedIndex.value],
-            // bottomNavigationBar:  BottomNavigationBar(
-            //     currentIndex: _selectedIndexController.selectedIndex.value,
-            //     onTap: _selectedIndexController.changeTab,
-            //     backgroundColor: AppTheme.surfaceElevated,
-            //     selectedItemColor: AppTheme.accentTeal,
-            //     unselectedItemColor: AppTheme.textSecondary,
-            //     type: BottomNavigationBarType.fixed,
-            //     items: [
-            //       BottomNavigationBarItem(
-            //         icon: Icon(
-            //           Icons.home,
-            //           size: 6.w,
-            //           color: _selectedIndexController.selectedIndex.value == 0
-            //               ? AppTheme.accentTeal
-            //               : AppTheme.textSecondary,
-            //         ),
-            //         label: 'Home',
-            //       ),
-            //       BottomNavigationBarItem(
-            //         icon: Icon(
-            //           Icons.web,
-            //           size: 6.w,
-            //           color: _selectedIndexController.selectedIndex.value == 1
-            //               ? AppTheme.accentTeal
-            //               : AppTheme.textSecondary,
-            //         ),
-            //         label: 'Browser',
-            //       ),
-            //       BottomNavigationBarItem(
-            //         icon: Icon(
-            //           Icons.settings,
-            //           size: 6.w,
-            //           color: _selectedIndexController.selectedIndex.value == 2
-            //               ? AppTheme.accentTeal
-            //               : AppTheme.textSecondary,
-            //         ),
-            //         label: 'Settings',
-            //       ),
-            //     ],
-            //   ),
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -103,17 +64,17 @@ class DashboardScreen extends StatelessWidget {
                 unselectedItemColor: AppTheme.textSecondary,
                 type: BottomNavigationBarType.fixed,
                 selectedLabelStyle: TextStyle(
-                  fontSize: 11.sp, // Thoda bada text
-                  fontWeight: FontWeight.bold, // Bold for selected
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
                 ),
                 unselectedLabelStyle: TextStyle(
-                  fontSize: 10.sp, // Same size, normal weight
+                  fontSize: 10.sp,
                   fontWeight: FontWeight.normal,
                 ),
                 items: [
                   BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.home,
+                      LucideIcons.house,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 0
                           ? AppTheme.accentTeal
@@ -123,7 +84,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.web,
+                      LucideIcons.compass,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 1
                           ? AppTheme.accentTeal
@@ -133,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.settings,
+                      LucideIcons.settings,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 2
                           ? AppTheme.accentTeal
@@ -142,7 +103,8 @@ class DashboardScreen extends StatelessWidget {
                     label: 'Settings',
                   ),
                 ],
-              ),
+              )
+
             ],
           ),
 

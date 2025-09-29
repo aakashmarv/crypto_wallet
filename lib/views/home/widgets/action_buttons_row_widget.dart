@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../widgets/app_button.dart';
+
 class ActionButtonsRowWidget extends StatelessWidget {
   const ActionButtonsRowWidget({super.key});
 
@@ -99,7 +101,7 @@ class _DepositBottomSheet extends StatelessWidget {
           5.w,
           3.h,
           5.w,
-          bottomPadding > 0 ? bottomPadding : 2.h, // ✅ Safe bottom spacing
+          bottomPadding > 0 ? bottomPadding : 2.h,
         ),
         decoration: BoxDecoration(
           color: AppTheme.secondaryDark,
@@ -135,7 +137,7 @@ class _DepositBottomSheet extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.surfaceElevated,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: SizedBox(
@@ -145,7 +147,7 @@ class _DepositBottomSheet extends StatelessWidget {
                   child: Icon(
                     Icons.qr_code,
                     size: 36.w,
-                    color: AppTheme.primaryDark,
+                    color: AppTheme.black,
                   ),
                 ),
               ),
@@ -452,24 +454,14 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
               // ✅ Send Button pinned at bottom
               SafeArea(
                 top: false,
-                child: ElevatedButton(
+                child: AppButton(
+                  label: "Send",
                   onPressed: _handleSend,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.successGreen,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 1.6.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Send",
-                      style: GoogleFonts.inter(fontSize: 13.sp, fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                  enabled: true,
+                  trailingIcon: null,
                 ),
               ),
+
             ],
           ),
         ),
@@ -495,21 +487,22 @@ class _ActionButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 1.h),
+        padding: EdgeInsets.symmetric(vertical: 1.5.h),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppTheme.accentTeal.withValues(alpha: 0.1),
-              AppTheme.successGreen.withValues(alpha: 0.05),
-            ],
-          ),
+          color: AppTheme.accentTherd,
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     AppTheme.accentTeal.withValues(alpha: 0.1),
+          //     AppTheme.successGreen.withValues(alpha: 0.05),
+          //   ],
+          // ),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppTheme.borderSubtle,
-            width: 1,
-          ),
+          // border: Border.all(
+          //   color: AppTheme.borderSubtle,
+          //   width: 1,
+          // ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

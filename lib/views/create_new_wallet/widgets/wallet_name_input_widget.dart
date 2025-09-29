@@ -71,7 +71,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.accentTherd.withOpacity(0.4),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppTheme.borderSubtle,

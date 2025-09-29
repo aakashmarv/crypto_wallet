@@ -75,7 +75,7 @@ class _GenerateWalletButtonWidgetState extends State<GenerateWalletButtonWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 7.h,
       child: AnimatedBuilder(

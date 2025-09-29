@@ -4,6 +4,7 @@ import 'package:cryptovault_pro/views/home/widgets/network_dropdown_widget.dart'
 import 'package:cryptovault_pro/views/home/widgets/wallet_balance_card_widget.dart';
 import 'package:cryptovault_pro/views/home/widgets/wallet_tabs_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -91,14 +92,6 @@ class _HomeScreenState extends State<HomeScreen>
 
       body: Container(
         decoration: BoxDecoration(
-          // gradient: LinearGradient(
-          //   begin: Alignment.topCenter,
-          //   end: Alignment.bottomCenter,
-          //   colors: [
-          //     AppTheme.primaryDark,
-          //     AppTheme.secondaryDark.withValues(alpha: 0.9),
-          //   ],
-          // ),
         ),
         child: SafeArea(
           child: Column(
@@ -108,6 +101,34 @@ class _HomeScreenState extends State<HomeScreen>
               // ✅ Action Buttons
               const ActionButtonsRowWidget(),
               SizedBox(height: 2.h),
+              // Wallet Address
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 4.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'rA99b007d6a2...D06dE1948746',
+                        style: GoogleFonts.jetBrainsMono(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppTheme.textSecondary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(width: 2.w),
+                    IconButton(
+                      icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 4.w),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text:  'rA99b007d6a2...D06dE1948746'));
+
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 1.h),
               // ✅ Tabs
               Expanded(
                 child: WalletTabsWidget(

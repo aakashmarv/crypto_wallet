@@ -51,7 +51,7 @@ class WalletTabsWidget extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 3.h),
+        SizedBox(height: 1.h),
 
         // Tab Content Placeholder
         Expanded(
@@ -99,14 +99,14 @@ class _CoinsTabContent extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.account_balance_wallet_outlined,
-                    size: 10.w,
+                    size: 8.w,
                     color: Colors.grey.shade600,
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     'No tokens found',
                     style: GoogleFonts.inter(
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey.shade600,
                     ),
@@ -126,45 +126,32 @@ class _CoinsTabContent extends StatelessWidget {
           ),
 
           // Import Token Button
-          Container(
-            margin: EdgeInsets.only(bottom: 2.h),
-            child: GestureDetector(
-              onTap: () => _handleImportToken(context),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 4.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1,
+          GestureDetector(
+            onTap: () => _handleImportToken(context),
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(bottom: 3.w,left: 4.w,right: 4.w),
+              padding: EdgeInsets.symmetric(vertical: 1.4.h, horizontal: 4.w),
+              decoration: BoxDecoration(
+                color: AppTheme.accentTeal,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2), // soft shadow
+                    offset: const Offset(0, 3),           // x=0, y=3
+                    blurRadius: 6,                        // blur for smoothness
+                    spreadRadius: 1,                      // little spread
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(2.w),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.blue.shade500,
-                        size: 5.w,
-                      ),
-                    ),
-                    SizedBox(width: 3.w),
-                    Text(
-                      'Import token',
-                      style: GoogleFonts.inter(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  'Import token',
+                  style: GoogleFonts.inter(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.surfaceElevated,
+                  ),
                 ),
               ),
             ),
@@ -175,9 +162,9 @@ class _CoinsTabContent extends StatelessWidget {
   }
 
   void _handleImportToken(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Import token functionality coming soon!')),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Import token functionality coming soon!')),
+    // );
   }
 }
 
@@ -192,14 +179,14 @@ class _NFTsTabContent extends StatelessWidget {
           children: [
             Icon(
               Icons.photo_library_outlined,
-              size: 10.w,
+              size: 8.w,
               color: Colors.grey.shade600,
             ),
             SizedBox(height: 2.h),
             Text(
               'No NFTs found',
               style: GoogleFonts.inter(
-                fontSize: 14.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey.shade600,
               ),

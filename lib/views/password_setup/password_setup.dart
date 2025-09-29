@@ -384,6 +384,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             },
             decoration: InputDecoration(
               hintText: 'Enter your password',
+              hintStyle: TextStyle(color: AppTheme.hintTextColor,),
               errorText: _passwordError.isNotEmpty ? _passwordError : null,
               suffixIcon: IconButton(
                 onPressed: () {
@@ -400,7 +401,7 @@ class _PasswordSetupState extends State<PasswordSetup>
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: Icon(
-                  Icons.lock,
+                  Icons.lock_outline,
                   color: AppTheme.textSecondary,
                   size: 20,
                 ),
@@ -442,6 +443,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             },
             decoration: InputDecoration(
               hintText: 'Confirm your password',
+              hintStyle: TextStyle(color: AppTheme.hintTextColor,),
               errorText: _confirmPasswordError.isNotEmpty
                   ? _confirmPasswordError
                   : null,

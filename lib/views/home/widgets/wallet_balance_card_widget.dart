@@ -10,69 +10,44 @@ class WalletBalanceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.h),
-      padding: EdgeInsets.all(3.w),
-      // decoration: BoxDecoration(
-      //   gradient: LinearGradient(
-      //     begin: Alignment.topLeft,
-      //     end: Alignment.bottomRight,
-      //     colors: [
-      //       AppTheme.accentTeal.withOpacity(0.1), // slight alpha
-      //       AppTheme.successGreen.withOpacity(0.05),
-      //     ],
-      //   ),
-      //   borderRadius: BorderRadius.circular(12),
-      //   border: Border.all(color: AppTheme.borderSubtle, width: 1),
-      // ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '\$0.00',               // Amount
-            style: GoogleFonts.sourceSans3(
-              fontSize: 36.sp,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
-          ),
-          // Bottom change text
-          Text(
-            '+\$0(+0.00%)',
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary, // grey color
-            ),
-          ),
-
-          SizedBox(height: 2.h),
-          // Wallet Address
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'rA99b007d6a2...D06dE1948746',
-                  style: GoogleFonts.jetBrainsMono(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.textSecondary,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.5.h),
+      child: SizedBox(
+        width: double.infinity,
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //     colors: [
+        //       AppTheme.accentTeal.withOpacity(0.1), // slight alpha
+        //       AppTheme.successGreen.withOpacity(0.05),
+        //     ],
+        //   ),
+        //   borderRadius: BorderRadius.circular(12),
+        //   border: Border.all(color: AppTheme.borderSubtle, width: 1),
+        // ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '\$0.00',
+              style: GoogleFonts.inter(
+                fontSize: 32.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
-              SizedBox(width: 4.w),
-              IconButton(
-                icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 4.w),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text:  'rA99b007d6a2...D06dE1948746'));
-
-                },
+            ),
+            // Bottom change text
+            Text(
+              '+\$0(+0.00%)',
+              style: GoogleFonts.inter(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textSecondary, // grey color
               ),
-              // Icon(Icons.copy, size: 5.w, color: AppTheme.textSecondary),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -84,6 +84,14 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
           color: AppTheme.borderSubtle,
           width: 1,
         ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppTheme.accentTeal.withOpacity(0.1), // slight alpha
+            AppTheme.successGreen.withOpacity(0.05),
+          ],
+        ),
       ),
       child: Column(
         children: [

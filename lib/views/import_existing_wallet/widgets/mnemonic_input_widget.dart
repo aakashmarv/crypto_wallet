@@ -2162,7 +2162,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.accentTherd.withOpacity(0.4),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _isValid
@@ -2271,7 +2271,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 3.w,
-                            vertical: 1.h,
+                            vertical: 0.5.h,
                           ),
                           decoration: BoxDecoration(
                             color: AppTheme.accentTeal.withValues(alpha: 0.1),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../../theme/app_theme.dart';
+import '../../widgets/app_button.dart';
 
 class SwapScreen extends StatefulWidget {
   const SwapScreen({super.key});
@@ -140,37 +141,23 @@ class _SwapScreenState extends State<SwapScreen> {
             // 🔹 Bottom Swap Button
             Positioned(
               bottom: MediaQuery.of(context).padding.bottom + 2.h,
-              left: 4.w,
-              right: 4.w,
-              child: ElevatedButton.icon(
+              left: 1.w,
+              right: 1.w,
+              child: AppButton(
+                label: "Swap",
                 onPressed: _isLoading ? null : _handleSwap,
-                // icon: Icon(Icons.swap_horiz, color: Colors.white),
-                label: _isLoading
-                    ? SizedBox(
-                  height: 2.h,
-                  width: 2.h,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
+                isLoading: _isLoading,
+                enabled: !_isLoading, // disable button while loading
+                trailingIcon: !_isLoading
+                    ? Icon(
+                  Icons.swap_horiz,
+                  color: AppTheme.primaryDark, // match your button style
+                  size: 18.sp,
                 )
-                    : Text(
-                  "Swap",
-                  style: GoogleFonts.inter(
-                    fontSize: 14.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.accentTeal,
-                  padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
+                    : null,
               ),
             ),
+
           ],
         ),
       ),

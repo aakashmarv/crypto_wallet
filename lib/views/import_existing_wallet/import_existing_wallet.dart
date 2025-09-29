@@ -438,7 +438,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         width: double.infinity,
         padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
-          color: AppTheme.secondaryDark,
+          color: AppTheme.accentTherd,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: AppTheme.borderSubtle,
@@ -467,80 +467,16 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     );
   }
 
-  // Widget _buildImportButton() {
-  //   return SizedBox(
-  //     width: double.infinity,
-  //     child: ElevatedButton(
-  //       onPressed: _isMnemonicValid && !_isImporting ? _importWallet : null,
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: _isMnemonicValid && !_isImporting
-  //             ? AppTheme.accentTeal
-  //             : AppTheme.borderSubtle,
-  //         foregroundColor: _isMnemonicValid && !_isImporting
-  //             ? AppTheme.primaryDark
-  //             : AppTheme.textSecondary,
-  //         padding: EdgeInsets.symmetric(vertical: 4.h),
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16),
-  //         ),
-  //         elevation: _isMnemonicValid && !_isImporting ? 2 : 0,
-  //       ),
-  //       child: _isImporting
-  //           ? Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: [
-  //                 SizedBox(
-  //                   width: 20,
-  //                   height: 20,
-  //                   child: CircularProgressIndicator(
-  //                     strokeWidth: 2,
-  //                     color: AppTheme.primaryDark,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 3.w),
-  //                 Text(
-  //                   'Importing Wallet...',
-  //                   style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-  //                     color: AppTheme.primaryDark,
-  //                     fontWeight: FontWeight.w600,
-  //                   ),
-  //                 ),
-  //               ],
-  //             )
-  //           : Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: [
-  //                 CustomIconWidget(
-  //                   iconName: 'download',
-  //                   color: _isMnemonicValid
-  //                       ? AppTheme.primaryDark
-  //                       : AppTheme.textSecondary,
-  //                   size: 20,
-  //                 ),
-  //                 SizedBox(width: 3.w),
-  //                 Text(
-  //                   'Import Wallet',
-  //                   style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-  //                     color: _isMnemonicValid
-  //                         ? AppTheme.primaryDark
-  //                         : AppTheme.textSecondary,
-  //                     fontWeight: FontWeight.w600,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //     ),
-  //   );
-  // }
   Widget _buildImportButton() {
+    final bool isActive = _isMnemonicValid && !_isImporting;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: _isMnemonicValid && !_isImporting ? _importWallet : null,
+        onPressed: isActive ? _importWallet : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.accentTeal, // ✅ always solid teal
+          backgroundColor: AppTheme.accentTeal,
           foregroundColor: AppTheme.primaryDark,
-          disabledBackgroundColor: AppTheme.borderSubtle, // ✅ even when disabled
+          disabledBackgroundColor: AppTheme.borderSubtle,
           disabledForegroundColor: AppTheme.primaryDark,
           padding: EdgeInsets.symmetric(vertical: 4.h),
           shape: RoundedRectangleBorder(
@@ -557,14 +493,14 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: AppTheme.primaryDark,
+                color: AppTheme.secondaryDark,
               ),
             ),
             SizedBox(width: 3.w),
             Text(
               'Importing Wallet...',
               style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-                color: AppTheme.primaryDark,
+                color: AppTheme.secondaryDark,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -575,14 +511,14 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
           children: [
             Icon(
               Icons.download,
-              color: AppTheme.primaryDark,
+              color: isActive ? AppTheme.secondaryDark : AppTheme.textSecondary,
               size: 20,
             ),
             SizedBox(width: 3.w),
             Text(
               'Import Wallet',
               style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-                color: AppTheme.primaryDark,
+                color:isActive ? AppTheme.secondaryDark : AppTheme.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
