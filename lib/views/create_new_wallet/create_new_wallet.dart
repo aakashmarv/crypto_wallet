@@ -60,7 +60,6 @@ class _CreateNewWalletState extends State<CreateNewWallet>
 
   Future<void> _generateWallet() async {
     if (!_isNameValid || _isGenerating) return;
-
     // Haptic feedback
     HapticFeedback.mediumImpact();
 

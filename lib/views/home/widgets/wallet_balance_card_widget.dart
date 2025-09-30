@@ -30,7 +30,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '\$0.00',
+              '\$75384.00',
               style: GoogleFonts.inter(
                 fontSize: 32.sp,
                 fontWeight: FontWeight.w700,
