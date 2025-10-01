@@ -29,6 +29,7 @@
 // }
 
 
+import 'package:cryptovault_pro/views/app_lock_screen.dart';
 import 'package:cryptovault_pro/views/dashboard/dashboard_screen.dart';
 import 'package:cryptovault_pro/views/home/swap_screen.dart';
 import 'package:get/get.dart';
@@ -51,6 +52,7 @@ class AppRoutes {
   static const String onboardingFlow = '/onboarding-flow';
   static const String mnemonicPhraseDisplay = '/mnemonic-phrase-display';
   static const String swap = '/swap';
+  static const String appLock = '/appLock';
 
   // Default transition settings
   static const _defaultTransition = Transition.cupertino;
@@ -81,6 +83,7 @@ class AppRoutes {
       _buildPage(name: onboardingFlow, page: () => const OnboardingFlow()),
       _buildPage(name: mnemonicPhraseDisplay, page: () => const MnemonicPhraseDisplay()),
       _buildPage(name: swap, page: () => const SwapScreen()),
+      _buildPage(name: appLock, page: () => AppLockScreen()),
       // TODO: add other screens here when needed
     ];
   }

@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:cryptovault_pro/constants/app_keys.dart';
+import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
@@ -10,7 +13,7 @@ import './widgets/password_requirements_widget.dart';
 import './widgets/password_strength_indicator_widget.dart';
 
 class PasswordSetup extends StatefulWidget {
-  const PasswordSetup({Key? key}) : super(key: key);
+  const PasswordSetup({super.key});
 
   @override
   State<PasswordSetup> createState() => _PasswordSetupState();
@@ -90,6 +93,35 @@ class _PasswordSetupState extends State<PasswordSetup>
         !_isLoading;
   }
 
+  // Future<void> _handleSetPassword() async {
+  //   if (!_canSetPassword) return;
+  //
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //
+  //   try {
+  //     // Provide haptic feedback
+  //     HapticFeedback.lightImpact();
+  //     // Simulate password setup process
+  //     await Future.delayed(const Duration(seconds: 2));
+  //
+  //     // Navigate to mnemonic phrase display
+  //     if (mounted) {
+  //       Get.toNamed(AppRoutes.mnemonicPhraseDisplay);
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _passwordError = 'Failed to set password. Please try again.';
+  //     });
+  //   } finally {
+  //     if (mounted) {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   }
+  // }
   Future<void> _handleSetPassword() async {
     if (!_canSetPassword) return;
 
@@ -100,6 +132,20 @@ class _PasswordSetupState extends State<PasswordSetup>
     try {
       // Provide haptic feedback
       HapticFeedback.lightImpact();
+
+      // 🔹 Save password securely
+      final password = _passwordController.text.trim();
+      if (password.isNotEmpty) {
+        final storage = const FlutterSecureStorage();
+        await storage.write(
+          key: AppKeys.userPassword,
+          value: password,
+        );
+      }
+
+      // Debug logs
+      debugPrint("AppKeys.userPassword = ${AppKeys.userPassword}");
+      debugPrint("Password = ${_passwordController.text}");
 
       // Simulate password setup process
       await Future.delayed(const Duration(seconds: 2));
@@ -112,6 +158,7 @@ class _PasswordSetupState extends State<PasswordSetup>
       setState(() {
         _passwordError = 'Failed to set password. Please try again.';
       });
+      debugPrint("Password save error: $e");
     } finally {
       if (mounted) {
         setState(() {
@@ -120,6 +167,7 @@ class _PasswordSetupState extends State<PasswordSetup>
       }
     }
   }
+
 
   Future<bool> _onWillPop() async {
     return await showDialog<bool>(
@@ -212,12 +260,15 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 3.h),
                         _buildConfirmPasswordField(),
                         SizedBox(height: 3.h),
+                        /// biometric setup
                         BiometricSetupWidget(
                           isBiometricEnabled: _isBiometricEnabled,
-                          onBiometricToggle: (value) {
+                          onBiometricToggle: (value) async {
                             setState(() {
                               _isBiometricEnabled = value;
                             });
+                            final prefs = await SharedPreferencesService.getInstance();
+                            await prefs.setBool(AppKeys.isBiometricEnable, value);
                           },
                         ),
                         SizedBox(height: 4.h),
