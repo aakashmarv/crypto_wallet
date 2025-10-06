@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../core/app_export.dart';
-import '../../theme/app_theme.dart';
 import './widgets/onboarding_navigation_widget.dart';
 import './widgets/onboarding_page_widget.dart';
 import './widgets/page_indicator_widget.dart';
@@ -42,7 +39,7 @@ class _OnboardingFlowState extends State<OnboardingFlow>
         end: Alignment.bottomRight,
         colors: [
           AppTheme.primaryDark,
-          AppTheme.secondaryDark.withValues(alpha: 0.8),
+          AppTheme.secondaryDark.withValues(alpha: 0.3),
         ],
       ),
     },
@@ -62,7 +59,7 @@ class _OnboardingFlowState extends State<OnboardingFlow>
         end: Alignment.bottomRight,
         colors: [
           AppTheme.primaryDark,
-          AppTheme.successGreen.withValues(alpha: 0.1),
+          AppTheme.successGreen.withValues(alpha: 0.2),
         ],
       ),
     },
@@ -82,7 +79,7 @@ class _OnboardingFlowState extends State<OnboardingFlow>
         end: Alignment.bottomRight,
         colors: [
           AppTheme.primaryDark,
-          AppTheme.warningOrange.withValues(alpha: 0.1),
+          AppTheme.warningOrange.withValues(alpha: 0.2),
         ],
       ),
     },
@@ -143,9 +140,14 @@ class _OnboardingFlowState extends State<OnboardingFlow>
 
   @override
   Widget build(BuildContext context) {
+    final currentGradient =
+    _onboardingData[_currentPage]["backgroundGradient"] as LinearGradient;
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
-      body: Column(
+      body: AnimatedContainer(duration: const Duration(milliseconds: 300),
+        decoration: BoxDecoration(
+          gradient: currentGradient,
+        ),
+      child: SafeArea(child: Column(
         children: [
           // Main Content
           Expanded(
@@ -161,8 +163,7 @@ class _OnboardingFlowState extends State<OnboardingFlow>
                   features: (pageData["features"] as List).cast<String>(),
                   iconName: pageData["iconName"] as String,
                   iconColor: pageData["iconColor"] as Color,
-                  backgroundGradient:
-                      pageData["backgroundGradient"] as LinearGradient,
+                  // backgroundGradient: pageData["backgroundGradient"] as LinearGradient,
                 );
               },
             ),
@@ -188,7 +189,7 @@ class _OnboardingFlowState extends State<OnboardingFlow>
 
           SizedBox(height: 2.h),
         ],
-      ),
+      ),),),
     );
   }
 }

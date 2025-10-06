@@ -9,7 +9,7 @@ class OnboardingPageWidget extends StatelessWidget {
   final List<String> features;
   final String iconName;
   final Color iconColor;
-  final LinearGradient backgroundGradient;
+  // final LinearGradient backgroundGradient;
 
   const OnboardingPageWidget({
     Key? key,
@@ -18,7 +18,7 @@ class OnboardingPageWidget extends StatelessWidget {
     required this.features,
     required this.iconName,
     required this.iconColor,
-    required this.backgroundGradient,
+    // required this.backgroundGradient,
   }) : super(key: key);
 
   @override
@@ -32,9 +32,9 @@ class OnboardingPageWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: backgroundGradient,
-      ),
+      // decoration: BoxDecoration(
+      //   gradient: backgroundGradient,
+      // ),
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
