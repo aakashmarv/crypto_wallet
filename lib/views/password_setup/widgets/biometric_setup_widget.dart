@@ -53,12 +53,14 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
         // Provide haptic feedback
         HapticFeedback.lightImpact();
 
-        // Show biometric prompt simulation
-        final bool enabled = await _showBiometricPrompt();
-
-        widget.onBiometricToggle(true);
+        final bool? enabled = await _showBiometricPrompt();
+        if (enabled == true) {
+          widget.onBiometricToggle(true);
+        } else {
+          widget.onBiometricToggle(false);
+        }
       } catch (e) {
-        // Handle biometric setup failure
+        widget.onBiometricToggle(false);
         _showBiometricError();
       }
     } else {
@@ -66,7 +68,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
     }
   }
 
-  Future<bool> _showBiometricPrompt() async {
+  Future<bool?> _showBiometricPrompt() async {
     return await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -105,7 +107,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);;
                 throw Exception('Biometric setup cancelled');
               },
               child: Text(
@@ -115,7 +117,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
                 // Simulate biometric authentication
                 await Future.delayed(const Duration(milliseconds: 1000));
               },

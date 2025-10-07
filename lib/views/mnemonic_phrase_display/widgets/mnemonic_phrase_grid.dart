@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class MnemonicPhraseGrid extends StatefulWidget {
   final List<String> mnemonicWords;
@@ -23,46 +23,94 @@ class MnemonicPhraseGrid extends StatefulWidget {
 class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
   int? _selectedWordIndex;
 
-  void _showWordDefinition(int index, String word) {
-    final definitions = {
-      'abandon': 'To give up completely',
-      'ability': 'The capacity to do something',
-      'able': 'Having the power or skill to do something',
-      'about': 'Concerning or regarding',
-      'above': 'In a higher position than',
-      'absent': 'Not present or available',
-      'absorb': 'To take in or soak up',
-      'abstract': 'Existing in thought but not physical',
-      'absurd': 'Wildly unreasonable or illogical',
-      'abuse': 'To use wrongly or improperly',
-    };
+  void _showMnemonicQrCode() {
+    final phrase = widget.mnemonicWords.join(' ');
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceElevated,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Word #${index + 1}: $word',
-          style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-            color: AppTheme.accentTeal,
+      barrierColor: Colors.black.withOpacity(0.7),
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width:double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceElevated,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.accentTeal.withOpacity(0.1),
+                blurRadius: 32,
+                spreadRadius: 0,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Mnemonic QR Code',
+                style: TextStyle(
+                  color: AppTheme.accentTeal,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.sp
+                ),
+              ),
+              const SizedBox(height: 8),
+              // QR Code with container
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: QrImageView(
+                  data: phrase,
+                  version: QrVersions.auto,
+                  size: 150,
+                  gapless: false,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accentTeal.withOpacity(0.15),
+                    foregroundColor: AppTheme.accentTeal,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: AppTheme.accentTeal.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        content: Text(
-          definitions[word.toLowerCase()] ?? 'A word in your recovery phrase',
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Got it',
-              style: TextStyle(color: AppTheme.accentTeal),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -201,6 +249,14 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                       ),
                     ),
                     IconButton(
+                      onPressed: _showMnemonicQrCode,
+                      icon: Icon(
+                        Icons.qr_code,
+                        color: AppTheme.textSecondary,
+                        size: 5.w,
+                      ),
+                    ),
+                    IconButton(
                       onPressed: _copyPhraseToClipboard,
                       icon: Icon(
                         Icons.copy_all,
@@ -231,7 +287,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   onTap: () => setState(() {
                     _selectedWordIndex = isSelected ? null : index;
                   }),
-                  onLongPress: () => _showWordDefinition(index, word),
+                  // onLongPress: () => _showWordDefinition(index, word),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
@@ -274,37 +330,6 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   ),
                 );
               },
-            ),
-            SizedBox(height: 2.h),
-            Container(
-              padding: EdgeInsets.all(3.w),
-              decoration: BoxDecoration(
-                color: AppTheme.accentTeal.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppTheme.accentTeal.withValues(alpha: 0.3),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info,
-                    color: AppTheme.accentTeal,
-                    size: 4.w,
-                  ),
-                  SizedBox(width: 2.w),
-                  Expanded(
-                    child: Text(
-                      'Long press any word to see its definition',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.accentTeal,
-                        fontSize: 10.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ],

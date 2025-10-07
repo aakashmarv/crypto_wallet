@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
+import '../../servieces/mnemonic_service.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
 import './widgets/mnemonic_phrase_grid.dart';
@@ -27,26 +28,28 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
   bool _isBackupVerified = false;
 
   // Mock mnemonic phrase data
-  final List<String> _mnemonicWords = [
-    'abandon',
-    'ability',
-    'able',
-    'about',
-    'above',
-    'absent',
-    'absorb',
-    'abstract',
-    'absurd',
-    'abuse',
-    'access',
-    'accident'
-  ];
+  List<String> _mnemonicWords = [];
+  // final List<String> _mnemonicWords = [
+  //   'abandon',
+  //   'ability',
+  //   'able',
+  //   'about',
+  //   'above',
+  //   'absent',
+  //   'absorb',
+  //   'abstract',
+  //   'absurd',
+  //   'abuse',
+  //   'access',
+  //   'accident'
+  // ];
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
     _preventScreenshots();
+    _generateMnemonicPhrase();
   }
 
   @override
@@ -82,6 +85,13 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     } catch (e) {
       // Handle silently for platforms that don't support this
     }
+  }
+  // Generate the mnemonic phrase dynamically
+  void _generateMnemonicPhrase() {
+    final mnemonic = MnemonicService.generateMnemonic(); // 12 words by default
+    setState(() {
+      _mnemonicWords = mnemonic.split(' ');
+    });
   }
 
   void _enableScreenshots() {
@@ -215,7 +225,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       _isBackupVerified = true;
     });
 
-    // Navigate to DApp browser after successful verification
+    // Navigate to dashboard after successful verification
     Future.delayed(const Duration(milliseconds: 500), () {
       Get.offAllNamed(AppRoutes.dashboard);
     });
