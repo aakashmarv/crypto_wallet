@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
 import '../../servieces/mnemonic_service.dart';
+import '../../servieces/sharedpreferences_service.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
 import './widgets/mnemonic_phrase_grid.dart';
@@ -220,10 +222,13 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     );
   }
 
-  void _onVerificationComplete() {
+  Future<void> _onVerificationComplete() async {
     setState(() {
       _isBackupVerified = true;
     });
+
+    final prefs = await SharedPreferencesService.getInstance();
+    await prefs.setBool(AppKeys.isLogin, true);
 
     // Navigate to dashboard after successful verification
     Future.delayed(const Duration(milliseconds: 500), () {
