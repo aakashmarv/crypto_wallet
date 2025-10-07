@@ -75,13 +75,6 @@ import '../widgets/custom_error_widget.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final AppStateController appStateController = Get.put(AppStateController());
-  // 🔹 (CHANGE 1) SharedPreferences instance load
-  final prefs = await SharedPreferencesService.getInstance();
-  final bool isBiometricEnabled = prefs.getBool(AppKeys.isBiometricEnable) ?? false;
-
-  // 🔹 (CHANGE 2) Decide initial route based on lock setting
-  final String initialRoute =
-  isBiometricEnabled ? AppRoutes.appLock : AppRoutes.initial;
   bool _hasShownError = false;
 
   // 🚨 CRITICAL: Custom error handling - DO NOT REMOVE
@@ -105,20 +98,19 @@ void main() async {
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
   ]).then((value) {
-    runApp(MyApp(initialRoute: initialRoute));
+    runApp(MyApp());
   });
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
-  const MyApp({super.key, required this.initialRoute});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, screenType) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'cryptovault_pro',
+        title: 'corezex',
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
@@ -132,7 +124,7 @@ class MyApp extends StatelessWidget {
           );
         },
         // 🚨 END CRITICAL SECTION
-        initialRoute: initialRoute,
+        initialRoute: AppRoutes.initial,
         getPages: AppRoutes.getRoutes(),
       );
     });

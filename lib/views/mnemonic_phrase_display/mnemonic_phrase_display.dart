@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:cryptovault_pro/widgets/custome_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../core/app_export.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
@@ -15,7 +11,7 @@ import './widgets/security_checklist.dart';
 import './widgets/security_warning_banner.dart';
 
 class MnemonicPhraseDisplay extends StatefulWidget {
-  const MnemonicPhraseDisplay({Key? key}) : super(key: key);
+  const MnemonicPhraseDisplay({super.key});
 
   @override
   State<MnemonicPhraseDisplay> createState() => _MnemonicPhraseDisplayState();

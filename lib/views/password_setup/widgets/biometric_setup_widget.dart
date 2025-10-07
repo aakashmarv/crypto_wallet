@@ -54,7 +54,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
         HapticFeedback.lightImpact();
 
         // Show biometric prompt simulation
-        await _showBiometricPrompt();
+        final bool enabled = await _showBiometricPrompt();
 
         widget.onBiometricToggle(true);
       } catch (e) {
@@ -66,8 +66,8 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
     }
   }
 
-  Future<void> _showBiometricPrompt() async {
-    return showDialog<void>(
+  Future<bool> _showBiometricPrompt() async {
+    return await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -128,7 +128,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
           ],
         );
       },
-    );
+    ) ?? false;
   }
 
   void _showBiometricError() {

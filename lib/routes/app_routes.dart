@@ -29,6 +29,7 @@
 // }
 
 
+import 'package:cryptovault_pro/splashscreen.dart';
 import 'package:cryptovault_pro/views/app_lock_screen.dart';
 import 'package:cryptovault_pro/views/dashboard/dashboard_screen.dart';
 import 'package:cryptovault_pro/views/home/swap_screen.dart';
@@ -44,6 +45,7 @@ import '../views/password_setup/password_setup.dart';
 class AppRoutes {
   // Route names
   static const String initial = '/';
+  static const String onboarding = '/onboarding';
   static const String dashboard = '/dashboard';
   static const String passwordSetup = '/password-setup';
   static const String dAppBrowser = '/d-app-browser';
@@ -74,7 +76,8 @@ class AppRoutes {
   // All routes list
   static List<GetPage> getRoutes() {
     return [
-      _buildPage(name: initial, page: () => const OnboardingFlow()),
+      _buildPage(name: initial, page: () => const SplashScreen()),
+      _buildPage(name: onboarding, page: () => const OnboardingFlow()),
       _buildPage(name: dashboard, page: () =>  DashboardScreen()),
       _buildPage(name: passwordSetup, page: () => const PasswordSetup()),
       _buildPage(name: dAppBrowser, page: () => const DAppBrowser()),

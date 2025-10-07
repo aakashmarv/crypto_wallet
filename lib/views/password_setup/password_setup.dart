@@ -93,35 +93,6 @@ class _PasswordSetupState extends State<PasswordSetup>
         !_isLoading;
   }
 
-  // Future<void> _handleSetPassword() async {
-  //   if (!_canSetPassword) return;
-  //
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //
-  //   try {
-  //     // Provide haptic feedback
-  //     HapticFeedback.lightImpact();
-  //     // Simulate password setup process
-  //     await Future.delayed(const Duration(seconds: 2));
-  //
-  //     // Navigate to mnemonic phrase display
-  //     if (mounted) {
-  //       Get.toNamed(AppRoutes.mnemonicPhraseDisplay);
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _passwordError = 'Failed to set password. Please try again.';
-  //     });
-  //   } finally {
-  //     if (mounted) {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> _handleSetPassword() async {
     if (!_canSetPassword) return;
 
@@ -144,8 +115,8 @@ class _PasswordSetupState extends State<PasswordSetup>
       }
 
       // Debug logs
-      debugPrint("AppKeys.userPassword = ${AppKeys.userPassword}");
-      debugPrint("Password = ${_passwordController.text}");
+      // debugPrint("AppKeys.userPassword = ${AppKeys.userPassword}");
+      // debugPrint("Password = ${_passwordController.text}");
 
       // Simulate password setup process
       await Future.delayed(const Duration(seconds: 2));
@@ -437,18 +408,18 @@ class _PasswordSetupState extends State<PasswordSetup>
               hintText: 'Enter your password',
               hintStyle: TextStyle(color: AppTheme.hintTextColor,),
               errorText: _passwordError.isNotEmpty ? _passwordError : null,
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-                icon: Icon(
-                 _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                  color: AppTheme.textSecondary,
-                  size: 20,
-                ),
-              ),
+              // suffixIcon: IconButton(
+              //   onPressed: () {
+              //     setState(() {
+              //       _isPasswordVisible = !_isPasswordVisible;
+              //     });
+              //   },
+              //   icon: Icon(
+              //    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+              //     color: AppTheme.textSecondary,
+              //     size: 20,
+              //   ),
+              // ),
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: Icon(

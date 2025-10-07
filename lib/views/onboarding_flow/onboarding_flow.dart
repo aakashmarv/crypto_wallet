@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
+import '../../servieces/sharedpreferences_service.dart';
 import './widgets/onboarding_navigation_widget.dart';
 import './widgets/onboarding_page_widget.dart';
 import './widgets/page_indicator_widget.dart';
@@ -14,8 +16,7 @@ class OnboardingFlow extends StatefulWidget {
   State<OnboardingFlow> createState() => _OnboardingFlowState();
 }
 
-class _OnboardingFlowState extends State<OnboardingFlow>
-    with TickerProviderStateMixin {
+class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
   int _currentPage = 0;
@@ -123,17 +124,17 @@ class _OnboardingFlowState extends State<OnboardingFlow>
         curve: Curves.easeInOut,
       );
     } else {
-      Get.offAllNamed(AppRoutes.createNewWallet);
-      // _navigateToWalletSetup();
+      _navigateToWalletSetup();
     }
   }
 
   void _skipOnboarding() {
-    Get.offAllNamed(AppRoutes.dashboard);
-    // _navigateToWalletSetup();
+    _navigateToWalletSetup();
   }
 
-  void _navigateToWalletSetup() {
+  Future<void> _navigateToWalletSetup() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    await prefs.setBool(AppKeys.onboardingComplete, true);
     Get.offAllNamed(AppRoutes.createNewWallet);
     // Get.offAllNamed(AppRoutes.dashboard);
   }
