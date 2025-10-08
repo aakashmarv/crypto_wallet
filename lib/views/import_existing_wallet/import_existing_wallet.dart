@@ -63,7 +63,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     });
   }
 
-
   void _onWalletNameChanged(String name) {
     setState(() {
       _walletName = name.trim();
@@ -81,7 +80,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
       _onMnemonicValidationChanged(_validateMnemonic(qrContent));
     });
   }
-
 
   bool _validateMnemonic(String mnemonic) {
     final words = mnemonic.trim().toLowerCase().split(RegExp(r'\s+'));

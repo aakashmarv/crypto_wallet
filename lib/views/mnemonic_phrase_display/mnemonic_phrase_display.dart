@@ -1,11 +1,13 @@
 import 'package:cryptovault_pro/widgets/custome_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
 import '../../servieces/mnemonic_service.dart';
+import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
@@ -31,20 +33,6 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
 
   // Mock mnemonic phrase data
   List<String> _mnemonicWords = [];
-  // final List<String> _mnemonicWords = [
-  //   'abandon',
-  //   'ability',
-  //   'able',
-  //   'about',
-  //   'above',
-  //   'absent',
-  //   'absorb',
-  //   'abstract',
-  //   'absurd',
-  //   'abuse',
-  //   'access',
-  //   'accident'
-  // ];
 
   @override
   void initState() {
@@ -168,7 +156,6 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       _showIncompleteBackupDialog();
       return;
     }
-
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -226,12 +213,21 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     setState(() {
       _isBackupVerified = true;
     });
-
     final prefs = await SharedPreferencesService.getInstance();
+    final storage = FlutterSecureStorage();
+    final storedPassword = await storage.read(key: AppKeys.userPassword);
+    if (storedPassword == null) {
+      throw Exception("Encryption failed: No stored password found.");
+    }
+    final mnemonic = _mnemonicWords.join(' ');
+    await SecureMnemonicService().encryptAndStoreMnemonic(mnemonic,storedPassword);
+
     await prefs.setBool(AppKeys.isLogin, true);
-    Future.delayed(const Duration(milliseconds: 500), () {
-      Get.offAllNamed(AppRoutes.dashboard);
-    });
+    if (mounted) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Get.offAllNamed(AppRoutes.dashboard);
+      });
+    }
   }
 
   @override
