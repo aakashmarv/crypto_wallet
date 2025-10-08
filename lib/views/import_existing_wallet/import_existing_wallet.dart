@@ -218,18 +218,18 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   }
 
   Future<void> _importWallet() async {
-    // if (!_isMnemonicValid) {
-    //   _showToast('Please enter a valid recovery phrase', isError: true);
-    //   return;
-    // }
-    //
-    // // Check if the mnemonic matches our mock valid mnemonic
-    // if (_mnemonicPhrase.toLowerCase().trim() !=
-    //     _mockWalletData['validMnemonic']) {
-    //   _showToast('Invalid recovery phrase. Please check and try again.',
-    //       isError: true);
-    //   return;
-    // }
+    if (!_isMnemonicValid) {
+      _showToast('Please enter a valid recovery phrase', isError: true);
+      return;
+    }
+
+    // Check if the mnemonic matches our mock valid mnemonic
+    if (_mnemonicPhrase.toLowerCase().trim() !=
+        _mockWalletData['validMnemonic']) {
+      _showToast('Invalid recovery phrase. Please check and try again.',
+          isError: true);
+      return;
+    }
 
     setState(() {
       _isImporting = true;
@@ -328,16 +328,16 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
                       initialValue: _mnemonicPhrase,
                     ),
                     SizedBox(height: 3.h),
-                    // QrScannerButtonWidget(
-                    //   onQrCodeScanned: _onQrCodeScanned,
-                    // ),
-                    // SizedBox(height: 2.h),
+                    QrScannerButtonWidget(
+                      onQrCodeScanned: _onQrCodeScanned,
+                    ),
+                    SizedBox(height: 2.h),
                     _buildPasteButton(),
-                    // SizedBox(height: 3.h),
-                    // WalletNameInputWidget(
-                    //   onNameChanged: _onWalletNameChanged,
-                    //   initialValue: _walletName,
-                    // ),
+                    SizedBox(height: 3.h),
+                    WalletNameInputWidget(
+                      onNameChanged: _onWalletNameChanged,
+                      initialValue: _walletName,
+                    ),
                     SizedBox(height: 4.h),
                     _buildImportButton(),
                     SizedBox(height: 2.h),

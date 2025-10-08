@@ -229,8 +229,6 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
 
     final prefs = await SharedPreferencesService.getInstance();
     await prefs.setBool(AppKeys.isLogin, true);
-
-    // Navigate to dashboard after successful verification
     Future.delayed(const Duration(milliseconds: 500), () {
       Get.offAllNamed(AppRoutes.dashboard);
     });

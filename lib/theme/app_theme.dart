@@ -25,8 +25,8 @@ class AppTheme {
 
 
   // light theme colors
-  // static const Color primaryDark = Color(0xFFFAFAFB); // Clean light background
-  static const Color primaryDark = Color(0xFFFFFCF2); // Clean light background
+  static const Color primaryDark = Color(0xFFFAFAFB); // Clean light background
+  // static const Color primaryDark = Color(0xFFFFFCF2);
   static const Color secondaryDark = Color(0xFFFFFFFF); // Pure white card surfaces
   static const Color accentTeal = Color(0xFF455bff); // Main accent - Modern blue
   static const Color accentSecondry = Color(0xFFdde8ff);

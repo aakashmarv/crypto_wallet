@@ -42,20 +42,29 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     final isOnboardingComplete = prefs.getBool(AppKeys.onboardingComplete) ?? false;
     final bool isLogged = prefs.getBool(AppKeys.isLogin) ?? false;
     final isBiometricEnabled = prefs.getBool(AppKeys.isBiometricEnable) ?? false;
+    print("isOnboardingComplete splash :: $isOnboardingComplete ");
+    print("isLogged splash :: $isLogged ");
+    print("isBiometricEnable splash :: $isBiometricEnabled ");
 
     await Future.delayed(const Duration(seconds: 3));
 
-    if (isBiometricEnabled) {
-      // User enabled biometric lock
-      Get.offAllNamed(AppRoutes.appLock);
-    } else if (!isOnboardingComplete) {
-      // User has not completed onboarding
+    if (!isOnboardingComplete) {
+      // Onboarding not completed
       Get.offAllNamed(AppRoutes.onboarding);
-    } else if (isOnboardingComplete && !isLogged) {
-      // Onboarding done but not logged in
+      return;
+    }
+
+    if (!isLogged) {
+      // Onboarding done but user not logged in
       Get.offAllNamed(AppRoutes.createNewWallet);
-    } else if (isOnboardingComplete && isLogged) {
-      // Both onboarding + login done
+      return;
+    }
+
+    if (isBiometricEnabled) {
+      // Logged in + Biometric enabled
+      Get.offAllNamed(AppRoutes.appLock);
+    } else {
+      // Logged in + Biometric disabled
       Get.offAllNamed(AppRoutes.dashboard);
     }
   }

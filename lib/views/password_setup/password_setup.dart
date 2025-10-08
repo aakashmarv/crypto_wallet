@@ -239,6 +239,7 @@ class _PasswordSetupState extends State<PasswordSetup>
                               _isBiometricEnabled = value;
                             });
                             final prefs = await SharedPreferencesService.getInstance();
+                            print("isBiometricEnable :: $value");
                             await prefs.setBool(AppKeys.isBiometricEnable, value);
                           },
                         ),
