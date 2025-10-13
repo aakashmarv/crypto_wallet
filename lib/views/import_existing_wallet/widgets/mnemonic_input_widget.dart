@@ -1,4 +1,9 @@
+import 'package:cryptovault_pro/views/import_existing_wallet/widgets/qr_scanner_button_widget.dart';
+import 'package:cryptovault_pro/views/import_existing_wallet/widgets/qr_scanner_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
@@ -22,8 +27,10 @@ class MnemonicInputWidget extends StatefulWidget {
 class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  List<String> _words = [];
-  bool _isValid = false;
+  // List<String> _words = [];
+  // bool _isValid = false;
+  final RxList<String> _words = <String>[].obs;
+  final RxBool _isValid = false.obs;
 
   // Common BIP39 words for suggestions
   final List<String> _commonBip39Words = [
@@ -2111,12 +2118,10 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
     final allWordsValid = words
         .every((word) => word.isNotEmpty && _commonBip39Words.contains(word));
 
-    setState(() {
-      _words = words;
-      _isValid = validWordCount && allWordsValid && text.trim().isNotEmpty;
-    });
+    _words.value = words;
+    _isValid.value = validWordCount && allWordsValid && text.trim().isNotEmpty;
 
-    widget.onValidationChanged(_isValid);
+    widget.onValidationChanged(_isValid.value);
   }
 
   void _insertWord(String word) {
@@ -2160,12 +2165,12 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
     final suggestions = _getSuggestions();
 
     return Container(
-      padding: EdgeInsets.all(4.w),
+      padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: AppTheme.accentTherd.withOpacity(0.4),
+        color: AppTheme.accentTherd.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _isValid
+          color: _isValid.value
               ? AppTheme.successGreen.withValues(alpha: 0.3)
               : AppTheme.borderSubtle,
           width: 1,
@@ -2174,17 +2179,38 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Recovery Phrase',
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Recovery Phrase',
+                style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                  color: AppTheme.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  QrScannerWidget(
+                    context: context,
+                    onScanComplete: (scannedData) {
+                      _validateMnemonic(scannedData);
+                    },
+                  );
+                },
+                child: Icon(
+                  LucideIcons.scanLine,
+                  color: AppTheme.accentTeal,
+                  size: 22,
+                ),
+              ),
+
+            ],
           ),
           SizedBox(height: 2.h),
           Container(
             constraints: BoxConstraints(
-              minHeight: 20.h,
+              minHeight: 15.h,
               maxHeight: 30.h,
             ),
             decoration: BoxDecoration(
@@ -2194,7 +2220,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                 color: _focusNode.hasFocus
                     ? AppTheme.accentTeal
                     : AppTheme.borderSubtle,
-                width: _focusNode.hasFocus ? 2 : 1,
+                width: _focusNode.hasFocus ? 1 : 1,
               ),
             ),
             child: TextField(
@@ -2211,10 +2237,10 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                 color: AppTheme.textPrimary,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your 12 or 24 word recovery phrase...',
+                hintText: 'Enter your mnemonic, private key or Scan',
                 hintStyle: AppTheme.monoTextStyle(
                   fontSize: 14,
-                  color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.5),
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(4.w),
@@ -2228,13 +2254,12 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
               Text(
                 '${_words.length} words',
                 style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                  color:
-                      _isValid ? AppTheme.successGreen : AppTheme.textSecondary,
+                  color: _isValid.value ? AppTheme.successGreen : AppTheme.textSecondary,
                 ),
               ),
-              if (_isValid)
-                Row(
-                  children: [
+              Row(
+                children: [
+                  if (_isValid.value) ...[
                     Icon(
                       Icons.check_circle,
                       color: AppTheme.successGreen,
@@ -2249,11 +2274,48 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                       ),
                     ),
                   ],
-                ),
+                  SizedBox(width: 5.w),
+                  GestureDetector(
+                    onTap: () async {
+                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                      if (data?.text != null && data!.text!.isNotEmpty) {
+                        _controller.text = data.text!.trim();
+                        _validateMnemonic(data.text!.trim());
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppTheme.accentTeal.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        'Paste',
+                        style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.accentTeal,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
             ],
           ),
           if (suggestions.isNotEmpty) ...[
-            SizedBox(height: 2.h),
+            // SizedBox(height: 2.h),
             Text(
               'Suggestions',
               style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(

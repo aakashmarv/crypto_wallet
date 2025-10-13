@@ -60,7 +60,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Wallet Name (Optional)',
+            'Wallet Name',
             style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,

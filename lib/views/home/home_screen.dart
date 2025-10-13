@@ -8,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/app_keys.dart';
+import '../../servieces/sharedpreferences_service.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -19,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  String? _walletName;
 
   @override
   void initState() {
@@ -31,6 +35,15 @@ class _HomeScreenState extends State<HomeScreen>
         });
       }
     });
+    _loadWalletName();
+  }
+  Future<void> _loadWalletName() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    final name = prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
+    print("wallet name:: $name");
+    setState(() {
+      _walletName = name;
+    });
   }
 
   @override
@@ -38,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: AppTheme.primaryDark,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(7.h), // AppBar height adjust karo
+        preferredSize: Size.fromHeight(7.h),
         child: AppBar(
           backgroundColor: AppTheme.primaryDark,
           elevation: 0,
@@ -56,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'amandev',
+                          _walletName ?? 'My Wallet',
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,

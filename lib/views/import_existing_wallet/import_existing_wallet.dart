@@ -1,16 +1,14 @@
+import 'package:cryptovault_pro/views/import_existing_wallet/widgets/import_progress_widget.dart';
+import 'package:cryptovault_pro/views/import_existing_wallet/widgets/security_tips_widget.dart';
+import 'package:cryptovault_pro/views/import_existing_wallet/widgets/wallet_name_input_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-
+import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
-import './widgets/import_progress_widget.dart';
+import '../../servieces/sharedpreferences_service.dart';
 import './widgets/mnemonic_input_widget.dart';
-import './widgets/qr_scanner_button_widget.dart';
-import './widgets/security_tips_widget.dart';
-import './widgets/wallet_name_input_widget.dart';
 
 class ImportExistingWallet extends StatefulWidget {
   const ImportExistingWallet({Key? key}) : super(key: key);
@@ -28,18 +26,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   bool _isImporting = false;
   int _currentStep = 1;
   final int _totalSteps = 3;
-
-  // Mock credentials for demonstration
-  final Map<String, dynamic> _mockWalletData = {
-    'validMnemonic':
-        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
-    'walletAddress': '0x742d35Cc6634C0532925a3b8D4C9db96C4b4Df8d',
-    'balance': {
-      'BTC': '0.00234567',
-      'ETH': '1.23456789',
-      'USDT': '1,234.56',
-    },
-  };
 
   @override
   void dispose() {
@@ -69,208 +55,22 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     });
   }
 
-  void _onQrCodeScanned(String qrContent) {
-    setState(() {
-      _mnemonicPhrase = qrContent;
-    });
-
-    // ✅ delay validation so it won’t run during build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _onMnemonicValidationChanged(_validateMnemonic(qrContent));
-    });
-  }
-
-  bool _validateMnemonic(String mnemonic) {
-    final words = mnemonic.trim().toLowerCase().split(RegExp(r'\s+'));
-    return (words.length == 12 || words.length == 24) &&
-        words.every((word) => word.isNotEmpty);
-  }
-
-  Future<void> _handlePasteFromClipboard() async {
-    try {
-      final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-      if (clipboardData?.text != null && clipboardData!.text!.isNotEmpty) {
-        _showPasteConfirmationDialog(clipboardData.text!);
-      } else {
-        _showToast('Clipboard is empty', isError: true);
-      }
-    } catch (e) {
-      _showToast('Failed to access clipboard', isError: true);
-    }
-  }
-
-  void _showPasteConfirmationDialog(String clipboardText) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceElevated,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              Icons.warning,
-              color: AppTheme.warningOrange,
-              size: 24,
-            ),
-            SizedBox(width: 2.w),
-            Text(
-              'Security Warning',
-              style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
-                color: AppTheme.textPrimary,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You are about to paste sensitive wallet information. Make sure:',
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textSecondary,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            _buildSecurityCheckItem('You are in a secure environment'),
-            _buildSecurityCheckItem('No one can see your screen'),
-            _buildSecurityCheckItem(
-                'The clipboard content is from a trusted source'),
-            SizedBox(height: 2.h),
-            Container(
-              padding: EdgeInsets.all(3.w),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryDark,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppTheme.borderSubtle,
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                clipboardText.length > 100
-                    ? '${clipboardText.substring(0, 100)}...'
-                    : clipboardText,
-                style: AppTheme.monoTextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              'Cancel',
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _onQrCodeScanned(clipboardText);
-              _showToast('Recovery phrase pasted successfully');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.accentTeal,
-              foregroundColor: AppTheme.primaryDark,
-            ),
-            child: Text('Paste'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSecurityCheckItem(String text) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.5.h),
-      child: Row(
-        children: [
-          Icon(
-            Icons.check_circle_outline,
-            color: AppTheme.successGreen,
-            size: 16,
-          ),
-          SizedBox(width: 2.w),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.textSecondary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _importWallet() async {
+  Future<void> _onImportStart() async {
     if (!_isMnemonicValid) {
       _showToast('Please enter a valid recovery phrase', isError: true);
       return;
     }
+    final walletNameToSave = _walletName.isEmpty ? 'Imported' : _walletName;
+    final prefs = await SharedPreferencesService.getInstance();
+    await prefs.setString(AppKeys.currentWalletName, walletNameToSave,);
 
-    // Check if the mnemonic matches our mock valid mnemonic
-    if (_mnemonicPhrase.toLowerCase().trim() !=
-        _mockWalletData['validMnemonic']) {
-      _showToast('Invalid recovery phrase. Please check and try again.',
-          isError: true);
-      return;
-    }
-
-    setState(() {
-      _isImporting = true;
-      _currentStep = 3;
-    });
-
-    try {
-      // Simulate import process with realistic delays
-      await _simulateImportProcess();
-
-      // Show success message
-      _showToast('Wallet imported successfully!');
-
-      // Add haptic feedback
-      HapticFeedback.lightImpact();
-
-      // Navigate to dashboard after a short delay
-      await Future.delayed(const Duration(milliseconds: 1500));
-
-      if (mounted) {
-        Get.offAllNamed(AppRoutes.dashboard);
-      }
-    } catch (e) {
-      _showToast('Import failed: ${e.toString()}', isError: true);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isImporting = false;
-          _currentStep = 2;
-        });
-      }
-    }
-  }
-
-  Future<void> _simulateImportProcess() async {
-    // Simulate validation
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    // Simulate blockchain connection
-    await Future.delayed(const Duration(milliseconds: 1200));
-
-    // Simulate wallet creation
-    await Future.delayed(const Duration(milliseconds: 1000));
+    Get.toNamed(
+      AppRoutes.passwordSetup,
+      arguments: {
+        'fromImport': true,
+        'mnemonic': _mnemonicPhrase.trim(),
+      },
+    );
   }
 
   void _showToast(String message, {bool isError = false}) {
@@ -326,12 +126,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
                       initialValue: _mnemonicPhrase,
                     ),
                     SizedBox(height: 3.h),
-                    QrScannerButtonWidget(
-                      onQrCodeScanned: _onQrCodeScanned,
-                    ),
-                    SizedBox(height: 2.h),
-                    _buildPasteButton(),
-                    SizedBox(height: 3.h),
                     WalletNameInputWidget(
                       onNameChanged: _onWalletNameChanged,
                       initialValue: _walletName,
@@ -355,14 +149,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       decoration: BoxDecoration(
-        // color: AppTheme.secondaryDark,
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: AppTheme.shadowColor,
-        //     blurRadius: 4,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
       ),
       child: Row(
         children: [
@@ -429,48 +215,12 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     );
   }
 
-  Widget _buildPasteButton() {
-    return GestureDetector(
-      onTap: _handlePasteFromClipboard,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(4.w),
-        decoration: BoxDecoration(
-          color: AppTheme.accentTherd,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppTheme.borderSubtle,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.content_paste,
-              color: AppTheme.textSecondary,
-              size: 20,
-            ),
-            SizedBox(width: 3.w),
-            Text(
-              'Paste from Clipboard',
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildImportButton() {
     final bool isActive = _isMnemonicValid && !_isImporting;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: isActive ? _importWallet : null,
+        onPressed: isActive ? _onImportStart : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.accentTeal,
           foregroundColor: AppTheme.primaryDark,

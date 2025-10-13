@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../theme/app_theme.dart';
+import 'package:sizer/sizer.dart';
+import '../../routes/app_routes.dart';
+import '../../servieces/secure_mnemonic_service.dart';
+import '../../servieces/sharedpreferences_service.dart';
+import '../../theme/app_theme.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _isDarkMode = true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +42,100 @@ class SettingsScreen extends StatelessWidget {
               context,
               icon: Icons.dark_mode,
               title: "Dark Mode",
-              value: true,
+              value: _isDarkMode,
               onChanged: (val) {
-                // toggle dark mode
+                setState(() => _isDarkMode = val);
               },
             ),
-            // _buildNavigationTile(context, icon: Icons.open_in_full, title: "Expand view", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.receipt_long, title: "View Transaction", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.book, title: "Address Book", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.link, title: "Connected Sites", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.lock_reset, title: "Change Password", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.help_outline, title: "Help & Support", onTap: () {}),
-            _buildNavigationTile(context, icon: Icons.privacy_tip, title: "Privacy Policy", onTap: () {}),
+            _buildNavigationTile(
+              context,
+              icon: Icons.receipt_long,
+              title: "View Transaction",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.book,
+              title: "Address Book",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.link,
+              title: "Connected Sites",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.lock_reset,
+              title: "Change Password",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.help_outline,
+              title: "Help & Support",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.privacy_tip,
+              title: "Privacy Policy",
+              onTap: () {},
+            ),
+            _buildNavigationTile(
+              context,
+              icon: Icons.logout,
+              title: "Logout",
+              onTap: _handleLogout,
+            ),
           ],
         ),
       ),
     );
   }
 
+  // 🔘 Logout Confirmation + Clear All Data
+  Future<void> _handleLogout() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.primaryDark,
+        title: Text(
+          'Confirm Logout',
+          style: TextStyle(color: AppTheme.textPrimary),
+        ),
+        content: Text(
+          'Are you sure you want to log out? This will delete all wallet data.',
+          style: TextStyle(color: AppTheme.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Logout', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    // ✅ Clear all data
+    final prefs = await SharedPreferencesService.getInstance();
+    await prefs.clear();
+
+    await SecureMnemonicService().clearAll();
+    // await MultiWalletService().clearAll();
+
+    // ✅ Navigate to onboarding / login screen
+    Get.offAllNamed(AppRoutes.onboarding);
+  }
+
+  // 🔘 Switch Tile Widget
   Widget _buildSwitchTile(BuildContext context,
       {required IconData icon, required String title, required bool value, required Function(bool) onChanged}) {
     return Container(
@@ -84,6 +171,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  // 🔘 Navigation Tile Widget
   Widget _buildNavigationTile(BuildContext context,
       {required IconData icon, required String title, required VoidCallback onTap}) {
     return GestureDetector(

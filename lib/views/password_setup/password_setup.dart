@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cryptovault_pro/constants/app_keys.dart';
 import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
@@ -7,6 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
+import '../../servieces/mnemonic_service.dart';
+import '../../servieces/multi_wallet_service.dart';
+import '../../servieces/secure_mnemonic_service.dart';
 import '../../widgets/app_button.dart';
 import './widgets/biometric_setup_widget.dart';
 import './widgets/password_requirements_widget.dart';
@@ -27,14 +31,15 @@ class _PasswordSetupState extends State<PasswordSetup>
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocusNode = FocusNode();
 
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
-  bool _isRequirementsExpanded = false;
-  bool _isBiometricEnabled = false;
-  bool _isLoading = false;
-
-  String _passwordError = '';
-  String _confirmPasswordError = '';
+  bool _fromImport = false;
+  String? _mnemonicPhrase;
+  final _isPasswordVisible = false.obs;
+  final _isConfirmPasswordVisible = false.obs;
+  final _isRequirementsExpanded = false.obs;
+  final _isBiometricEnabled = false.obs;
+  final _isLoading = false.obs;
+  final _passwordError = ''.obs;
+  final _confirmPasswordError = ''.obs;
 
   @override
   void initState() {
@@ -51,10 +56,18 @@ class _PasswordSetupState extends State<PasswordSetup>
     _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    _fromImport = args?['fromImport'] ?? false;
+    _mnemonicPhrase = args?['mnemonic'];
+  }
 
   void _onPasswordChanged() {
     setState(() {
-      _passwordError = '';
+      _passwordError.value = '';
       if (_confirmPasswordController.text.isNotEmpty) {
         _validateConfirmPassword();
       }
@@ -69,11 +82,11 @@ class _PasswordSetupState extends State<PasswordSetup>
 
   void _validateConfirmPassword() {
     if (_confirmPasswordController.text.isEmpty) {
-      _confirmPasswordError = '';
+      _confirmPasswordError.value = '';
     } else if (_passwordController.text != _confirmPasswordController.text) {
-      _confirmPasswordError = 'Passwords do not match';
+      _confirmPasswordError.value = 'Passwords do not match';
     } else {
-      _confirmPasswordError = '';
+      _confirmPasswordError.value = '';
     }
   }
 
@@ -90,52 +103,87 @@ class _PasswordSetupState extends State<PasswordSetup>
     return _isPasswordValid &&
         _confirmPasswordController.text.isNotEmpty &&
         _confirmPasswordError.isEmpty &&
-        !_isLoading;
+        !_isLoading.value;
   }
 
   Future<void> _handleSetPassword() async {
     if (!_canSetPassword) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
+      _isLoading.value = true;
+    final storage = const FlutterSecureStorage();
     try {
-      // Provide haptic feedback
       HapticFeedback.lightImpact();
-
       // 🔹 Save password securely
       final password = _passwordController.text.trim();
       if (password.isNotEmpty) {
-        final storage = const FlutterSecureStorage();
-        await storage.write(
-          key: AppKeys.userPassword,
-          value: password,
-        );
+        await storage.write(key: AppKeys.userPassword, value: password,);
       }
-
       // Debug logs
       // debugPrint("AppKeys.userPassword = ${AppKeys.userPassword}");
       // debugPrint("Password = ${_passwordController.text}");
 
       // Simulate password setup process
       await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      if (_fromImport) {
+        // 🟩 Import wallet using same logic as ImportDetailsScreen
+        final mnemonic = _mnemonicPhrase?.trim();
+        if (mnemonic == null || mnemonic.isEmpty) {
+          _passwordError.value = 'Mnemonic missing. Please re-import.';
+          return;
+        }
 
-      // Navigate to mnemonic phrase display
-      if (mounted) {
+        if (!MnemonicService.validateMnemonic(mnemonic)) {
+          _passwordError.value = 'Invalid recovery phrase.';
+          return;
+        }
+
+        final secureService = SecureMnemonicService();
+        final multiWalletService = MultiWalletService(secureService);
+        final walletInfo = await multiWalletService.importMnemonic(mnemonic, password);
+
+        // ✅ Save wallet info securely
+        final prefs = await SharedPreferencesService.getInstance();
+        final walletName = prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
+        // Handle wallet list
+        final namesJson = prefs.getString(AppKeys.walletsListJson);
+        List<Map<String, dynamic>> existing = [];
+        if (namesJson != null) {
+          try {
+            existing = (jsonDecode(namesJson) as List<dynamic>)
+                .map((e) => Map<String, dynamic>.from(e))
+                .toList();
+          } catch (_) {
+            existing = [];
+          }
+        }
+
+        existing.add({
+          'name': walletName,
+          'address': walletInfo.address,
+          'index': walletInfo.index,
+          'createdAt': DateTime.now().toIso8601String(),
+        });
+
+        await prefs.setString(AppKeys.walletsListJson, jsonEncode(existing));
+        await prefs.setBool(AppKeys.isLogin, true);
+        await prefs.setInt(AppKeys.walletCount, 1);
+
+        HapticFeedback.lightImpact();
+        Get.snackbar('Success', 'Wallet imported successfully!',
+            backgroundColor: AppTheme.successGreen,
+            colorText: AppTheme.textPrimary,
+            snackPosition: SnackPosition.BOTTOM);
+        // ✅ Navigate to dashboard
+        Get.offAllNamed(AppRoutes.dashboard);
+      } else {
+        // 🟦 For new wallet creation → go to mnemonic display
         Get.toNamed(AppRoutes.mnemonicPhraseDisplay);
       }
     } catch (e) {
-      setState(() {
-        _passwordError = 'Failed to set password. Please try again.';
-      });
+      _passwordError.value = 'Failed to set password. Please try again.';
       debugPrint("Password save error: $e");
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (mounted) _isLoading.value = false;
     }
   }
 
@@ -215,12 +263,9 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 3.h),
                         PasswordRequirementsWidget(
                           password: _passwordController.text,
-                          isExpanded: _isRequirementsExpanded,
+                          isExpanded: _isRequirementsExpanded.value,
                           onToggle: () {
-                            setState(() {
-                              _isRequirementsExpanded =
-                                  !_isRequirementsExpanded;
-                            });
+                              _isRequirementsExpanded.value = !_isRequirementsExpanded.value;
                           },
                         ),
                         SizedBox(height: 3.h),
@@ -233,11 +278,9 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 3.h),
                         /// biometric setup
                         BiometricSetupWidget(
-                          isBiometricEnabled: _isBiometricEnabled,
+                          isBiometricEnabled: _isBiometricEnabled.value,
                           onBiometricToggle: (value) async {
-                            setState(() {
-                              _isBiometricEnabled = value;
-                            });
+                              _isBiometricEnabled.value = value;
                             final prefs = await SharedPreferencesService.getInstance();
                             print("isBiometricEnable :: $value");
                             await prefs.setBool(AppKeys.isBiometricEnable, value);
@@ -396,10 +439,10 @@ class _PasswordSetupState extends State<PasswordSetup>
             ),
           ),
           SizedBox(height: 1.h),
-          TextFormField(
+          Obx(() => TextFormField(
             controller: _passwordController,
             focusNode: _passwordFocusNode,
-            obscureText: !_isPasswordVisible,
+            obscureText: !_isPasswordVisible.value,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) {
@@ -408,19 +451,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             decoration: InputDecoration(
               hintText: 'Enter your password',
               hintStyle: TextStyle(color: AppTheme.hintTextColor,),
-              errorText: _passwordError.isNotEmpty ? _passwordError : null,
-              // suffixIcon: IconButton(
-              //   onPressed: () {
-              //     setState(() {
-              //       _isPasswordVisible = !_isPasswordVisible;
-              //     });
-              //   },
-              //   icon: Icon(
-              //    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-              //     color: AppTheme.textSecondary,
-              //     size: 20,
-              //   ),
-              // ),
+              errorText: _passwordError.value.isNotEmpty ? _passwordError.value : null,
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: Icon(
@@ -433,7 +464,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
               color: AppTheme.textPrimary,
             ),
-          ),
+          )),
         ],
       ),
     );
@@ -453,10 +484,10 @@ class _PasswordSetupState extends State<PasswordSetup>
             ),
           ),
           SizedBox(height: 1.h),
-          TextFormField(
+          Obx(() => TextFormField(
             controller: _confirmPasswordController,
             focusNode: _confirmPasswordFocusNode,
-            obscureText: !_isConfirmPasswordVisible,
+            obscureText: !_isConfirmPasswordVisible.value,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) {
@@ -467,8 +498,8 @@ class _PasswordSetupState extends State<PasswordSetup>
             decoration: InputDecoration(
               hintText: 'Confirm your password',
               hintStyle: TextStyle(color: AppTheme.hintTextColor,),
-              errorText: _confirmPasswordError.isNotEmpty
-                  ? _confirmPasswordError
+              errorText: _confirmPasswordError.value.isNotEmpty
+                  ? _confirmPasswordError.value
                   : null,
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -485,12 +516,10 @@ class _PasswordSetupState extends State<PasswordSetup>
                     ),
                   IconButton(
                     onPressed: () {
-                      setState(() {
-                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                      });
+                        _isConfirmPasswordVisible.value = !_isConfirmPasswordVisible.value;
                     },
                     icon: Icon(
-                      _isConfirmPasswordVisible
+                      _isConfirmPasswordVisible.value
                           ? Icons.visibility_off
                           : Icons.visibility,
                       color: AppTheme.textSecondary,
@@ -502,7 +531,7 @@ class _PasswordSetupState extends State<PasswordSetup>
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: Icon(
-                 Icons.lock_outline,
+                  Icons.lock_outline,
                   color: AppTheme.textSecondary,
                   size: 20,
                 ),
@@ -511,7 +540,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
               color: AppTheme.textPrimary,
             ),
-          ),
+          )),
         ],
       ),
     );
@@ -521,7 +550,7 @@ class _PasswordSetupState extends State<PasswordSetup>
     return AppButton(
       label: "Set Password",
       enabled: _canSetPassword,
-      isLoading: _isLoading,
+      isLoading: _isLoading.value,
       onPressed: _handleSetPassword,
     );
   }

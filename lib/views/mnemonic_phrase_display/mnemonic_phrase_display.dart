@@ -221,7 +221,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     }
     final mnemonic = _mnemonicWords.join(' ');
     await SecureMnemonicService().encryptAndStoreMnemonic(mnemonic,storedPassword);
-
+    await prefs.setInt(AppKeys.walletCount, 1);
     await prefs.setBool(AppKeys.isLogin, true);
     if (mounted) {
       Future.delayed(const Duration(milliseconds: 500), () {

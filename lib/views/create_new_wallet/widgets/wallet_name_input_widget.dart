@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
@@ -19,8 +21,8 @@ class WalletNameInputWidget extends StatefulWidget {
 
 class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
   final TextEditingController _nameController = TextEditingController();
-  String? _errorText;
-  bool _isValid = false;
+  final RxString _errorText = RxString('');
+  final RxBool _isValid = false.obs;
 
   @override
   void initState() {
@@ -50,10 +52,8 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
       isValid = true;
     }
 
-    setState(() {
-      _errorText = error;
-      _isValid = isValid;
-    });
+    _errorText.value = error ?? '';
+    _isValid.value = isValid;
 
     widget.onNameChanged(name);
     widget.onValidationChanged(isValid);
@@ -67,7 +67,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Obx(() => Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -103,25 +103,27 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
                 padding: EdgeInsets.all(3.w),
                 child: Icon(
                   Icons.account_balance_wallet,
-                  color:
-                      _isValid ? AppTheme.accentTeal : AppTheme.textSecondary,
+                  color: _isValid.value
+                      ? AppTheme.accentTeal
+                      : AppTheme.textSecondary,
                   size: 20,
                 ),
               ),
               suffixIcon: _nameController.text.isNotEmpty
                   ? Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: Icon(
-                        _isValid ? Icons.check_circle : Icons.error,
-                        color: _isValid
-                            ? AppTheme.successGreen
-                            : AppTheme.errorRed,
-                        size: 20,
-                      ),
-                    )
+                padding: EdgeInsets.all(3.w),
+                child: Icon(
+                  _isValid.value ? Icons.check_circle : Icons.error,
+                  color: _isValid.value
+                      ? AppTheme.successGreen
+                      : AppTheme.errorRed,
+                  size: 20,
+                ),
+              )
                   : null,
-              errorText: _errorText,
-              errorStyle: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+              errorText: _errorText.value.isEmpty ? null : _errorText.value,
+              errorStyle:
+              AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
                 color: AppTheme.errorRed,
               ),
               border: OutlineInputBorder(
@@ -167,7 +169,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
               ),
             ),
           ),
-          if (_isValid) ...[
+          if (_isValid.value) ...[
             SizedBox(height: 1.h),
             Row(
               children: [
@@ -180,7 +182,8 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
                 Expanded(
                   child: Text(
                     'Great! Your wallet name looks good.',
-                    style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                    style:
+                    AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
                       color: AppTheme.successGreen,
                     ),
                   ),
@@ -190,6 +193,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
           ],
         ],
       ),
-    );
+    ));
   }
 }
+
