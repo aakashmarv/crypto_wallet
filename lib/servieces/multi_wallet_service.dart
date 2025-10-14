@@ -70,7 +70,7 @@ class MultiWalletService {
 
   // Add new account derived from stored mnemonic (increment index)
   Future<WalletInfo> addAccount(String password) async {
-    final mnemonic = await _secureService.decryptMnemonic(password);
+    final mnemonic = await _secureService.getDecryptedMnemonic(password);
     if (mnemonic == null) throw Exception('Bad password or no mnemonic');
 
     final indexes = await _getIndexes();
@@ -88,7 +88,7 @@ class MultiWalletService {
   Future<List<WalletInfo>> listAccounts(String password) async {
     if (_cached.isNotEmpty) return _cached;
 
-    final mnemonic = await _secureService.decryptMnemonic(password);
+    final mnemonic = await _secureService.getDecryptedMnemonic(password);
     if (mnemonic == null) return [];
 
     final indexes = await _getIndexes();

@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../theme/app_theme.dart';
 
 class WalletBalanceCardWidget extends StatelessWidget {
-  const WalletBalanceCardWidget({super.key});
+  final String? balance;
+  const WalletBalanceCardWidget({super.key, this.balance});
 
   @override
   Widget build(BuildContext context) {
@@ -14,23 +15,11 @@ class WalletBalanceCardWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 1.5.h),
       child: SizedBox(
         width: double.infinity,
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //     colors: [
-        //       AppTheme.accentTeal.withOpacity(0.1), // slight alpha
-        //       AppTheme.successGreen.withOpacity(0.05),
-        //     ],
-        //   ),
-        //   borderRadius: BorderRadius.circular(12),
-        //   border: Border.all(color: AppTheme.borderSubtle, width: 1),
-        // ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '\$75384.00',
+              balance != null ? '$balance ETH' : 'Loading...',
               style: GoogleFonts.inter(
                 fontSize: 32.sp,
                 fontWeight: FontWeight.w700,

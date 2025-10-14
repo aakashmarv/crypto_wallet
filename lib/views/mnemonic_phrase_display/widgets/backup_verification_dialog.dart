@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
 
 class BackupVerificationDialog extends StatefulWidget {
@@ -323,6 +322,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
       ),
     );
   }
+
 
   List<String> _generateWordOptions(int correctIndex) {
     final correctWord = widget.mnemonicWords[correctIndex];

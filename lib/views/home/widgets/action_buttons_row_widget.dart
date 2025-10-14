@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../../widgets/app_button.dart';
 
 class ActionButtonsRowWidget extends StatelessWidget {
-  const ActionButtonsRowWidget({super.key});
+  final String? walletAddress;
+
+  const ActionButtonsRowWidget({super.key, required this.walletAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,21 @@ class ActionButtonsRowWidget extends StatelessWidget {
               child: _ActionButton(
                 label: 'Deposit',
                 icon: Icons.download_rounded,
-                onTap: () => _handleDeposit(context),
+                onTap: () {
+                  if (walletAddress != null) {
+                    _handleDeposit(context, walletAddress!);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Wallet address not loaded",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.black,
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ),
@@ -60,14 +76,22 @@ class ActionButtonsRowWidget extends StatelessWidget {
     );
   }
 
-  void _handleDeposit(BuildContext context) {
+  void _handleDeposit(BuildContext context, String address) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const _DepositBottomSheet(),
+      builder: (_) => _DepositBottomSheet(walletAddress: address),
     );
   }
+  // void _handleDeposit(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (_) => const _DepositBottomSheet(),
+  //   );
+  // }
 
 
   void _handleSend(BuildContext context) {
@@ -83,10 +107,13 @@ class ActionButtonsRowWidget extends StatelessWidget {
     Get.toNamed(AppRoutes.swap);
   }
 }
-class _DepositBottomSheet extends StatelessWidget {
-  const _DepositBottomSheet();
 
-  final String walletAddress = "rA99b007d6a2...D06dE1948746";
+
+
+class _DepositBottomSheet extends StatelessWidget {
+  final String walletAddress;
+
+  const _DepositBottomSheet({required this.walletAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -133,32 +160,28 @@ class _DepositBottomSheet extends StatelessWidget {
             ),
             SizedBox(height: 2.h),
 
-            // QR Code
+            // ✅ QR Code from actual address
             Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
                 color: AppTheme.surfaceElevated,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: SizedBox(
-                width: 40.w,
-                height: 40.w,
-                child: Center(
-                  child: Icon(
-                    Icons.qr_code,
-                    size: 36.w,
-                    color: AppTheme.black,
-                  ),
-                ),
+              child: QrImageView(
+                data: walletAddress,
+                version: QrVersions.auto,
+                size: 40.w,
+                backgroundColor: Colors.white,
               ),
             ),
             SizedBox(height: 2.h),
 
-            // Wallet Address + Copy Button
+            // ✅ Wallet Address + Copy
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Text(
+                  child: SelectableText(
                     walletAddress,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.jetBrainsMono(
@@ -166,17 +189,38 @@ class _DepositBottomSheet extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: AppTheme.textPrimary,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 6.w),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: walletAddress));
-
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Address copied")),
+                    );
                   },
                 ),
               ],
+            ),
+
+            SizedBox(height: 1.5.h),
+
+            // ✅ Optional: Network Info & Warning
+            Text(
+              "Network: Ethereum Sepolia",
+              style: GoogleFonts.inter(
+                fontSize: 10.sp,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+            SizedBox(height: 1.h),
+            Text(
+              "Only send ETH or supported tokens.\nSending unsupported assets may be lost.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 10.sp,
+                color: Colors.redAccent,
+              ),
             ),
           ],
         ),
@@ -184,6 +228,108 @@ class _DepositBottomSheet extends StatelessWidget {
     );
   }
 }
+
+// class _DepositBottomSheet extends StatelessWidget {
+//   const _DepositBottomSheet();
+//
+//   final String walletAddress = "rA99b007d6a2...D06dE1948746";
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+//
+//     return DraggableScrollableSheet(
+//       initialChildSize: 0.45,
+//       minChildSize: 0.35,
+//       maxChildSize: 0.75,
+//       builder: (_, controller) => Container(
+//         padding: EdgeInsets.fromLTRB(
+//           5.w,
+//           3.h,
+//           5.w,
+//           bottomPadding > 0 ? bottomPadding : 2.h,
+//         ),
+//         decoration: BoxDecoration(
+//           color: AppTheme.secondaryDark,
+//           borderRadius: const BorderRadius.vertical(
+//             top: Radius.circular(24),
+//           ),
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             // Handle bar
+//             Container(
+//               width: 10.w,
+//               height: 0.7.h,
+//               decoration: BoxDecoration(
+//                 color: AppTheme.borderSubtle,
+//                 borderRadius: BorderRadius.circular(10),
+//               ),
+//             ),
+//             SizedBox(height: 2.h),
+//
+//             Text(
+//               "Deposit Address",
+//               style: GoogleFonts.inter(
+//                 fontSize: 14.sp,
+//                 fontWeight: FontWeight.w600,
+//                 color: AppTheme.textPrimary,
+//               ),
+//             ),
+//             SizedBox(height: 2.h),
+//
+//             // QR Code
+//             Container(
+//               padding: EdgeInsets.all(2.w),
+//               decoration: BoxDecoration(
+//                 color: AppTheme.surfaceElevated,
+//                 borderRadius: BorderRadius.circular(16),
+//               ),
+//               child: SizedBox(
+//                 width: 40.w,
+//                 height: 40.w,
+//                 child: Center(
+//                   child: Icon(
+//                     Icons.qr_code,
+//                     size: 36.w,
+//                     color: AppTheme.black,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(height: 2.h),
+//
+//             // Wallet Address + Copy Button
+//             Row(
+//               children: [
+//                 Expanded(
+//                   child: Text(
+//                     walletAddress,
+//                     textAlign: TextAlign.center,
+//                     style: GoogleFonts.jetBrainsMono(
+//                       fontSize: 11.sp,
+//                       fontWeight: FontWeight.w500,
+//                       color: AppTheme.textPrimary,
+//                     ),
+//                     overflow: TextOverflow.ellipsis,
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 6.w),
+//                   onPressed: () {
+//                     Clipboard.setData(ClipboardData(text: walletAddress));
+//
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class _SendBottomSheet extends StatefulWidget {
   const _SendBottomSheet();

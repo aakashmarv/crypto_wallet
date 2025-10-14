@@ -70,7 +70,7 @@ class SecureMnemonicService {
   }
 
   // Public: decrypt mnemonic using password
-  Future<String?> decryptMnemonic(String password) async {
+  Future<String?> getDecryptedMnemonic(String password) async {
     final encBase64 = await _secureStorage.read(key: AppKeys.encryptedMnemonicKey);
     final saltBase64 = await _secureStorage.read(key: AppKeys.saltKey);
     final ivBase64 = await _secureStorage.read(key: AppKeys.ivKey);

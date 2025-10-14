@@ -5,11 +5,15 @@ import 'package:cryptovault_pro/views/home/widgets/wallet_balance_card_widget.da
 import 'package:cryptovault_pro/views/home/widgets/wallet_tabs_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:web3dart/web3dart.dart';
 import '../../constants/app_keys.dart';
+import '../../servieces/multi_wallet_service.dart';
+import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
+import 'package:http/http.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,11 +27,14 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
   int _selectedIndex = 0;
   String? _walletName;
+  String? _walletAddress;
+  String? _walletBalance;
+  static const String rpcUrl = "https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID";
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         setState(() {
@@ -36,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
     });
     _loadWalletName();
+    _loadWalletInfo();
   }
   Future<void> _loadWalletName() async {
     final prefs = await SharedPreferencesService.getInstance();
@@ -45,6 +53,76 @@ class _HomeScreenState extends State<HomeScreen>
       _walletName = name;
     });
   }
+  Future<void> _loadWalletInfo() async {
+    print('[DEBUG] _loadWalletInfo() called');
+    try {
+      final address = await getCurrentAddress();
+      final balance = await getCurrentBalance();
+      print('[DEBUG] Wallet Address: $address');
+      print('[DEBUG] Wallet Balance: $balance');
+
+      setState(() {
+        _walletAddress = address;
+        _walletBalance = balance;
+      });
+    } catch (e, st) {
+      print('[ERROR] Failed to load wallet info: $e');
+      print(st); // stacktrace
+    }
+  }
+
+  // Future<void> _loadWalletInfo() async {
+  //   try {
+  //     final address = await getCurrentAddress();
+  //     final balance = await getCurrentBalance();
+  //     setState(() {
+  //       _walletAddress = address;
+  //       _walletBalance = balance;
+  //     });
+  //   } catch (e) {
+  //     print("Failed to load wallet info: $e");
+  //   }
+  // }
+  Future<String?> getCurrentAddress() async {
+    final secureService = SecureMnemonicService();
+    final storage = FlutterSecureStorage();
+    final storedPassword = await storage.read(key: AppKeys.userPassword);
+    print('[DEBUG] Stored password: $storedPassword');
+    if (storedPassword == null) return null;
+
+    final mnemonic = await secureService.getDecryptedMnemonic(storedPassword);
+    print('[DEBUG] Decrypted mnemonic: $mnemonic');
+    final walletService = MultiWalletService(secureService);
+    final wallet = await walletService.deriveWalletFromMnemonic(mnemonic!, 0);
+    print('[DEBUG] Derived wallet address: ${wallet.address}');
+    return wallet.address;
+  }
+
+  Future<String> getCurrentBalance() async {
+    final secureService = SecureMnemonicService();
+    final storage = FlutterSecureStorage();
+    final storedPassword = await storage.read(key: AppKeys.userPassword);
+    if (storedPassword == null) throw Exception("No password found");
+
+    final mnemonic = await secureService.getDecryptedMnemonic(storedPassword);
+    final walletService = MultiWalletService(secureService);
+    final wallet = await walletService.deriveWalletFromMnemonic(mnemonic!, 0);
+
+    final web3client = Web3Client(rpcUrl, Client());
+    final address = EthereumAddress.fromHex(wallet.address);
+    print('[DEBUG] Fetching balance for: ${wallet.address}');
+
+    final balance = await web3client.getBalance(address);
+    await web3client.dispose();
+
+    print('[DEBUG] Raw balance (wei): $balance');
+    final ether = balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(4);
+    print('[DEBUG] Ether balance: $ether');
+
+    return ether;
+    // return balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(4);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +188,9 @@ class _HomeScreenState extends State<HomeScreen>
           child: Column(
             children: [
               // ✅ Wallet Balance Card
-              const WalletBalanceCardWidget(),
+              WalletBalanceCardWidget(balance: _walletBalance),
               // ✅ Action Buttons
-              const ActionButtonsRowWidget(),
+              ActionButtonsRowWidget(walletAddress: _walletAddress),
               SizedBox(height: 2.h),
               // Wallet Address
               Padding(
@@ -121,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     Expanded(
                       child: Text(
-                        'rA99b007d6a2...D06dE1948746',
+                        _walletAddress ?? 'Loading...',
                         style: GoogleFonts.jetBrainsMono(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
@@ -134,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen>
                     IconButton(
                       icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 4.w),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text:  'rA99b007d6a2...D06dE1948746'));
+                        Clipboard.setData(ClipboardData(text: _walletAddress ?? ''));
 
                       },
                     ),
