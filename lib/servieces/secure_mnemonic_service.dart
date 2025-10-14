@@ -1,3 +1,4 @@
+import 'package:cryptovault_pro/constants/app_keys.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:crypto/crypto.dart';
@@ -6,10 +7,6 @@ import 'dart:typed_data';
 import 'dart:math';
 
 class SecureMnemonicService {
-  static const _encryptedMnemonicKey = 'encrypted_mnemonic';
-  static const _saltKey = 'mnemonic_salt';
-  static const _ivKey = 'mnemonic_iv';
-  static const _pbkdf2Iterations = 100000; // recommended >=100k for mobile
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
@@ -52,7 +49,7 @@ class SecureMnemonicService {
   // Derive AES key (32 bytes) from password + stored salt (or provided salt)
   Future<Uint8List> _deriveKeyFromPassword(String password, Uint8List salt) async {
     final passBytes = utf8.encode(password) as Uint8List;
-    return _pbkdf2(passBytes, salt, _pbkdf2Iterations, 32);
+    return _pbkdf2(passBytes, salt, AppKeys.pbkdf2Iterations, 32);
   }
 
   // Public: encrypt mnemonic and store (salt & iv stored too)
@@ -67,16 +64,16 @@ class SecureMnemonicService {
 
     final encrypted = encrypter.encrypt(mnemonic, iv: IV(iv));
 
-    await _secureStorage.write(key: _encryptedMnemonicKey, value: encrypted.base64);
-    await _secureStorage.write(key: _saltKey, value: base64Encode(salt));
-    await _secureStorage.write(key: _ivKey, value: base64Encode(iv));
+    await _secureStorage.write(key: AppKeys.encryptedMnemonicKey, value: encrypted.base64);
+    await _secureStorage.write(key: AppKeys.saltKey, value: base64Encode(salt));
+    await _secureStorage.write(key: AppKeys.ivKey, value: base64Encode(iv));
   }
 
   // Public: decrypt mnemonic using password
   Future<String?> decryptMnemonic(String password) async {
-    final encBase64 = await _secureStorage.read(key: _encryptedMnemonicKey);
-    final saltBase64 = await _secureStorage.read(key: _saltKey);
-    final ivBase64 = await _secureStorage.read(key: _ivKey);
+    final encBase64 = await _secureStorage.read(key: AppKeys.encryptedMnemonicKey);
+    final saltBase64 = await _secureStorage.read(key: AppKeys.saltKey);
+    final ivBase64 = await _secureStorage.read(key: AppKeys.ivKey);
 
     if (encBase64 == null || saltBase64 == null || ivBase64 == null) return null;
 
@@ -97,9 +94,9 @@ class SecureMnemonicService {
   }
 
   Future<void> clearAll() async {
-    await _secureStorage.delete(key: _encryptedMnemonicKey);
-    await _secureStorage.delete(key: _saltKey);
-    await _secureStorage.delete(key: _ivKey);
+    await _secureStorage.delete(key: AppKeys.encryptedMnemonicKey);
+    await _secureStorage.delete(key: AppKeys.saltKey);
+    await _secureStorage.delete(key: AppKeys.ivKey);
   }
 
   Uint8List _randomBytes(int len) {

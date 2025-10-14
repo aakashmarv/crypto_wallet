@@ -28,22 +28,6 @@ class MultiWalletService {
 
   MultiWalletService(this._secureService);
 
-  // Create first wallet (generate mnemonic, store encrypted, init indexes)
-  Future<WalletInfo> createFirstWallet(String password, {int index = 0}) async {
-    final mnemonic = bip39.generateMnemonic(); // 12 words default
-    if (!bip39.validateMnemonic(mnemonic)) {
-      throw Exception('Generated mnemonic invalid');
-    }
-
-    await _secureService.encryptAndStoreMnemonic(mnemonic, password);
-    // initialize index list with the first index used (0)
-    await _saveIndexes([index]);
-
-    final wallet = await deriveWalletFromMnemonic(mnemonic, index);
-    _cached = [wallet];
-    return wallet;
-  }
-
   // Import mnemonic (user-provided) -> encrypt & reset indexes to [0]
   Future<WalletInfo> importMnemonic(String mnemonic, String password, {int index = 0}) async {
     if (!bip39.validateMnemonic(mnemonic)) {
@@ -56,9 +40,7 @@ class MultiWalletService {
     return wallet;
   }
 
-  // MultiWalletService Class Mein Add Karein
-
-// Import single Private Key (non-HD) -> encrypt & reset indexes to [-1]
+// Import wallet from Private Key (non-HD) -> encrypt & reset indexes to [-1]
   Future<WalletInfo> importPrivateKey(String privateKeyHex, String password) async {
     // 1. Private Key ki validity check karein
     try {

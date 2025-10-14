@@ -115,7 +115,6 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 2.h),
-
                             // Welcome Text
                             Text(
                               'Let\'s create your wallet',
@@ -142,18 +141,15 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                               onValidationChanged: _onValidationChanged,
                             ),
                             SizedBox(height: 3.h),
-
                             // Security Information Card
                             const SecurityInfoCardWidget(),
-
                             SizedBox(height: 4.h),
                           ],
                         ),
                       );
                     }),
                   ),
-
-                  // Bottom Button Area
+                  // Bottom Navigation  Button Area
                   Obx(() {
                     if (_isGenerating.value) return const SizedBox.shrink();
                     return Container(
@@ -170,11 +166,11 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          GenerateWalletButtonWidget(
+                          Obx(() => GenerateWalletButtonWidget(
                             isEnabled: _isNameValid.value,
                             isLoading: _isGenerating.value,
                             onPressed: _generateWallet,
-                          ),
+                          )),
                           SizedBox(height: 2.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

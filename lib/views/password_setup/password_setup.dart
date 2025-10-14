@@ -26,8 +26,7 @@ class PasswordSetup extends StatefulWidget {
 class _PasswordSetupState extends State<PasswordSetup>
     with TickerProviderStateMixin {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocusNode = FocusNode();
 
@@ -261,13 +260,13 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 4.h),
                         _buildTitle(),
                         SizedBox(height: 3.h),
-                        PasswordRequirementsWidget(
+                        Obx(()=> PasswordRequirementsWidget(
                           password: _passwordController.text,
                           isExpanded: _isRequirementsExpanded.value,
                           onToggle: () {
-                              _isRequirementsExpanded.value = !_isRequirementsExpanded.value;
+                            _isRequirementsExpanded.value = !_isRequirementsExpanded.value;
                           },
-                        ),
+                        ),),
                         SizedBox(height: 3.h),
                         _buildPasswordField(),
                         PasswordStrengthIndicatorWidget(
@@ -277,15 +276,15 @@ class _PasswordSetupState extends State<PasswordSetup>
                         _buildConfirmPasswordField(),
                         SizedBox(height: 3.h),
                         /// biometric setup
-                        BiometricSetupWidget(
+                        Obx(() => BiometricSetupWidget(
                           isBiometricEnabled: _isBiometricEnabled.value,
                           onBiometricToggle: (value) async {
-                              _isBiometricEnabled.value = value;
+                            _isBiometricEnabled.value = value;
                             final prefs = await SharedPreferencesService.getInstance();
                             print("isBiometricEnable :: $value");
                             await prefs.setBool(AppKeys.isBiometricEnable, value);
                           },
-                        ),
+                        )),
                         SizedBox(height: 4.h),
                         _buildSetPasswordButton(),
                         SizedBox(height: 3.h),
@@ -547,11 +546,11 @@ class _PasswordSetupState extends State<PasswordSetup>
   }
 
   Widget _buildSetPasswordButton() {
-    return AppButton(
+    return Obx(() => AppButton(
       label: "Set Password",
       enabled: _canSetPassword,
       isLoading: _isLoading.value,
       onPressed: _handleSetPassword,
-    );
+    ));
   }
 }

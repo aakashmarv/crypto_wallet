@@ -5,7 +5,13 @@ class AppKeys {
   static const String userPassword = "user_password";
   static const String encryptedMnemonic = "encrypted_mnemonic";
   static const String walletCount = "walletCount";
+  static const String walletAddress = "wallet_address";
+  static const String createdAt = "created_at";
   static const String currentWalletName = "current_wallet_name";
   static const String walletsListJson = "wallets_list_json";
+  static const encryptedMnemonicKey = 'encrypted_mnemonic';
+  static const saltKey = 'mnemonic_salt';
+  static const ivKey = 'mnemonic_iv';
+  static const pbkdf2Iterations = 100000; // recommended >=100k for mobile
 
 }

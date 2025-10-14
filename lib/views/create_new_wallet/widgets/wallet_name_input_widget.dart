@@ -28,6 +28,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
   void initState() {
     super.initState();
     _nameController.addListener(_validateInput);
+    _validateInput();
   }
 
   void _validateInput() {
@@ -58,9 +59,18 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
     widget.onNameChanged(name);
     widget.onValidationChanged(isValid);
   }
-
   @override
   void dispose() {
+    // Inform parent that this child is gone and the name should be considered empty.
+    // This helps when popping the screen or the widget being removed from the tree.
+    try {
+      widget.onValidationChanged(false);
+    } catch (e) {
+      // ignore: avoid_print
+      print('onValidationChanged dispose error: $e');
+    }
+
+    _nameController.removeListener(_validateInput);
     _nameController.dispose();
     super.dispose();
   }
@@ -82,7 +92,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Wallet Name',
+            'Wallet',
             style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,
@@ -95,7 +105,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
               color: AppTheme.textPrimary,
             ),
             decoration: InputDecoration(
-              hintText: 'My Crypto Wallet',
+              hintText: 'Please enter Wallet name',
               hintStyle: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
                 color: AppTheme.textSecondary.withValues(alpha: 0.7),
               ),

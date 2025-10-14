@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
 import '../../servieces/mnemonic_service.dart';
+import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../widgets/app_button.dart';
@@ -213,16 +214,28 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     setState(() {
       _isBackupVerified = true;
     });
+    final secureService = SecureMnemonicService();
     final prefs = await SharedPreferencesService.getInstance();
+
     final storage = FlutterSecureStorage();
     final storedPassword = await storage.read(key: AppKeys.userPassword);
     if (storedPassword == null) {
       throw Exception("Encryption failed: No stored password found.");
     }
+    // ✅ Encrypt and store mnemonic securely
     final mnemonic = _mnemonicWords.join(' ');
-    await SecureMnemonicService().encryptAndStoreMnemonic(mnemonic,storedPassword);
+    await secureService.encryptAndStoreMnemonic(mnemonic,storedPassword);
+
+    // ✅ Derive wallet from this mnemonic
+    final walletService = MultiWalletService(secureService);
+    final wallet = await walletService.deriveWalletFromMnemonic(mnemonic, 0);
+
+    // ✅ Store non-sensitive info in SharedPreferences
+    await prefs.setString(AppKeys.walletAddress, wallet.address);
     await prefs.setInt(AppKeys.walletCount, 1);
     await prefs.setBool(AppKeys.isLogin, true);
+    await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
+    // await prefs.setString(AppKeys.network, "ethereum");
     if (mounted) {
       Future.delayed(const Duration(milliseconds: 500), () {
         Get.offAllNamed(AppRoutes.dashboard);

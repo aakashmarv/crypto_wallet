@@ -115,7 +115,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
                 SizedBox(width: 3.w),
                 Expanded(
                   child: Text(
-                    'CryptoVault Pro cannot recover your wallet if you lose your recovery phrase. This is your responsibility.',
+                    'Ruby wallet & Dapp browser cannot recover your wallet if you lose your recovery phrase. This is your responsibility.',
                     style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
                       color: AppTheme.warningOrange,
                       height: 1.4,

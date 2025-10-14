@@ -21,7 +21,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
       'icon': 'security',
       'title': 'Keep Your Phrase Private',
       'description':
-          'Never share your recovery phrase with anyone. CryptoVault will never ask for it.',
+          'Never share your recovery phrase with anyone. Ruby wallet & Dapp browser will never ask for it.',
     },
     {
       'icon': 'visibility_off',
