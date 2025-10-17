@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
+import '../../servieces/mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import './widgets/mnemonic_input_widget.dart';
 
@@ -56,22 +57,45 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   }
 
   Future<void> _onImportStart() async {
-    if (!_isMnemonicValid) {
-      _showToast('Please enter a valid recovery phrase', isError: true);
+    final input = _mnemonicPhrase.trim();
+
+    if (input.isEmpty) {
+      _showToast('Please enter recovery phrase or private key', isError: true);
       return;
     }
+
+    // ✅ Detect type of import: Mnemonic vs Private Key
+    final wordCount = input.split(RegExp(r'\s+')).length;
+    final isMnemonic = input.split(RegExp(r'\s+')).length >= 12 && MnemonicService.validateMnemonic(input);
+    final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(input);
+    print('🧩 [Detection] Word count: $wordCount');
+    print('🧠 [Detection] isMnemonic: $isMnemonic');
+    print('🔑 [Detection] isPrivateKey: $isPrivateKey');
+
+    if (!isMnemonic && !isPrivateKey) {
+      _showToast('Invalid mnemonic or private key format', isError: true);
+      return;
+    }
+
     final walletNameToSave = _walletName.isEmpty ? 'Imported' : _walletName;
     final prefs = await SharedPreferencesService.getInstance();
-    await prefs.setString(AppKeys.currentWalletName, walletNameToSave,);
-
+    await prefs.setString(AppKeys.currentWalletName, walletNameToSave);
+    print('💾 [Saved] Wallet name saved: $walletNameToSave');
+    print('➡️ [Navigation] Navigating to password setup with arguments:');
+    print('   fromImport: true');
+    print('   mnemonic/privateKey: $input');
+    print('   isPrivateKey: $isPrivateKey');
+    // ✅ Navigate to password setup, passing type information
     Get.toNamed(
       AppRoutes.passwordSetup,
       arguments: {
         'fromImport': true,
-        'mnemonic': _mnemonicPhrase.trim(),
+        'mnemonic': input, // can be mnemonic or private key
+        'isPrivateKey': isPrivateKey,
       },
     );
   }
+
 
   void _showToast(String message, {bool isError = false}) {
     Fluttertoast.showToast(
@@ -85,6 +109,11 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   }
 
   String _getCurrentStepDescription() {
+    if (_mnemonicPhrase.trim().startsWith('0x') ||
+        RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(_mnemonicPhrase.trim())) {
+      return 'Enter or paste your private key';
+    }
+
     switch (_currentStep) {
       case 1:
         return 'Enter your 12 or 24 word recovery phrase';
@@ -96,6 +125,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         return 'Preparing wallet import...';
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

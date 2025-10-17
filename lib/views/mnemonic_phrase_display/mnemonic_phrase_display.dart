@@ -215,9 +215,10 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       _isBackupVerified = true;
     });
     final secureService = SecureMnemonicService();
+    final multiWalletService= MultiWalletService(secureService);
     final prefs = await SharedPreferencesService.getInstance();
-
     final storage = FlutterSecureStorage();
+
     final storedPassword = await storage.read(key: AppKeys.userPassword);
     if (storedPassword == null) {
       throw Exception("Encryption failed: No stored password found.");
@@ -231,8 +232,8 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     final wallet = await walletService.deriveWalletFromMnemonic(mnemonic, 0);
 
     // ✅ Store non-sensitive info in SharedPreferences
+    await multiWalletService.saveIndexes([0]);
     await prefs.setString(AppKeys.walletAddress, wallet.address);
-    await prefs.setInt(AppKeys.walletCount, 1);
     await prefs.setBool(AppKeys.isLogin, true);
     await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
     // await prefs.setString(AppKeys.network, "ethereum");

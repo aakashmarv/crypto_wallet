@@ -1,6 +1,5 @@
 import 'package:cryptovault_pro/constants/app_keys.dart';
 import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
-import 'package:cryptovault_pro/views/password_unlock_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -51,13 +50,11 @@ class _AppLockScreenState extends State<AppLockScreen> {
     }
 
     // fallback: show password screen
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => PasswordUnlockScreen()),
-    );
+    Get.offAllNamed(AppRoutes.passwordUnlockScreen);
   }
 
   void _goToHome() {
-    Get.offAllNamed(AppRoutes.dashboard); // or your main app route
+    Get.offAllNamed(AppRoutes.dashboard);
   }
 
   @override

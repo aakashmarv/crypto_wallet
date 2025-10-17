@@ -1,10 +1,18 @@
+import 'dart:io';
 import 'package:cryptovault_pro/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:web3dart/credentials.dart';
+import '../../../constants/app_keys.dart';
+import '../../../servieces/multi_wallet_service.dart';
+import '../../../servieces/secure_mnemonic_service.dart';
+import '../../../servieces/send_service.dart';
 import '../../../widgets/app_button.dart';
 
 class ActionButtonsRowWidget extends StatelessWidget {
@@ -65,9 +73,9 @@ class ActionButtonsRowWidget extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 3.w,right:3.w,top: 1.h),
               child: _ActionButton(
-                label: 'Swap',
+                label: 'Transaction',
                 icon: Icons.swap_horiz_rounded,
-                onTap: () => _handleSwap(context),
+                onTap: () => _handleTransaction(context),
               ),
             ),
           ),
@@ -84,15 +92,6 @@ class ActionButtonsRowWidget extends StatelessWidget {
       builder: (_) => _DepositBottomSheet(walletAddress: address),
     );
   }
-  // void _handleDeposit(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     backgroundColor: Colors.transparent,
-  //     builder: (_) => const _DepositBottomSheet(),
-  //   );
-  // }
-
 
   void _handleSend(BuildContext context) {
     showModalBottomSheet(
@@ -103,12 +102,10 @@ class ActionButtonsRowWidget extends StatelessWidget {
     );
   }
 
-  void _handleSwap(BuildContext context) {
-    Get.toNamed(AppRoutes.swap);
+  void _handleTransaction(BuildContext context) {
+    Get.toNamed(AppRoutes.transationHistory);
   }
 }
-
-
 
 class _DepositBottomSheet extends StatelessWidget {
   final String walletAddress;
@@ -181,7 +178,7 @@ class _DepositBottomSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: SelectableText(
+                  child: Text(
                     walletAddress,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.jetBrainsMono(
@@ -189,38 +186,16 @@ class _DepositBottomSheet extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: AppTheme.textPrimary,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 6.w),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: walletAddress));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Address copied")),
-                    );
                   },
                 ),
               ],
-            ),
-
-            SizedBox(height: 1.5.h),
-
-            // ✅ Optional: Network Info & Warning
-            Text(
-              "Network: Ethereum Sepolia",
-              style: GoogleFonts.inter(
-                fontSize: 10.sp,
-                color: AppTheme.textSecondary,
-              ),
-            ),
-            SizedBox(height: 1.h),
-            Text(
-              "Only send ETH or supported tokens.\nSending unsupported assets may be lost.",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 10.sp,
-                color: Colors.redAccent,
-              ),
             ),
           ],
         ),
@@ -228,108 +203,6 @@ class _DepositBottomSheet extends StatelessWidget {
     );
   }
 }
-
-// class _DepositBottomSheet extends StatelessWidget {
-//   const _DepositBottomSheet();
-//
-//   final String walletAddress = "rA99b007d6a2...D06dE1948746";
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
-//
-//     return DraggableScrollableSheet(
-//       initialChildSize: 0.45,
-//       minChildSize: 0.35,
-//       maxChildSize: 0.75,
-//       builder: (_, controller) => Container(
-//         padding: EdgeInsets.fromLTRB(
-//           5.w,
-//           3.h,
-//           5.w,
-//           bottomPadding > 0 ? bottomPadding : 2.h,
-//         ),
-//         decoration: BoxDecoration(
-//           color: AppTheme.secondaryDark,
-//           borderRadius: const BorderRadius.vertical(
-//             top: Radius.circular(24),
-//           ),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             // Handle bar
-//             Container(
-//               width: 10.w,
-//               height: 0.7.h,
-//               decoration: BoxDecoration(
-//                 color: AppTheme.borderSubtle,
-//                 borderRadius: BorderRadius.circular(10),
-//               ),
-//             ),
-//             SizedBox(height: 2.h),
-//
-//             Text(
-//               "Deposit Address",
-//               style: GoogleFonts.inter(
-//                 fontSize: 14.sp,
-//                 fontWeight: FontWeight.w600,
-//                 color: AppTheme.textPrimary,
-//               ),
-//             ),
-//             SizedBox(height: 2.h),
-//
-//             // QR Code
-//             Container(
-//               padding: EdgeInsets.all(2.w),
-//               decoration: BoxDecoration(
-//                 color: AppTheme.surfaceElevated,
-//                 borderRadius: BorderRadius.circular(16),
-//               ),
-//               child: SizedBox(
-//                 width: 40.w,
-//                 height: 40.w,
-//                 child: Center(
-//                   child: Icon(
-//                     Icons.qr_code,
-//                     size: 36.w,
-//                     color: AppTheme.black,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 2.h),
-//
-//             // Wallet Address + Copy Button
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: Text(
-//                     walletAddress,
-//                     textAlign: TextAlign.center,
-//                     style: GoogleFonts.jetBrainsMono(
-//                       fontSize: 11.sp,
-//                       fontWeight: FontWeight.w500,
-//                       color: AppTheme.textPrimary,
-//                     ),
-//                     overflow: TextOverflow.ellipsis,
-//                   ),
-//                 ),
-//                 IconButton(
-//                   icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 6.w),
-//                   onPressed: () {
-//                     Clipboard.setData(ClipboardData(text: walletAddress));
-//
-//                   },
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class _SendBottomSheet extends StatefulWidget {
   const _SendBottomSheet();
@@ -352,6 +225,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
   };
 
   bool _showCoins = false;
+  bool _isSending = false;
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -373,14 +247,149 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
     super.dispose();
   }
 
-  void _handleSend() {
-    if (_formKey.currentState?.validate() ?? false) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sending ${_amountController.text} $_selectedCoin...")),
+  void _handleSendButton() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    final recipient = _recipientController.text.trim();
+    final amount = _amountController.text.trim();
+
+    // 🪵 Print debug info for transparency
+    debugPrint("🔹 Send button pressed");
+    debugPrint("Recipient entered: $recipient");
+    debugPrint("Amount entered: $amount $_selectedCoin");
+    // Step 1️⃣ - Show GetX loading feedback
+    Get.snackbar(
+      "Processing Transaction",
+      "⏳ Please wait while we send your transaction...",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.blueGrey.shade800,
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
+    );
+
+    try {
+      // Step 2️⃣ - Read stored password securely
+      const storage = FlutterSecureStorage();
+      final storedPassword = await storage.read(key: AppKeys.userPassword);
+
+      if (storedPassword == null || storedPassword.isEmpty) {
+        debugPrint("⚠️ Password not found in secure storage.");
+        Get.snackbar(
+          "Authentication Failed",
+          "⚠️ Password not found. Please re-login.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade700,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      // Step 3️⃣ - Validate recipient address
+      if (!_isValidEthereumAddress(recipient)) {
+        debugPrint("❌ Invalid Ethereum address entered: $recipient");
+        Get.snackbar(
+          "Invalid Address",
+          "❌ Please enter a valid Ethereum address.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade700,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      // Step 4️⃣ - Initialize wallet and transaction services
+      debugPrint("🔹 Initializing wallet and transaction services...");
+      final secureService = SecureMnemonicService();
+      final walletService = MultiWalletService(secureService);
+      final txService = SendService(walletService, secureService);
+
+      // Step 5️⃣ - Convert Ether amount safely → Wei
+      final parsedAmount = double.tryParse(amount);
+      if (parsedAmount == null || parsedAmount <= 0) {
+        debugPrint("⚠️ Invalid amount entered: $amount");
+        Get.snackbar(
+          "Invalid Amount",
+          "❌ Please enter a valid numeric amount.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade700,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final weiValue = BigInt.from(parsedAmount * 1e18); // ✅ proper conversion
+      debugPrint("💰 Converted $amount ETH → $weiValue Wei");
+
+      // Step 6️⃣ - Send the transaction
+      debugPrint("🚀 Sending transaction → To: $recipient | Amount: $amount ETH");
+      final txHash = await txService.sendTransaction(
+        to: recipient,
+        amount: weiValue.toString(), // ✅ send as string to match your service
+        password: storedPassword,
       );
-      Navigator.pop(context);
+
+      debugPrint("✅ Transaction sent successfully. Hash: $txHash");
+
+      // Step 7️⃣ - Success feedback with option to view transaction
+      Get.snackbar(
+        "Transaction Sent ✅",
+        "Hash: $txHash",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.shade600,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+        mainButton: TextButton(
+          onPressed: () {
+            final url = "https://etherscan.io/tx/$txHash";
+            debugPrint("🌐 Opening Etherscan: $url");
+            launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+          },
+          child: const Text("View", style: TextStyle(color: Colors.white)),
+        ),
+      );
+
+      // Step 8️⃣ - Close bottom sheet after success
+      if (mounted) Get.back();
+    } on SocketException catch (e) {
+      debugPrint("🌐 Network error: $e");
+      Get.snackbar(
+        "Network Error",
+        "🌐 Please check your internet connection.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
+    } on FormatException catch (e) {
+      debugPrint("⚠️ Invalid amount format: $e");
+      Get.snackbar(
+        "Invalid Amount",
+        "❌ Please enter a valid number for amount.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
+    } catch (e, stack) {
+      debugPrint("❌ Transaction Error: $e\nStackTrace: $stack");
+      Get.snackbar(
+        "Transaction Failed",
+        "❌ ${e.toString().replaceAll('Exception:', '').trim()}",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
     }
   }
+
+  /// ✅ Helper to validate Ethereum address
+  bool _isValidEthereumAddress(String input) {
+    final regex = RegExp(r'^0x[a-fA-F0-9]{40}$');
+    return regex.hasMatch(input);
+  }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -462,15 +471,18 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(Icons.copy, color: AppTheme.textSecondary),
-                            onPressed: () {
-                              if (_recipientController.text.isNotEmpty) {
-                                Clipboard.setData(ClipboardData(text: _recipientController.text));
+                            onPressed: () async {
+                              final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                              if (clipboardData != null && clipboardData.text != null && clipboardData.text!.isNotEmpty) {
+                                _recipientController.text = clipboardData.text!.trim();
+                              } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Address copied!")),
+                                  const SnackBar(content: Text("Clipboard is empty")),
                                 );
                               }
                             },
                           ),
+
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -481,7 +493,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                       ),
 
                       SizedBox(height: 1.5.h),
-// ✅ Amount
+                      // ✅ Amount
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
@@ -601,10 +613,19 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
               SafeArea(
                 top: false,
                 child: AppButton(
-                  label: "Send",
-                  onPressed: _handleSend,
-                  enabled: true,
-                  trailingIcon: null,
+                  label: _isSending ? "" : "Send",
+                  enabled: !_isSending,
+                  onPressed: _isSending ? null : _handleSendButton,
+                  trailingIcon: _isSending
+                      ? SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                      : null,
                 ),
               ),
 
@@ -636,19 +657,7 @@ class _ActionButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 1.5.h),
         decoration: BoxDecoration(
           color: AppTheme.accentTherd,
-          // gradient: LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: [
-          //     AppTheme.accentTeal.withValues(alpha: 0.1),
-          //     AppTheme.successGreen.withValues(alpha: 0.05),
-          //   ],
-          // ),
           borderRadius: BorderRadius.circular(12),
-          // border: Border.all(
-          //   color: AppTheme.borderSubtle,
-          //   width: 1,
-          // ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -48,7 +48,7 @@ class SecureMnemonicService {
 
   // Derive AES key (32 bytes) from password + stored salt (or provided salt)
   Future<Uint8List> _deriveKeyFromPassword(String password, Uint8List salt) async {
-    final passBytes = utf8.encode(password) as Uint8List;
+    final passBytes = utf8.encode(password);
     return _pbkdf2(passBytes, salt, AppKeys.pbkdf2Iterations, 32);
   }
 
@@ -97,6 +97,7 @@ class SecureMnemonicService {
     await _secureStorage.delete(key: AppKeys.encryptedMnemonicKey);
     await _secureStorage.delete(key: AppKeys.saltKey);
     await _secureStorage.delete(key: AppKeys.ivKey);
+    await _secureStorage.delete(key: AppKeys.userPassword);
   }
 
   Uint8List _randomBytes(int len) {

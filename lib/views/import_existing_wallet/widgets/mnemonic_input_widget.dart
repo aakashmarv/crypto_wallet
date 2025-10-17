@@ -1,11 +1,9 @@
-import 'package:cryptovault_pro/views/import_existing_wallet/widgets/qr_scanner_button_widget.dart';
 import 'package:cryptovault_pro/views/import_existing_wallet/widgets/qr_scanner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
 
 class MnemonicInputWidget extends StatefulWidget {
@@ -27,8 +25,6 @@ class MnemonicInputWidget extends StatefulWidget {
 class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  // List<String> _words = [];
-  // bool _isValid = false;
   final RxList<String> _words = <String>[].obs;
   final RxBool _isValid = false.obs;
 
@@ -2113,39 +2109,51 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
   }
 
   void _validateMnemonic(String text) {
-    final words = text.trim().toLowerCase().split(RegExp(r'\s+'));
+    final trimmed = text.trim();
+
+    // 🔹 Detect Private Key Format (64 hex characters, optional 0x)
+    final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(trimmed);
+
+    if (isPrivateKey) {
+      _isValid.value = true;
+      widget.onValidationChanged(true);
+      return;
+    }
+
+    // 🔹 Otherwise, validate mnemonic as before
+    final words = trimmed.toLowerCase().split(RegExp(r'\s+'));
     final validWordCount = words.length == 12 || words.length == 24;
     final allWordsValid = words
         .every((word) => word.isNotEmpty && _commonBip39Words.contains(word));
 
     _words.value = words;
-    _isValid.value = validWordCount && allWordsValid && text.trim().isNotEmpty;
+    _isValid.value = validWordCount && allWordsValid && trimmed.isNotEmpty;
 
     widget.onValidationChanged(_isValid.value);
   }
 
-  void _insertWord(String word) {
-    final currentText = _controller.text;
-    final cursorPosition = _controller.selection.baseOffset;
 
-    if (cursorPosition == -1) {
-      // If no cursor position, append to end
-      final newText = currentText.isEmpty ? word : '$currentText $word';
-      _controller.text = newText;
-      _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: newText.length),
-      );
-    } else {
-      // Insert at cursor position
-      final beforeCursor = currentText.substring(0, cursorPosition);
-      final afterCursor = currentText.substring(cursorPosition);
-      final newText = '$beforeCursor$word $afterCursor';
-      _controller.text = newText;
-      _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: cursorPosition + word.length + 1),
-      );
-    }
+  void _insertWord(String word) {
+    final text = _controller.text;
+    final selection = _controller.selection;
+    // Find last space before cursor (to detect last word boundary)
+    int lastSpaceIndex = text.lastIndexOf(' ', selection.baseOffset - 1);
+    // Keep everything before that space
+    String prefix = lastSpaceIndex == -1
+        ? ''
+        : text.substring(0, lastSpaceIndex + 1);
+    // Replace last typed part (prefix) with selected word
+    String newText = '$prefix$word ';
+    // Update text field
+    _controller.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+    // Trigger validation + callback
+    _validateMnemonic(newText);
+    widget.onMnemonicChanged(newText);
   }
+
 
   List<String> _getSuggestions() {
     final currentText = _controller.text.toLowerCase();

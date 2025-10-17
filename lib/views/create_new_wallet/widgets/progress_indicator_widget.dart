@@ -17,7 +17,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       child: Column(
         children: [
           Row(

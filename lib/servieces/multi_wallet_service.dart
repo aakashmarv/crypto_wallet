@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bip39/bip39.dart' as bip39;
+import 'package:cryptovault_pro/constants/app_keys.dart';
 import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
 import 'package:web3dart/web3dart.dart';
 import 'secure_mnemonic_service.dart';
@@ -20,7 +21,6 @@ class WalletInfo {
 }
 
 class MultiWalletService {
-  static const _prefsWalletIndexesKey = 'wallet_indexes'; // stored in SharedPreferences (non-sensitive)
   static const _bip44Prefix = "m/44'/60'/0'/0/"; // ethereum
 
   final SecureMnemonicService _secureService;
@@ -34,51 +34,62 @@ class MultiWalletService {
       throw Exception('Invalid mnemonic');
     }
     await _secureService.encryptAndStoreMnemonic(mnemonic, password);
-    await _saveIndexes([index]);
+    await saveIndexes([index]);
     final wallet = await deriveWalletFromMnemonic(mnemonic, index);
     _cached = [wallet];
     return wallet;
   }
 
-// Import wallet from Private Key (non-HD) -> encrypt & reset indexes to [-1]
+// 🔹 Import wallet using Private Key (non-HD) — single account only
   Future<WalletInfo> importPrivateKey(String privateKeyHex, String password) async {
-    // 1. Private Key ki validity check karein
+    // 1️⃣ Validate private key format
     try {
       EthPrivateKey.fromHex(privateKeyHex);
-    } catch (e) {
-      throw Exception('Invalid private key format. Must be 64 hex characters with or without 0x prefix.');
+    } catch (_) {
+      throw Exception(
+        'Invalid private key format. It must be a valid 64-character hex string (with or without 0x).',
+      );
     }
 
-    // 2. Private Key ko encrypt karke store karein.
-    // Hum Mnemonic encryption function ko Private Key store karne ke liye use kar rahe hain,
-    // kyunki app sirf ek hi secret store karegi.
+    // 2️⃣ Normalize (ensure 0x prefix)
+    if (!privateKeyHex.startsWith('0x')) {
+      privateKeyHex = '0x$privateKeyHex';
+    }
+
+    // 3️⃣ Encrypt and store securely
     await _secureService.encryptAndStoreMnemonic(privateKeyHex, password);
 
-    // 3. Indexes ko reset karein. Non-HD key ke liye index -1 set karna ek achhi practice hai.
-    final index = -1;
-    await _saveIndexes([index]);
+    // 4️⃣ Use index -1 to indicate non-HD wallet (single imported key)
+    const index = -1;
+    await saveIndexes([index]);
 
-    // 4. Address nikalna aur WalletInfo banana
+    // 5️⃣ Derive address and create WalletInfo object
     final ethKey = EthPrivateKey.fromHex(privateKeyHex);
     final addr = (await ethKey.extractAddress()).hexEip55;
 
-    // path ko 'non-hd' set karein
-    final wallet = WalletInfo(address: addr, privateKeyHex: privateKeyHex, index: index, path: 'non-hd');
+    final wallet = WalletInfo(
+      address: addr,
+      privateKeyHex: privateKeyHex,
+      index: index,
+      path: 'non-hd',
+    );
+
     _cached = [wallet];
     return wallet;
   }
+
 
   // Add new account derived from stored mnemonic (increment index)
   Future<WalletInfo> addAccount(String password) async {
     final mnemonic = await _secureService.getDecryptedMnemonic(password);
     if (mnemonic == null) throw Exception('Bad password or no mnemonic');
 
-    final indexes = await _getIndexes();
+    final indexes = await getIndexes();
     final nextIndex = (indexes.isEmpty) ? 0 : (indexes.reduce((a,b) => a>b?a:b) + 1);
     final wallet = await deriveWalletFromMnemonic(mnemonic, nextIndex);
 
     indexes.add(nextIndex);
-    await _saveIndexes(indexes);
+    await saveIndexes(indexes);
 
     _cached.add(wallet);
     return wallet;
@@ -91,7 +102,7 @@ class MultiWalletService {
     final mnemonic = await _secureService.getDecryptedMnemonic(password);
     if (mnemonic == null) return [];
 
-    final indexes = await _getIndexes();
+    final indexes = await getIndexes();
     final wallets = <WalletInfo>[];
     for (final idx in indexes) {
       wallets.add(await deriveWalletFromMnemonic(mnemonic, idx));
@@ -118,20 +129,18 @@ class MultiWalletService {
   // Remove cached decrypted data on logout
   Future<void> clearAll() async {
     await _secureService.clearAll();
-    final prefs = await SharedPreferencesService.getInstance();
-    await prefs.remove(_prefsWalletIndexesKey);
     _cached.clear();
   }
 
   // Helpers: store indexes (SharedPreferences)
-  Future<void> _saveIndexes(List<int> indexes) async {
+  Future<void> saveIndexes(List<int> indexes) async {
     final prefs = await SharedPreferencesService.getInstance();
-    await prefs.setString(_prefsWalletIndexesKey, jsonEncode(indexes));
+    await prefs.setString(AppKeys.walletIndexesKey, jsonEncode(indexes));
   }
 
-  Future<List<int>> _getIndexes() async {
+  Future<List<int>> getIndexes() async {
     final prefs = await SharedPreferencesService.getInstance();
-    final jsonString = prefs.getString(_prefsWalletIndexesKey);
+    final jsonString = prefs.getString(AppKeys.walletIndexesKey);
     if (jsonString == null) return [];
     final list = (jsonDecode(jsonString) as List<dynamic>).cast<int>();
     return list;

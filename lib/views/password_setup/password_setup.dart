@@ -107,75 +107,127 @@ class _PasswordSetupState extends State<PasswordSetup>
 
   Future<void> _handleSetPassword() async {
     if (!_canSetPassword) return;
-      _isLoading.value = true;
+    print('⚠️ [Password] Cannot set password yet.');
+    _isLoading.value = true;
+    print('🔹 [Password] Setting password process started...');
     final storage = const FlutterSecureStorage();
+
     try {
       HapticFeedback.lightImpact();
+
       // 🔹 Save password securely
       final password = _passwordController.text.trim();
+      print('🔑 [Password] Entered password: "${password.isNotEmpty ? '***hidden***' : '(empty)'}"');
       if (password.isNotEmpty) {
-        await storage.write(key: AppKeys.userPassword, value: password,);
+        await storage.write(key: AppKeys.userPassword, value: password);
+        print('💾 [SecureStorage] Password saved successfully.');
       }
-      // Debug logs
-      // debugPrint("AppKeys.userPassword = ${AppKeys.userPassword}");
-      // debugPrint("Password = ${_passwordController.text}");
 
-      // Simulate password setup process
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1)); // small UX delay
       if (!mounted) return;
+
       if (_fromImport) {
-        // 🟩 Import wallet using same logic as ImportDetailsScreen
-        final mnemonic = _mnemonicPhrase?.trim();
-        if (mnemonic == null || mnemonic.isEmpty) {
-          _passwordError.value = 'Mnemonic missing. Please re-import.';
+        print('🟩 [Import Flow] Starting wallet import...');
+        // 🟩 Import wallet (Mnemonic OR Private Key)
+        final input = _mnemonicPhrase?.trim();
+        final isPrivateKey = Get.arguments?['isPrivateKey'] ?? false;
+        print('📥 [Import Data] Input: "$input"');
+        print('📥 [Import Data] isPrivateKey: $isPrivateKey');
+        if (input == null || input.isEmpty) {
+          _passwordError.value = 'Please enter recovery phrase or private key.';
           return;
         }
 
-        if (!MnemonicService.validateMnemonic(mnemonic)) {
-          _passwordError.value = 'Invalid recovery phrase.';
-          return;
-        }
-
+        // ✅ Initialize services
+        print('⚙️ [Init] Initializing services...');
         final secureService = SecureMnemonicService();
-        final multiWalletService = MultiWalletService(secureService);
-        final walletInfo = await multiWalletService.importMnemonic(mnemonic, password);
-
-        // ✅ Save wallet info securely
         final prefs = await SharedPreferencesService.getInstance();
+        final multiWalletService = MultiWalletService(secureService);
+
+        WalletInfo? wallet;
+
+        if (isPrivateKey) {
+          print('🔸 [PrivateKey Import] Starting import...');
+          // 🔸 Import from Private Key
+          try {
+            wallet = await multiWalletService.importPrivateKey(input, password);
+            print('✅ [PrivateKey Import] Wallet imported: ${wallet.address}');
+          } catch (e) {
+            _passwordError.value = 'Invalid private key format.';
+            debugPrint('Private key import error: $e');
+            return;
+          }
+        } else {
+          print('🔹 [Mnemonic Import] Starting mnemonic import...');
+          // 🔹 Import from Mnemonic
+          if (!MnemonicService.validateMnemonic(input)) {
+            _passwordError.value = 'Invalid recovery phrase.';
+            return;
+          }
+
+          await secureService.encryptAndStoreMnemonic(input, password);
+          print('🔒 [Mnemonic Storage] Mnemonic encrypted & stored.');
+          wallet = await multiWalletService.deriveWalletFromMnemonic(input, 0);
+          print('✅ [Wallet Derivation] Wallet derived: ${wallet.address}');
+
+          // Save wallet indexes [0]
+          await multiWalletService.saveIndexes([0]);
+          print('💾 [Wallet Index] Index [0] saved.');
+        }
+
+        if (wallet == null) {
+          _passwordError.value = 'Failed to import wallet.';
+          return;
+        }
+
+        // ✅ Store wallet info
+        await prefs.setString(AppKeys.walletAddress, wallet.address);
+        await prefs.setBool(AppKeys.isLogin, true);
+        await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
+        print('💾 [Prefs] Wallet address & login info saved.');
+
+        // ✅ Save wallet metadata (for wallet list tracking)
         final walletName = prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
-        // Handle wallet list
+        print('📘 [Wallet Name] Current wallet name: $walletName');
         final namesJson = prefs.getString(AppKeys.walletsListJson);
         List<Map<String, dynamic>> existing = [];
+
         if (namesJson != null) {
           try {
             existing = (jsonDecode(namesJson) as List<dynamic>)
                 .map((e) => Map<String, dynamic>.from(e))
                 .toList();
+            print('📂 [Wallet List] Existing wallets loaded (${existing.length}).');
           } catch (_) {
             existing = [];
+            print('⚠️ [Wallet List] Failed to decode existing list. Starting fresh.');
           }
         }
 
         existing.add({
           'name': walletName,
-          'address': walletInfo.address,
-          'index': walletInfo.index,
+          'address': wallet.address,
+          'index': wallet.index,
           'createdAt': DateTime.now().toIso8601String(),
         });
 
         await prefs.setString(AppKeys.walletsListJson, jsonEncode(existing));
-        await prefs.setBool(AppKeys.isLogin, true);
-        await prefs.setInt(AppKeys.walletCount, 1);
+        print('💾 [Wallet List] Wallet metadata added. Total wallets: ${existing.length}');
 
+        // ✅ Success feedback
         HapticFeedback.lightImpact();
-        Get.snackbar('Success', 'Wallet imported successfully!',
-            backgroundColor: AppTheme.successGreen,
-            colorText: AppTheme.textPrimary,
-            snackPosition: SnackPosition.BOTTOM);
+        // Get.snackbar(
+        //   'Success',
+        //   'Wallet imported successfully!',
+        //   backgroundColor: AppTheme.successGreen,
+        //   colorText: AppTheme.textPrimary,
+        //   snackPosition: SnackPosition.BOTTOM,
+        // );
+        print('🎉 [Success] Wallet imported successfully.');
         // ✅ Navigate to dashboard
         Get.offAllNamed(AppRoutes.dashboard);
       } else {
-        // 🟦 For new wallet creation → go to mnemonic display
+        // 🟦 For new wallet creation → go to mnemonic display screen
         Get.toNamed(AppRoutes.mnemonicPhraseDisplay);
       }
     } catch (e) {

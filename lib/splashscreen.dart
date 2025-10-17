@@ -61,11 +61,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     }
 
     if (isBiometricEnabled) {
-      // Logged in + Biometric enabled
       Get.offAllNamed(AppRoutes.appLock);
     } else {
-      // Logged in + Biometric disabled
-      Get.offAllNamed(AppRoutes.dashboard);
+      Get.offAllNamed(AppRoutes.passwordUnlockScreen);
     }
   }
 

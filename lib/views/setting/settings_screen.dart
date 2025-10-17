@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../routes/app_routes.dart';
+import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../theme/app_theme.dart';
@@ -97,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // 🔘 Logout Confirmation + Clear All Data
   Future<void> _handleLogout() async {
+    // 🔹 Step 1: Ask for confirmation
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -106,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: TextStyle(color: AppTheme.textPrimary),
         ),
         content: Text(
-          'Are you sure you want to log out? This will delete all wallet data.',
+          'Are you sure you want to log out?\n\nThis will permanently delete all wallet data, passwords, and cached info from this device.',
           style: TextStyle(color: AppTheme.textSecondary),
         ),
         actions: [
@@ -122,18 +125,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
 
-    if (confirm != true) return;
+    if (confirm != true) {
+      print('🚫 [Logout] User canceled logout.');
+      return;
+    }
 
-    // ✅ Clear all data
-    final prefs = await SharedPreferencesService.getInstance();
-    await prefs.clear();
+    print('🔐 [Logout] Logout process started...');
 
-    await SecureMnemonicService().clearAll();
-    // await MultiWalletService().clearAll();
+    try {
+      // 🔹 Step 2: Clear all wallet-related data safely
+      // a) Clear SharedPreferences
+      final prefs = await SharedPreferencesService.getInstance();
+      await prefs.clear();
+      print('🧹 [Logout] SharedPreferences cleared.');
 
-    // ✅ Navigate to onboarding / login screen
-    Get.offAllNamed(AppRoutes.onboarding);
+      // b) Clear encrypted storage, mnemonic & AES keys,wallet caches, derived wallets, indexes
+      final secureService = SecureMnemonicService();
+      final multiWalletService = MultiWalletService(secureService);
+      await multiWalletService.clearAll();
+      print('🧹 [Logout] MultiWalletService cache and indexes cleared.');
+
+      // 🔹 Step 3: Provide feedback
+      HapticFeedback.mediumImpact();
+
+      Get.offAllNamed(AppRoutes.onboarding);
+
+    } catch (e, stack) {
+      print(stack);
+      Get.snackbar(
+        'Logout Failed',
+        'Something went wrong while logging out. Please restart the app.',
+        backgroundColor: Colors.redAccent.withOpacity(0.1),
+        colorText: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
+
 
   // 🔘 Switch Tile Widget
   Widget _buildSwitchTile(BuildContext context,

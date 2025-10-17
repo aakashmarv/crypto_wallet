@@ -277,23 +277,23 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                           ),
                         SizedBox(height: 1.h),
                         // Forgot Password
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              // Navigate to Forgot Password Screen
-                              // Get.toNamed(AppRoutes.forgotPassword);
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: AppTheme.accentTeal,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.centerRight,
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       // Navigate to Forgot Password Screen
+                        //       // Get.toNamed(AppRoutes.forgotPassword);
+                        //     },
+                        //     child: Text(
+                        //       'Forgot Password?',
+                        //       style: TextStyle(
+                        //         fontSize: 12.sp,
+                        //         color: AppTheme.accentTeal,
+                        //         fontWeight: FontWeight.w500,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(height: 8.h),
                         // Unlock Button
                         FadeTransition(
