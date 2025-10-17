@@ -77,7 +77,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Obx(() => WalletBalanceCardWidget(balance: controller.walletBalance.value)),
+            WalletBalanceCardWidget(balance: controller.walletBalance),
             Obx(() => ActionButtonsRowWidget(walletAddress: controller.walletAddress.value)),
             SizedBox(height: 2.h),
             Padding(

@@ -1,11 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
-import '../../constants/app_keys.dart';
-import '../../servieces/sharedpreferences_service.dart';
-import '../../theme/app_theme.dart';
-import 'package:dio/dio.dart';
-
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
@@ -164,8 +156,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           child: _isLoading
               ? _buildShimmerList()
               : _transactions.isEmpty
-              ? _buildEmptyState()
-              : _buildTransactionList(),
+                  ? _buildEmptyState()
+                  : _buildTransactionList(),
         ),
       ),
     );
@@ -337,4 +329,3 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 }
-

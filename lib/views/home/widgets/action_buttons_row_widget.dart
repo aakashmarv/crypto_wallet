@@ -8,12 +8,16 @@ import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web3dart/credentials.dart';
+import 'package:web3dart/web3dart.dart';
+import '../../../constants/api_constants.dart';
 import '../../../constants/app_keys.dart';
 import '../../../servieces/multi_wallet_service.dart';
 import '../../../servieces/secure_mnemonic_service.dart';
 import '../../../servieces/send_service.dart';
 import '../../../widgets/app_button.dart';
+import 'package:http/http.dart';
+
+import '../controller/home_controller.dart';
 
 class ActionButtonsRowWidget extends StatelessWidget {
   final String? walletAddress;
@@ -223,9 +227,8 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
     "Ruby Testnet": 300.75,
     "Ruby Dev": 120.25,
   };
-
-  bool _showCoins = false;
-  bool _isSending = false;
+  final RxBool _isSending = false.obs;
+  final RxBool _showCoins = false.obs;
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -251,24 +254,15 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final recipient = _recipientController.text.trim();
-    final amount = _amountController.text.trim();
+    final amountStr = _amountController.text.trim();
 
-    // 🪵 Print debug info for transparency
     debugPrint("🔹 Send button pressed");
     debugPrint("Recipient entered: $recipient");
-    debugPrint("Amount entered: $amount $_selectedCoin");
-    // Step 1️⃣ - Show GetX loading feedback
-    Get.snackbar(
-      "Processing Transaction",
-      "⏳ Please wait while we send your transaction...",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.blueGrey.shade800,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+    debugPrint("Amount entered: $amountStr $_selectedCoin");
+    _isSending.value = true;
 
     try {
-      // Step 2️⃣ - Read stored password securely
+      // Step 1️⃣ - Read stored password securely
       const storage = FlutterSecureStorage();
       final storedPassword = await storage.read(key: AppKeys.userPassword);
 
@@ -284,7 +278,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         return;
       }
 
-      // Step 3️⃣ - Validate recipient address
+      // Step 2️⃣ - Validate recipient Ethereum address
       if (!_isValidEthereumAddress(recipient)) {
         debugPrint("❌ Invalid Ethereum address entered: $recipient");
         Get.snackbar(
@@ -297,16 +291,28 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         return;
       }
 
-      // Step 4️⃣ - Initialize wallet and transaction services
-      debugPrint("🔹 Initializing wallet and transaction services...");
+      // Step 3️⃣ - Initialize wallet + send services
       final secureService = SecureMnemonicService();
       final walletService = MultiWalletService(secureService);
       final txService = SendService(walletService, secureService);
 
-      // Step 5️⃣ - Convert Ether amount safely → Wei
-      final parsedAmount = double.tryParse(amount);
+      // Step 4️⃣ - Get first wallet (sender)
+      final wallets = await walletService.listAccounts(storedPassword);
+      if (wallets.isEmpty) throw Exception("No wallet found.");
+      final senderWallet = wallets.first;
+
+      // Step 5️⃣ - Fetch sender balance (in ETH)
+      final client = Web3Client(ApiConstants.rpcUrl, Client());
+      final senderAddress = EthereumAddress.fromHex(senderWallet.address);
+      final balanceWei = await client.getBalance(senderAddress);
+      final balanceEth = balanceWei.getValueInUnit(EtherUnit.ether);
+
+      debugPrint("💳 Sender Address: ${senderWallet.address}");
+      debugPrint("💰 Current Balance: $balanceEth ETH");
+
+      // Step 6️⃣ - Parse and convert amount
+      final parsedAmount = double.tryParse(amountStr);
       if (parsedAmount == null || parsedAmount <= 0) {
-        debugPrint("⚠️ Invalid amount entered: $amount");
         Get.snackbar(
           "Invalid Amount",
           "❌ Please enter a valid numeric amount.",
@@ -317,20 +323,38 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         return;
       }
 
-      final weiValue = BigInt.from(parsedAmount * 1e18); // ✅ proper conversion
-      debugPrint("💰 Converted $amount ETH → $weiValue Wei");
+      // Convert safely → Wei
+      final weiValue = BigInt.parse((parsedAmount * 1e18).toStringAsFixed(0));
+      debugPrint("💰 Sending Amount: $parsedAmount ETH ($weiValue Wei)");
 
-      // Step 6️⃣ - Send the transaction
-      debugPrint("🚀 Sending transaction → To: $recipient | Amount: $amount ETH");
+      // ✅ Step 7️⃣ - Check if user has enough balance (including gas buffer)
+      final gasEstimate = BigInt.from(21000) * balanceWei.getInWei ~/ balanceWei.getInWei; // simple placeholder
+      final totalNeeded = weiValue + BigInt.from(21000) * BigInt.from(10e9.toInt()); // approx gas 21k * 10 Gwei
+      if (balanceWei.getInWei < totalNeeded) {
+        debugPrint("❌ Insufficient balance for transaction + gas.");
+        Get.snackbar(
+          "Insufficient Balance",
+          "💸 You don't have enough funds to send this amount. "
+              "Available: ${balanceEth.toStringAsFixed(6)} ETH",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.shade700,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      // Step 8️⃣ - Send Transaction
+      debugPrint("🚀 Sending transaction...");
       final txHash = await txService.sendTransaction(
         to: recipient,
-        amount: weiValue.toString(), // ✅ send as string to match your service
+        amount: weiValue.toString(),
         password: storedPassword,
       );
 
-      debugPrint("✅ Transaction sent successfully. Hash: $txHash");
+      debugPrint("✅ Transaction Sent Successfully!");
+      debugPrint("🔗 Tx Hash: $txHash");
 
-      // Step 7️⃣ - Success feedback with option to view transaction
+      // Step 9️⃣ - Success Snackbar
       Get.snackbar(
         "Transaction Sent ✅",
         "Hash: $txHash",
@@ -341,17 +365,24 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         mainButton: TextButton(
           onPressed: () {
             final url = "https://etherscan.io/tx/$txHash";
-            debugPrint("🌐 Opening Etherscan: $url");
             launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
           },
           child: const Text("View", style: TextStyle(color: Colors.white)),
         ),
       );
 
-      // Step 8️⃣ - Close bottom sheet after success
-      if (mounted) Get.back();
-    } on SocketException catch (e) {
-      debugPrint("🌐 Network error: $e");
+      _recipientController.clear();
+      _amountController.clear();
+      debugPrint("🧹 Cleared text fields");
+
+      // Step 9️⃣ - ✅ Update wallet balance
+      await Get.find<HomeController>().loadBalance(); // or your controller method
+      debugPrint("🔄 Balance refreshed");
+
+      // Step 🔟 - ✅ Close bottom sheet
+      if (mounted) Navigator.of(context).pop();
+
+    } on SocketException {
       Get.snackbar(
         "Network Error",
         "🌐 Please check your internet connection.",
@@ -359,17 +390,8 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         backgroundColor: Colors.red.shade700,
         colorText: Colors.white,
       );
-    } on FormatException catch (e) {
-      debugPrint("⚠️ Invalid amount format: $e");
-      Get.snackbar(
-        "Invalid Amount",
-        "❌ Please enter a valid number for amount.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade700,
-        colorText: Colors.white,
-      );
     } catch (e, stack) {
-      debugPrint("❌ Transaction Error: $e\nStackTrace: $stack");
+      debugPrint("❌ Transaction Error: $e\n$stack");
       Get.snackbar(
         "Transaction Failed",
         "❌ ${e.toString().replaceAll('Exception:', '').trim()}",
@@ -377,8 +399,12 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         backgroundColor: Colors.red.shade700,
         colorText: Colors.white,
       );
+    } finally {
+      _isSending.value = false;
     }
   }
+
+
 
   /// ✅ Helper to validate Ethereum address
   bool _isValidEthereumAddress(String input) {
@@ -533,7 +559,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                       SizedBox(height: 1.5.h),
                       // ✅ Custom Dropdown
                       InkWell(
-                        onTap: () => setState(() => _showCoins = !_showCoins),
+                        onTap: () => setState(() => _showCoins.value = !_showCoins.value),
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: EdgeInsets.all(3.w),
@@ -565,7 +591,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                                 ),
                               ),
                               AnimatedRotation(
-                                turns: _showCoins ? 0.5 : 0,
+                                turns: _showCoins.value ? 0.5 : 0,
                                 duration: const Duration(milliseconds: 300),
                                 child: Icon(Icons.keyboard_arrow_down,
                                     color: AppTheme.accentTeal, size: 24),
@@ -585,7 +611,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                               onTap: () {
                                 setState(() {
                                   _selectedCoin = coin;
-                                  _showCoins = false;
+                                  _showCoins.value = false;
                                 });
                               },
                               title: Text(
@@ -600,7 +626,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                           }).toList(),
                         ),
                         crossFadeState:
-                        _showCoins ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        _showCoins.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                       ),
 
                       SizedBox(height: 2.h),
@@ -612,22 +638,20 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
               // ✅ Send Button pinned at bottom
               SafeArea(
                 top: false,
-                child: AppButton(
-                  label: _isSending ? "" : "Send",
-                  enabled: !_isSending,
-                  onPressed: _isSending ? null : _handleSendButton,
-                  trailingIcon: _isSending
+                child: Obx(() => AppButton(
+                  label: _isSending.value ? "" : "Send",
+                  enabled: !_isSending.value,
+                  onPressed: _isSending.value ? null : _handleSendButton,
+                  trailingIcon: _isSending.value
                       ? SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                   )
                       : null,
-                ),
+                )),
               ),
+
 
             ],
           ),

@@ -11,15 +11,12 @@ class SendService {
 
   SendService(this.walletService, this.secureService);
 
-  /// Send ETH (or native token) to recipient
-  /// Send native ETH (or compatible coin) transaction
   Future<String> sendTransaction({
     required String to,
-    required String amount, // expects amount in WEI string from UI
+    required String amount, // in Wei string
     required String password,
-    int chainId = 1, // default Ethereum mainnet
+    int chainId = 18359, // ✅ fixed default
   }) async {
-    // 1️⃣ Get wallet credentials
     final wallets = await walletService.listAccounts(password);
     if (wallets.isEmpty) throw Exception('No wallet found');
 
@@ -28,38 +25,31 @@ class SendService {
     final client = Web3Client(ApiConstants.rpcUrl, Client());
 
     try {
-      // 2️⃣ Prepare sender info
       final sender = await credentials.extractAddress();
       final nonce = await client.getTransactionCount(sender);
       final gasPrice = await client.getGasPrice();
-
-      // ✅ Convert the amount (Wei string → BigInt)
       final valueInWei = BigInt.parse(amount);
 
-      // 🧱 Build transaction
       final tx = Transaction(
         from: sender,
         to: EthereumAddress.fromHex(to),
         gasPrice: gasPrice,
         maxGas: 21000,
-        value: EtherAmount.inWei(valueInWei), // ✅ Correct way
+        value: EtherAmount.inWei(valueInWei),
         nonce: nonce,
       );
 
-      // 3️⃣ Send signed transaction
       final txHash = await client.sendTransaction(
         credentials,
         tx,
         chainId: chainId,
       );
-
       return txHash;
     } catch (e) {
-      // Handle gracefully
-      throw Exception("Transaction failed: $e");
+      rethrow; // ✅ preserve original exception
     } finally {
       await client.dispose();
     }
   }
-
 }
+

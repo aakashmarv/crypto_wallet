@@ -99,17 +99,43 @@ class MultiWalletService {
   Future<List<WalletInfo>> listAccounts(String password) async {
     if (_cached.isNotEmpty) return _cached;
 
-    final mnemonic = await _secureService.getDecryptedMnemonic(password);
-    if (mnemonic == null) return [];
+    final storedValue = await _secureService.getDecryptedMnemonic(password);
+    if (storedValue == null) return [];
 
     final indexes = await getIndexes();
+
+    // 🧩 Detect if stored value is a mnemonic or private key
+    final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(storedValue);
+
     final wallets = <WalletInfo>[];
-    for (final idx in indexes) {
-      wallets.add(await deriveWalletFromMnemonic(mnemonic, idx));
+
+    if (isPrivateKey) {
+      // 🔹 Handle private key wallet
+      var privateKeyHex = storedValue;
+      if (!privateKeyHex.startsWith('0x')) {
+        privateKeyHex = '0x$privateKeyHex';
+      }
+
+      final ethKey = EthPrivateKey.fromHex(privateKeyHex);
+      final address = (await ethKey.extractAddress()).hexEip55;
+
+      wallets.add(WalletInfo(
+        address: address,
+        privateKeyHex: privateKeyHex,
+        index: -1,
+        path: 'non-hd',
+      ));
+    } else {
+      // 🔹 Handle HD wallet (mnemonic)
+      for (final idx in indexes) {
+        wallets.add(await deriveWalletFromMnemonic(storedValue, idx));
+      }
     }
+
     _cached = wallets;
     return wallets;
   }
+
 
   // Derive wallet info (path + private key -> address)
   Future<WalletInfo> deriveWalletFromMnemonic(String mnemonic, int index) async {

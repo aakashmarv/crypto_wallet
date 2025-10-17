@@ -12,7 +12,7 @@ import '../../../utils/logger.dart';
 class HomeController extends GetxController {
   var walletName = 'My Wallet'.obs;
   var walletAddress = ''.obs;
-  var walletBalance = ''.obs;
+  var  walletBalance = ''.obs;
 
   @override
   void onInit() {
@@ -22,7 +22,7 @@ class HomeController extends GetxController {
 
   Future<void> loadWalletData() async {
     await _loadWalletInfo();
-    await _loadBalance();
+    await loadBalance();
   }
 
   Future<void> _loadWalletInfo() async {
@@ -36,15 +36,21 @@ class HomeController extends GetxController {
     appLog('[DEBUG] Wallet Loaded: $name | $address');
   }
 
-  Future<void> _loadBalance() async {
+  Future<void> loadBalance() async {
     try {
       final balance = await getCurrentBalance();
-      walletBalance.value = balance;
+      if (walletBalance.value != balance) {
+        walletBalance.value = balance;
+      } else {
+        walletBalance.refresh(); // ✅ forces Obx to rebuild if value unchanged
+      }
+      appLog('[DEBUG] UI Balance Updated → $balance');
     } catch (e, st) {
       appLog('[ERROR] Balance load failed: $e');
       print(st);
     }
   }
+
 
   Future<String> getCurrentBalance() async {
     final secureService = SecureMnemonicService();
@@ -52,9 +58,26 @@ class HomeController extends GetxController {
     final storedPassword = await storage.read(key: AppKeys.userPassword);
     if (storedPassword == null) throw Exception("No password found");
 
-    final mnemonic = await secureService.getDecryptedMnemonic(storedPassword);
+    final decryptedValue = await secureService.getDecryptedMnemonic(storedPassword);
+    if (decryptedValue == null) throw Exception("No mnemonic/private key found");
+
     final walletService = MultiWalletService(secureService);
-    final wallet = await walletService.deriveWalletFromMnemonic(mnemonic!, 0);
+
+    // ✅ Detect if stored value is mnemonic or private key
+    final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(decryptedValue);
+
+    WalletInfo wallet;
+    if (isPrivateKey) {
+      // Private key wallet
+      var pk = decryptedValue;
+      if (!pk.startsWith('0x')) pk = '0x$pk';
+      final ethKey = EthPrivateKey.fromHex(pk);
+      final addr = (await ethKey.extractAddress()).hexEip55;
+      wallet = WalletInfo(address: addr, privateKeyHex: pk, index: -1, path: 'non-hd');
+    } else {
+      // HD wallet (mnemonic)
+      wallet = await walletService.deriveWalletFromMnemonic(decryptedValue, 0);
+    }
 
     final web3client = Web3Client(ApiConstants.rpcUrl, Client());
     final address = EthereumAddress.fromHex(wallet.address);
@@ -64,8 +87,12 @@ class HomeController extends GetxController {
     await web3client.dispose();
     appLog('[DEBUG] Raw balance (wei): $balance');
 
-    final ether = balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(4);
-    return ether;
+    final ether = balance.getValueInUnit(EtherUnit.ether);
+    appLog('[DEBUG] Parsed balance (ether): $ether');
+
+    // ✅ Return string formatted safely
+    return ether.toStringAsFixed(6);
   }
+
 }
 
