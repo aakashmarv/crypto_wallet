@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:cryptovault_pro/core/app_export.dart';
+import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
+import 'package:cryptovault_pro/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,6 +16,7 @@ import '../../../constants/app_keys.dart';
 import '../../../servieces/multi_wallet_service.dart';
 import '../../../servieces/secure_mnemonic_service.dart';
 import '../../../servieces/send_service.dart';
+import '../../../utils/helper_util.dart';
 import '../../../widgets/app_button.dart';
 import 'package:http/http.dart';
 
@@ -222,11 +225,6 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
   final TextEditingController _amountController = TextEditingController();
 
   String _selectedCoin = "Ruby";
-  // final Map<String, double> _balances = {
-  //   "Ruby": 1250.50,
-  //   "Ruby Testnet": 300.75,
-  //   "Ruby Dev": 120.25,
-  // };
   final RxBool _isSending = false.obs;
   final RxBool _showCoins = false.obs;
 
@@ -256,9 +254,9 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
     final recipient = _recipientController.text.trim();
     final amountStr = _amountController.text.trim();
 
-    debugPrint("🔹 Send button pressed");
-    debugPrint("Recipient entered: $recipient");
-    debugPrint("Amount entered: $amountStr $_selectedCoin");
+    appLog("🔹 Send button pressed");
+    appLog("Recipient entered: $recipient");
+    appLog("Amount entered: $amountStr $_selectedCoin");
     _isSending.value = true;
 
     try {
@@ -267,27 +265,13 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
       final storedPassword = await storage.read(key: AppKeys.userPassword);
 
       if (storedPassword == null || storedPassword.isEmpty) {
-        debugPrint("⚠️ Password not found in secure storage.");
-        Get.snackbar(
-          "Authentication Failed",
-          "⚠️ Password not found. Please re-login.",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red.shade700,
-          colorText: Colors.white,
-        );
+        appLog("⚠️ Password not found in secure storage.");
         return;
       }
 
       // Step 2️⃣ - Validate recipient Ethereum address
       if (!_isValidEthereumAddress(recipient)) {
-        debugPrint("❌ Invalid Ethereum address entered: $recipient");
-        Get.snackbar(
-          "Invalid Address",
-          "❌ Please enter a valid Ethereum address.",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red.shade700,
-          colorText: Colors.white,
-        );
+        appLog("❌ Invalid Ethereum address entered: $recipient");
         return;
       }
 
@@ -297,18 +281,29 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
       final txService = SendService(walletService, secureService);
 
       // Step 4️⃣ - Get first wallet (sender)
-      final wallets = await walletService.listAccounts(storedPassword);
-      if (wallets.isEmpty) throw Exception("No wallet found.");
-      final senderWallet = wallets.first;
+      // final wallets = await walletService.listAccounts(storedPassword);
+      // if (wallets.isEmpty) throw Exception("No wallet found.");
+      // final senderWallet = wallets.first;
+      // final senderAddress = EthereumAddress.fromHex(senderWallet.address);
+
+      final prefs = await SharedPreferencesService.getInstance();
+      String senderWalletAddress = prefs.getString(AppKeys.walletAddress) ?? "";
+      if (senderWalletAddress.isEmpty) {
+        appLog("❌ No wallet address found in SharedPreferences.");
+        return;
+      }
+      final ethAddress = HelperUtil.toEthereumAddress(senderWalletAddress);
+      final senderAddress = EthereumAddress.fromHex(ethAddress);
+      appLog("💳 Sender Address: ${senderWalletAddress}");
+      appLog("💳 Sender ethAddress: ${ethAddress}");
 
       // Step 5️⃣ - Fetch sender balance (in ETH)
       final client = Web3Client(ApiConstants.rpcUrl, Client());
-      final senderAddress = EthereumAddress.fromHex(senderWallet.address);
       final balanceWei = await client.getBalance(senderAddress);
       final balanceEth = balanceWei.getValueInUnit(EtherUnit.ether);
 
-      debugPrint("💳 Sender Address: ${senderWallet.address}");
-      debugPrint("💰 Current Balance: $balanceEth ETH");
+
+      appLog("💰 Current Balance: $balanceEth ETH");
 
       // Step 6️⃣ - Parse and convert amount
       final parsedAmount = double.tryParse(amountStr);
@@ -325,13 +320,12 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
 
       // Convert safely → Wei
       final weiValue = BigInt.parse((parsedAmount * 1e18).toStringAsFixed(0));
-      debugPrint("💰 Sending Amount: $parsedAmount ETH ($weiValue Wei)");
+      appLog("💰 Sending Amount: $parsedAmount ETH ($weiValue Wei)");
 
       // ✅ Step 7️⃣ - Check if user has enough balance (including gas buffer)
-      final gasEstimate = BigInt.from(21000) * balanceWei.getInWei ~/ balanceWei.getInWei; // simple placeholder
       final totalNeeded = weiValue + BigInt.from(21000) * BigInt.from(10e9.toInt()); // approx gas 21k * 10 Gwei
       if (balanceWei.getInWei < totalNeeded) {
-        debugPrint("❌ Insufficient balance for transaction + gas.");
+        appLog("❌ Insufficient balance for transaction + gas.");
         Get.snackbar(
           "Insufficient Balance",
           "💸 You don't have enough funds to send this amount. "
@@ -344,15 +338,15 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
       }
 
       // Step 8️⃣ - Send Transaction
-      debugPrint("🚀 Sending transaction...");
+      appLog("🚀 Sending transaction...");
       final txHash = await txService.sendTransaction(
         to: recipient,
         amount: weiValue.toString(),
         password: storedPassword,
       );
 
-      debugPrint("✅ Transaction Sent Successfully!");
-      debugPrint("🔗 Tx Hash: $txHash");
+      appLog("✅ Transaction Sent Successfully!");
+      appLog("🔗 Tx Hash: $txHash");
 
       // Step 9️⃣ - Success Snackbar
       Get.snackbar(
@@ -364,7 +358,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         duration: const Duration(seconds: 5),
         mainButton: TextButton(
           onPressed: () {
-            final url = "https://etherscan.io/tx/$txHash";
+            final url = "https://rubyscan.io/tx/$txHash";
             launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
           },
           child: const Text("View", style: TextStyle(color: Colors.white)),
@@ -373,14 +367,20 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
 
       _recipientController.clear();
       _amountController.clear();
-      debugPrint("🧹 Cleared text fields");
+      appLog("🧹 Cleared text fields");
 
       // Step 9️⃣ - ✅ Update wallet balance
-      await Get.find<HomeController>().loadBalance(); // or your controller method
-      debugPrint("🔄 Balance refreshed");
+      final homeController = Get.find<HomeController>();
+      appLog("🔄 Refreshing balance before closing bottom sheet...");
+      await homeController.loadBalance(); // wait fully
+      appLog("✅ Balance refresh complete");
 
-      // Step 🔟 - ✅ Close bottom sheet
-      if (mounted) Navigator.of(context).pop();
+// Step 🔟 - ✅ Close bottom sheet after balance is updated
+      if (mounted) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          Navigator.of(context).pop();
+        });
+      }
 
     } on SocketException {
       Get.snackbar(
@@ -391,7 +391,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
         colorText: Colors.white,
       );
     } catch (e, stack) {
-      debugPrint("❌ Transaction Error: $e\n$stack");
+      appLog("❌ Transaction Error: $e\n$stack");
       Get.snackbar(
         "Transaction Failed",
         "❌ ${e.toString().replaceAll('Exception:', '').trim()}",

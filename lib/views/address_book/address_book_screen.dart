@@ -1,3 +1,4 @@
+import 'package:cryptovault_pro/utils/helper_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -209,11 +210,6 @@ class _AddressCard extends StatelessWidget {
     required this.onDelete,
   });
 
-  String _short(String addr) {
-    if (addr.length <= 12) return addr;
-    return '${addr.substring(0, 15)}...${addr.substring(addr.length - 8)}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -271,7 +267,7 @@ class _AddressCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      _short(entry.address),
+                      HelperUtil.shortAddress(entry.address),
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 10.sp,
                         color: AppTheme.textSecondary,

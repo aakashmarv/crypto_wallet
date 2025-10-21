@@ -45,27 +45,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 2.w),
                     child: Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _homeController.walletName.value,
-                          style: GoogleFonts.inter(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary,
-                          ),
-                        ),
-                        Text(
-                          'Not Connected',
-                          style: GoogleFonts.inter(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppTheme.textSecondary,
-                          ),
-                        ),
-                      ],
-                    )),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _homeController.walletName.value,
+                              style: GoogleFonts.inter(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              'Not Connected',
+                              style: GoogleFonts.inter(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
+                          ],
+                        )),
                   ),
                   NetworkDropdownWidget(),
                 ],
@@ -84,38 +84,40 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            WalletBalanceCardWidget(balance: _homeController.walletBalance),
-            Obx(() => ActionButtonsRowWidget(walletAddress: _homeController.walletAddress.value)),
+           WalletBalanceCardWidget(),
+            Obx(() => ActionButtonsRowWidget(
+                walletAddress: _homeController.walletAddress.value)),
             SizedBox(height: 2.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Obx(() => Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _homeController.walletAddress.value.isEmpty
-                          ? 'Loading...'
-                          : _homeController.walletAddress.value,
-                      style: GoogleFonts.jetBrainsMono(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppTheme.textSecondary,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  SizedBox(width: 2.w),
-                  IconButton(
-                    icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 4.w),
-                    onPressed: () {
-                      Clipboard.setData(
-                          ClipboardData(text: _homeController.walletAddress.value));
-                    },
-                  ),
-                ],
-              )),
-            ),
-            SizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 4.w),
+            //   child: Obx(() => Row(
+            //         children: [
+            //           Expanded(
+            //             child: Text(
+            //               _homeController.walletAddress.value.isEmpty
+            //                   ? 'Loading...'
+            //                   : _homeController.walletAddress.value,
+            //               style: GoogleFonts.jetBrainsMono(
+            //                 fontSize: 12.sp,
+            //                 fontWeight: FontWeight.w500,
+            //                 color: AppTheme.textSecondary,
+            //               ),
+            //               overflow: TextOverflow.ellipsis,
+            //             ),
+            //           ),
+            //           SizedBox(width: 2.w),
+            //           IconButton(
+            //             icon: Icon(Icons.copy,
+            //                 color: AppTheme.successGreen, size: 4.w),
+            //             onPressed: () {
+            //               Clipboard.setData(ClipboardData(
+            //                   text: _homeController.walletAddress.value));
+            //             },
+            //           ),
+            //         ],
+            //       )),
+            // ),
+            // SizedBox(height: 1.h),
             Expanded(
               child: DefaultTabController(
                 length: 2,

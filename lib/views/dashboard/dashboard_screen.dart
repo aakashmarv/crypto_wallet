@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
 import '../../theme/app_theme.dart';
+import '../../viewmodels/coin_controller.dart';
 import '../../viewmodels/selectedIndex_controller.dart';
 import '../d_app_browser/d_app_browser.dart';
 import '../home/controller/home_controller.dart';
@@ -14,7 +15,8 @@ class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
 
   final SelectedIndexController _selectedIndexController = Get.put(SelectedIndexController());
-  final HomeController _homeController = Get.put(HomeController());
+  final HomeController _homeController = Get.put(HomeController(), permanent: true);
+  final CoinPriceController _coinPriceController = Get.put(CoinPriceController(), permanent: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Rxn<DateTime> _lastBackPressed = Rxn<DateTime>();
 

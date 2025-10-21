@@ -6,6 +6,9 @@ class ApiConstants {
   // Endpoints
   static const String rpcUrl = "https://bridge-rpc.rubyscan.io";
 
+  static String getCoinUrl = "$baseUrl/getrubyprice";
+
   static String getTokenlistUrl(String walletAddress) => "$baseUrl/getaddressdetails/$walletAddress";
+
 
 }

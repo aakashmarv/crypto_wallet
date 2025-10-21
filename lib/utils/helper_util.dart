@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,6 +37,17 @@ class HelperUtil {
       FocusManager.instance.primaryFocus?.unfocus();
       appLog('🧹 [HelperUtil] Keyboard closed.');
     }
+  }
+  /// ✅ Shortens long wallet addresses for UI display (safe for all lengths)
+  static String shortAddress(String? addr) {
+    if (addr == null || addr.isEmpty) return "—"; // handle null/empty safely
+
+    final clean = addr.trim();
+    if (clean.length <= 16) return clean;
+
+    final start = clean.substring(0, math.min(15, clean.length));
+    final end = clean.substring(math.max(clean.length - 8, 0));
+    return "$start...$end";
   }
 
   /// ✅ Copy text to clipboard with optional toast message
