@@ -62,53 +62,56 @@ class PasswordStrengthIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return password.isEmpty
         ? const SizedBox.shrink()
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 2.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Password Strength',
-                    style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    strengthText,
-                    style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                      color: strengthColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 1.h),
-              Container(
-                height: 6,
-                decoration: BoxDecoration(
-                  color: AppTheme.borderSubtle,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Row(
-                  children: List.generate(5, (index) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: index < 4 ? 2 : 0),
-                        decoration: BoxDecoration(
-                          color: index < strengthScore
-                              ? strengthColor
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
+        : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 2.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Password Strength',
+                      style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
                       ),
-                    );
-                  }),
+                    ),
+                    Text(
+                      strengthText,
+                      style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                        color: strengthColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          );
+                SizedBox(height: 1.h),
+                Container(
+                  height: 4,
+                  decoration: BoxDecoration(
+                    // color: AppTheme.borderSubtle,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Row(
+                    children: List.generate(5, (index) {
+                      return Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: index < 4 ? 3 : 0),
+                          decoration: BoxDecoration(
+                            color: index < strengthScore
+                                ? strengthColor
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+        );
   }
 }

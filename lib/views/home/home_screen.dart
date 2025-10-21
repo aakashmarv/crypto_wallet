@@ -10,17 +10,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import 'controller/home_controller.dart';
 
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final HomeController controller = Get.find<HomeController>();
-    return _buildUI(controller);
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late HomeController _homeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeController = Get.find<HomeController>();
   }
 
-  Widget _buildUI(HomeController controller) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.primaryDark,
       appBar: PreferredSize(
@@ -42,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          controller.walletName.value,
+                          _homeController.walletName.value,
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -77,8 +84,8 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            WalletBalanceCardWidget(balance: controller.walletBalance),
-            Obx(() => ActionButtonsRowWidget(walletAddress: controller.walletAddress.value)),
+            WalletBalanceCardWidget(balance: _homeController.walletBalance),
+            Obx(() => ActionButtonsRowWidget(walletAddress: _homeController.walletAddress.value)),
             SizedBox(height: 2.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -86,9 +93,9 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      controller.walletAddress.value.isEmpty
+                      _homeController.walletAddress.value.isEmpty
                           ? 'Loading...'
-                          : controller.walletAddress.value,
+                          : _homeController.walletAddress.value,
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -101,14 +108,14 @@ class HomeScreen extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 4.w),
                     onPressed: () {
-                      Clipboard.setData(ClipboardData(text: controller.walletAddress.value));
+                      Clipboard.setData(
+                          ClipboardData(text: _homeController.walletAddress.value));
                     },
                   ),
                 ],
               )),
             ),
             SizedBox(height: 1.h),
-            // ✅ Proper TabController using GetX-friendly pattern
             Expanded(
               child: DefaultTabController(
                 length: 2,

@@ -11,6 +11,8 @@ import '../../core/app_export.dart';
 import '../../servieces/mnemonic_service.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
+import '../../utils/helper_util.dart';
+import '../../utils/logger.dart';
 import '../../widgets/app_button.dart';
 import './widgets/biometric_setup_widget.dart';
 import './widgets/password_requirements_widget.dart';
@@ -106,40 +108,40 @@ class _PasswordSetupState extends State<PasswordSetup>
   }
 
   Future<void> _handleSetPassword() async {
+    HelperUtil.closeKeyboard(context);
     if (!_canSetPassword) return;
-    print('⚠️ [Password] Cannot set password yet.');
+    appLog('⚠️ [Password] Cannot set password yet.');
     _isLoading.value = true;
-    print('🔹 [Password] Setting password process started...');
+    appLog('🔹 [Password] Setting password process started...');
     final storage = const FlutterSecureStorage();
 
     try {
       HapticFeedback.lightImpact();
-
       // 🔹 Save password securely
       final password = _passwordController.text.trim();
-      print('🔑 [Password] Entered password: "${password.isNotEmpty ? '***hidden***' : '(empty)'}"');
+      appLog('🔑 [Password] Entered password: "${password.isNotEmpty ? '***hidden***' : '(empty)'}"');
       if (password.isNotEmpty) {
         await storage.write(key: AppKeys.userPassword, value: password);
-        print('💾 [SecureStorage] Password saved successfully.');
+        appLog('💾 [SecureStorage] Password saved successfully.');
       }
 
       await Future.delayed(const Duration(seconds: 1)); // small UX delay
       if (!mounted) return;
 
       if (_fromImport) {
-        print('🟩 [Import Flow] Starting wallet import...');
+        appLog('🟩 [Import Flow] Starting wallet import...');
         // 🟩 Import wallet (Mnemonic OR Private Key)
         final input = _mnemonicPhrase?.trim();
         final isPrivateKey = Get.arguments?['isPrivateKey'] ?? false;
-        print('📥 [Import Data] Input: "$input"');
-        print('📥 [Import Data] isPrivateKey: $isPrivateKey');
+        appLog('📥 [Import Data] Input: "$input"');
+        appLog('📥 [Import Data] isPrivateKey: $isPrivateKey');
         if (input == null || input.isEmpty) {
           _passwordError.value = 'Please enter recovery phrase or private key.';
           return;
         }
 
         // ✅ Initialize services
-        print('⚙️ [Init] Initializing services...');
+        appLog('⚙️ [Init] Initializing services...');
         final secureService = SecureMnemonicService();
         final prefs = await SharedPreferencesService.getInstance();
         final multiWalletService = MultiWalletService(secureService);
@@ -147,18 +149,18 @@ class _PasswordSetupState extends State<PasswordSetup>
         WalletInfo? wallet;
 
         if (isPrivateKey) {
-          print('🔸 [PrivateKey Import] Starting import...');
+          appLog('🔸 [PrivateKey Import] Starting import...');
           // 🔸 Import from Private Key
           try {
             wallet = await multiWalletService.importPrivateKey(input, password);
-            print('✅ [PrivateKey Import] Wallet imported: ${wallet.address}');
+            appLog('✅ [PrivateKey Import] Wallet imported: ${wallet.address}');
           } catch (e) {
             _passwordError.value = 'Invalid private key format.';
-            debugPrint('Private key import error: $e');
+            appLog('Private key import error: $e');
             return;
           }
         } else {
-          print('🔹 [Mnemonic Import] Starting mnemonic import...');
+          appLog('🔹 [Mnemonic Import] Starting mnemonic import...');
           // 🔹 Import from Mnemonic
           if (!MnemonicService.validateMnemonic(input)) {
             _passwordError.value = 'Invalid recovery phrase.';
@@ -166,13 +168,13 @@ class _PasswordSetupState extends State<PasswordSetup>
           }
 
           await secureService.encryptAndStoreMnemonic(input, password);
-          print('🔒 [Mnemonic Storage] Mnemonic encrypted & stored.');
+          appLog('🔒 [Mnemonic Storage] Mnemonic encrypted & stored.');
           wallet = await multiWalletService.deriveWalletFromMnemonic(input, 0);
-          print('✅ [Wallet Derivation] Wallet derived: ${wallet.address}');
+          appLog('✅ [Wallet Derivation] Wallet derived: ${wallet.address}');
 
           // Save wallet indexes [0]
           await multiWalletService.saveIndexes([0]);
-          print('💾 [Wallet Index] Index [0] saved.');
+          appLog('💾 [Wallet Index] Index [0] saved.');
         }
 
         if (wallet == null) {
@@ -180,15 +182,18 @@ class _PasswordSetupState extends State<PasswordSetup>
           return;
         }
 
+        // ✅ Convert Ethereum-style address (0x...) → Ruby-chain format (r...)
+        final rubyAddress = HelperUtil.toRubyAddress(wallet.address);
+
         // ✅ Store wallet info
-        await prefs.setString(AppKeys.walletAddress, wallet.address);
+        await prefs.setString(AppKeys.walletAddress, rubyAddress);
         await prefs.setBool(AppKeys.isLogin, true);
         await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
-        print('💾 [Prefs] Wallet address & login info saved.');
+        appLog('💾 [Prefs] Wallet address & login info saved.');
 
         // ✅ Save wallet metadata (for wallet list tracking)
         final walletName = prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
-        print('📘 [Wallet Name] Current wallet name: $walletName');
+        appLog('📘 [Wallet Name] Current wallet name: $walletName');
         final namesJson = prefs.getString(AppKeys.walletsListJson);
         List<Map<String, dynamic>> existing = [];
 
@@ -197,10 +202,10 @@ class _PasswordSetupState extends State<PasswordSetup>
             existing = (jsonDecode(namesJson) as List<dynamic>)
                 .map((e) => Map<String, dynamic>.from(e))
                 .toList();
-            print('📂 [Wallet List] Existing wallets loaded (${existing.length}).');
+            appLog('📂 [Wallet List] Existing wallets loaded (${existing.length}).');
           } catch (_) {
             existing = [];
-            print('⚠️ [Wallet List] Failed to decode existing list. Starting fresh.');
+            appLog('⚠️ [Wallet List] Failed to decode existing list. Starting fresh.');
           }
         }
 
@@ -212,18 +217,8 @@ class _PasswordSetupState extends State<PasswordSetup>
         });
 
         await prefs.setString(AppKeys.walletsListJson, jsonEncode(existing));
-        print('💾 [Wallet List] Wallet metadata added. Total wallets: ${existing.length}');
-
-        // ✅ Success feedback
-        HapticFeedback.lightImpact();
-        // Get.snackbar(
-        //   'Success',
-        //   'Wallet imported successfully!',
-        //   backgroundColor: AppTheme.successGreen,
-        //   colorText: AppTheme.textPrimary,
-        //   snackPosition: SnackPosition.BOTTOM,
-        // );
-        print('🎉 [Success] Wallet imported successfully.');
+        appLog('💾 [Wallet List] Wallet metadata added. Total wallets: ${existing.length}');
+        appLog('🎉 [Success] Wallet imported successfully.');
         // ✅ Navigate to dashboard
         Get.offAllNamed(AppRoutes.dashboard);
       } else {
@@ -232,7 +227,7 @@ class _PasswordSetupState extends State<PasswordSetup>
       }
     } catch (e) {
       _passwordError.value = 'Failed to set password. Please try again.';
-      debugPrint("Password save error: $e");
+      appLog("Password save error: $e");
     } finally {
       if (mounted) _isLoading.value = false;
     }
@@ -303,7 +298,7 @@ class _PasswordSetupState extends State<PasswordSetup>
                 _buildHeader(),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    padding: EdgeInsets.symmetric(horizontal: 1.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -333,7 +328,7 @@ class _PasswordSetupState extends State<PasswordSetup>
                           onBiometricToggle: (value) async {
                             _isBiometricEnabled.value = value;
                             final prefs = await SharedPreferencesService.getInstance();
-                            print("isBiometricEnable :: $value");
+                            appLog("isBiometricEnable :: $value");
                             await prefs.setBool(AppKeys.isBiometricEnable, value);
                           },
                         )),
@@ -385,9 +380,9 @@ class _PasswordSetupState extends State<PasswordSetup>
             child: Center(
               child: Text(
                 'Password Setup',
-                style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+                style: AppTheme.darkTheme.textTheme.headlineSmall?.copyWith(
                   color: AppTheme.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),

@@ -139,15 +139,15 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Transform.scale(
-          scale: 1.2,
+          scale: 1.1,
           child: Checkbox(
             value: isChecked,
             onChanged: onChanged,
             activeColor: AppTheme.accentTeal,
             checkColor: AppTheme.primaryDark,
             side: BorderSide(
-              color: isChecked ? AppTheme.accentTeal : AppTheme.borderSubtle,
-              width: 2,
+              color: isChecked ? AppTheme.accentTeal : AppTheme.textSecondary,
+              width: 1,
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),

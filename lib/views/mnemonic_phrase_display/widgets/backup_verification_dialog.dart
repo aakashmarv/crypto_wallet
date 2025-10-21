@@ -270,7 +270,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
             textAlign: TextAlign.center,
           ),
 
-          SizedBox(height: 3.h),
+          // SizedBox(height: 3.h),
 
           // Word options
           GridView.builder(
@@ -288,6 +288,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
               return ElevatedButton(
                 onPressed: () => _submitAnswer(word),
                 style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   backgroundColor: AppTheme.secondaryDark,
                   foregroundColor: AppTheme.textPrimary,
                   elevation: 0,

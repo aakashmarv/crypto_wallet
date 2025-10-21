@@ -47,26 +47,13 @@ class WalletBalanceCardWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
         child: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isLoading ? "---" : _formatBalance(balance.value),
-                style: GoogleFonts.inter(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                '+\$0(+0.00%)',
-                style: GoogleFonts.inter(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.textSecondary,
-                ),
-              ),
-            ],
+          child: Text(
+            "Ruby ${isLoading ? '---' : _formatBalance(balance.value)}",
+            style: GoogleFonts.inter(
+              fontSize: 22.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
         ),
       );

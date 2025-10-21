@@ -20,12 +20,10 @@ dependencies:
   cached_network_image: ^3.3.1
   connectivity_plus: ^6.1.4
   fluttertoast: ^8.2.4
-  fl_chart: ^0.65.0
   smooth_page_indicator: ^1.2.1
   webview_flutter: ^4.13.0
   camera: ^0.10.5+5
   permission_handler: ^11.1.0
-  universal_html: ^2.2.4
   lucide_icons_flutter: ^3.1.1
   local_auth: ^2.3.0
   mobile_scanner: ^7.1.2

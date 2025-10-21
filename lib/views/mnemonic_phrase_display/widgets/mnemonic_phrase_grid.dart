@@ -58,36 +58,22 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   fontSize: 13.sp
                 ),
               ),
-              const SizedBox(height: 8),
-              // QR Code with container
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: QrImageView(
-                  data: phrase,
-                  version: QrVersions.auto,
-                  size: 150,
-                  gapless: false,
-                  backgroundColor: Colors.white,
-                ),
+              const SizedBox(height: 20),
+              QrImageView(
+                data: phrase,
+                version: QrVersions.auto,
+                size: 240,
+                gapless: false,
+                backgroundColor: Colors.white,
               ),
+
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.accentTeal.withOpacity(0.15),
+                    backgroundColor: AppTheme.accentTeal,
                     foregroundColor: AppTheme.accentTeal,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -103,6 +89,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                     'Close',
                     style: TextStyle(
                       fontSize: 16,
+                      color: AppTheme.surfaceElevated,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../routes/app_routes.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
@@ -16,8 +17,61 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   bool _isDarkMode = true;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+  static Future<void> _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      final launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to open link: $e',
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,63 +90,90 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         iconTheme: IconThemeData(color: AppTheme.textPrimary),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 2.h),
-        child: Column(
-          children: [
-            _buildSwitchTile(
-              context,
-              icon: Icons.dark_mode,
-              title: "Dark Mode",
-              value: _isDarkMode,
-              onChanged: (val) {
-                setState(() => _isDarkMode = val);
-              },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
+            child: Column(
+              children: [
+                _buildSwitchTile(
+                  context,
+                  icon: Icons.dark_mode,
+                  title: "Dark Mode",
+                  value: _isDarkMode,
+                  onChanged: (val) {
+                    setState(() => _isDarkMode = val);
+                  },
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.receipt_long,
+                  title: "View Transaction",
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.book,
+                  title: "Address Book",
+                  onTap: () => Get.toNamed(AppRoutes.addressBook),
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.link,
+                  title: "Connected Sites",
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.lock_reset,
+                  title: "Change Password",
+                  onTap: () => Get.toNamed(AppRoutes.changePassword),
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.help_outline,
+                  title: "Help & Support",
+                  onTap: () {_launchURL("https://uxbill.com/about");
+                  },
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.privacy_tip,
+                  title: "Privacy Policy",
+                  onTap: () {_launchURL("https://uxbill.com/about");},
+                ),
+                _buildDivider(),
+                _buildNavigationTile(
+                  context,
+                  icon: Icons.logout,
+                  title: "Logout",
+                  isDestructive: true,
+                  onTap: _handleLogout,
+                ),
+                SizedBox(height: 2.h),
+              ],
             ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.receipt_long,
-              title: "View Transaction",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.book,
-              title: "Address Book",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.link,
-              title: "Connected Sites",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.lock_reset,
-              title: "Change Password",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.help_outline,
-              title: "Help & Support",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.privacy_tip,
-              title: "Privacy Policy",
-              onTap: () {},
-            ),
-            _buildNavigationTile(
-              context,
-              icon: Icons.logout,
-              title: "Logout",
-              onTap: _handleLogout,
-            ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+  // 🔘 Light Divider
+  Widget _buildDivider() {
+    return Padding(
+      padding: EdgeInsets.only(left: 13.w),
+      child: Divider(
+        color: AppTheme.borderSubtle.withOpacity(0.5),
+        height: 1,
+        thickness: 0.5,
       ),
     );
   }
@@ -162,22 +243,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-
   // 🔘 Switch Tile Widget
   Widget _buildSwitchTile(BuildContext context,
       {required IconData icon, required String title, required bool value, required Function(bool) onChanged}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-      decoration: BoxDecoration(
-        color: AppTheme.secondaryDark.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderSubtle),
-      ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.accentTeal, size: 6.w),
-          SizedBox(width: 3.w),
+          Container(
+            padding: EdgeInsets.all(2.w),
+            decoration: BoxDecoration(
+              color: AppTheme.accentTeal.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: AppTheme.accentTeal, size: 5.5.w),
+          ),
+          SizedBox(width: 3.5.w),
           Expanded(
             child: Text(
               title,
@@ -201,35 +283,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // 🔘 Navigation Tile Widget
   Widget _buildNavigationTile(BuildContext context,
-      {required IconData icon, required String title, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-        decoration: BoxDecoration(
-          color: AppTheme.secondaryDark.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.borderSubtle),
-        ),
+      {required IconData icon, required String title, required VoidCallback onTap, bool isDestructive = false}) {
+    return InkWell(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
+      splashColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal).withOpacity(0.1),
+      highlightColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal).withOpacity(0.05),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
         child: Row(
           children: [
-            Icon(icon, color: AppTheme.textPrimary, size: 6.w),
-            SizedBox(width: 3.w),
+            Container(
+              padding: EdgeInsets.all(2.w),
+              decoration: BoxDecoration(
+                color: isDestructive
+                    ? Colors.redAccent.withOpacity(0.15)
+                    : AppTheme.textPrimary.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                  icon,
+                  color: isDestructive ? Colors.redAccent : AppTheme.textPrimary,
+                  size: 5.5.w
+              ),
+            ),
+            SizedBox(width: 3.5.w),
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.textPrimary,
+                  color: isDestructive ? Colors.redAccent : AppTheme.textPrimary,
                 ),
               ),
             ),
-            Icon(Icons.keyboard_arrow_right, color: AppTheme.textSecondary, size: 6.w),
+            Icon(
+                Icons.chevron_right,
+                color: AppTheme.textSecondary.withOpacity(0.5),
+                size: 5.5.w
+            ),
           ],
         ),
       ),
     );
   }
 }
+

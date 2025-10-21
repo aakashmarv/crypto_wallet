@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cryptovault_pro/widgets/custome_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import '../../servieces/mnemonic_service.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
+import '../../utils/helper_util.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
 import './widgets/mnemonic_phrase_grid.dart';
@@ -157,13 +160,24 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       _showIncompleteBackupDialog();
       return;
     }
-    showDialog(
+
+    showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => BackupVerificationDialog(
-        mnemonicWords: _mnemonicWords,
-        onVerificationComplete: _onVerificationComplete,
-      ),
+      barrierColor: Colors.black.withOpacity(0.6), // dark semi-transparent overlay
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12), // 🔹 Blur background
+          child: FadeTransition(
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            child: BackupVerificationDialog(
+              mnemonicWords: _mnemonicWords,
+              onVerificationComplete: _onVerificationComplete,
+            ),
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 
@@ -231,9 +245,12 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     final walletService = MultiWalletService(secureService);
     final wallet = await walletService.deriveWalletFromMnemonic(mnemonic, 0);
 
+    // ✅ Convert Ethereum-style address (0x...) → Ruby-chain format (r...)
+    final rubyAddress = HelperUtil.toRubyAddress(wallet.address);
+
     // ✅ Store non-sensitive info in SharedPreferences
     await multiWalletService.saveIndexes([0]);
-    await prefs.setString(AppKeys.walletAddress, wallet.address);
+    await prefs.setString(AppKeys.walletAddress, rubyAddress);
     await prefs.setBool(AppKeys.isLogin, true);
     await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
     // await prefs.setString(AppKeys.network, "ethereum");

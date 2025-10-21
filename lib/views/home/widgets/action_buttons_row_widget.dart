@@ -171,11 +171,11 @@ class _DepositBottomSheet extends StatelessWidget {
               child: QrImageView(
                 data: walletAddress,
                 version: QrVersions.auto,
-                size: 40.w,
+                size: 50.w,
                 backgroundColor: Colors.white,
               ),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.h),
 
             // ✅ Wallet Address + Copy
             Row(
@@ -222,11 +222,11 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
   final TextEditingController _amountController = TextEditingController();
 
   String _selectedCoin = "Ruby";
-  final Map<String, double> _balances = {
-    "Ruby": 1250.50,
-    "Ruby Testnet": 300.75,
-    "Ruby Dev": 120.25,
-  };
+  // final Map<String, double> _balances = {
+  //   "Ruby": 1250.50,
+  //   "Ruby Testnet": 300.75,
+  //   "Ruby Dev": 120.25,
+  // };
   final RxBool _isSending = false.obs;
   final RxBool _showCoins = false.obs;
 
@@ -458,7 +458,7 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                     controller: controller,
                     children: [
                       Text(
-                        "Send Tokens",
+                        "Send Ruby",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
@@ -552,17 +552,17 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                           if (value == null || value.isEmpty) return "Enter amount";
                           final amount = double.tryParse(value);
                           if (amount == null || amount <= 0) return "Invalid amount";
-                          if (amount > _balances[_selectedCoin]!) return "Insufficient balance";
+                          // if (amount > _balances[_selectedCoin]!) return "Insufficient balance";
                           return null;
                         },
                       ),
-                      SizedBox(height: 1.5.h),
+                      SizedBox(height: 4.h),
                       // ✅ Custom Dropdown
                       InkWell(
                         onTap: () => setState(() => _showCoins.value = !_showCoins.value),
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
-                          padding: EdgeInsets.all(3.w),
+                          padding: EdgeInsets.symmetric(horizontal: 3.w,vertical: 2.5.w),
                           decoration: BoxDecoration(
                             border: Border.all(color: AppTheme.borderSubtle),
                             borderRadius: BorderRadius.circular(16),
@@ -602,32 +602,32 @@ class _SendBottomSheetState extends State<_SendBottomSheet>
                       ),
 
                       // ✅ Coin List (expandable)
-                      AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 300),
-                        firstChild: const SizedBox.shrink(),
-                        secondChild: Column(
-                          children: _balances.keys.map((coin) {
-                            return ListTile(
-                              onTap: () {
-                                setState(() {
-                                  _selectedCoin = coin;
-                                  _showCoins.value = false;
-                                });
-                              },
-                              title: Text(
-                                coin,
-                                style: TextStyle(color: AppTheme.textPrimary),
-                              ),
-                              trailing: Text(
-                                _balances[coin].toString(),
-                                style: TextStyle(color: AppTheme.textSecondary, fontSize: 11.sp),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        crossFadeState:
-                        _showCoins.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                      ),
+                      // AnimatedCrossFade(
+                      //   duration: const Duration(milliseconds: 300),
+                      //   firstChild: const SizedBox.shrink(),
+                      //   secondChild: Column(
+                      //     children: _balances.keys.map((coin) {
+                      //       return ListTile(
+                      //         onTap: () {
+                      //           setState(() {
+                      //             _selectedCoin = coin;
+                      //             _showCoins.value = false;
+                      //           });
+                      //         },
+                      //         title: Text(
+                      //           coin,
+                      //           style: TextStyle(color: AppTheme.textPrimary),
+                      //         ),
+                      //         trailing: Text(
+                      //           _balances[coin].toString(),
+                      //           style: TextStyle(color: AppTheme.textSecondary, fontSize: 11.sp),
+                      //         ),
+                      //       );
+                      //     }).toList(),
+                      //   ),
+                      //   crossFadeState:
+                      //   _showCoins.value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                      // ),
 
                       SizedBox(height: 2.h),
                     ],

@@ -30,12 +30,14 @@
 
 
 import 'package:cryptovault_pro/splashscreen.dart';
+import 'package:cryptovault_pro/views/address_book/address_book_screen.dart';
 import 'package:cryptovault_pro/views/app_lock_screen.dart';
 import 'package:cryptovault_pro/views/dashboard/dashboard_screen.dart';
 import 'package:cryptovault_pro/views/home/swap_screen.dart';
 import 'package:cryptovault_pro/views/home/transaction_history_screen.dart';
 import 'package:cryptovault_pro/views/password_unlock_screen.dart';
 import 'package:get/get.dart';
+import '../views/change_password/change_password_screen.dart';
 import '../views/create_new_wallet/create_new_wallet.dart';
 import '../views/d_app_browser/d_app_browser.dart';
 import '../views/import_existing_wallet/import_existing_wallet.dart';
@@ -59,6 +61,8 @@ class AppRoutes {
   static const String transationHistory = '/transactionHistory';
   static const String appLock = '/appLock';
   static const String passwordUnlockScreen = '/passwordUnlockScreen';
+  static const String addressBook = '/address-book';
+  static const String changePassword= '/changePassword';
 
   // Default transition settings
   static const _defaultTransition = Transition.cupertino;
@@ -93,6 +97,8 @@ class AppRoutes {
       _buildPage(name: transationHistory, page: () => const TransactionHistoryScreen()),
       _buildPage(name: appLock, page: () => AppLockScreen()),
       _buildPage(name: passwordUnlockScreen, page: () => PasswordUnlockScreen()),
+      _buildPage(name: addressBook, page: () => AddressBookScreen()),
+      _buildPage(name: changePassword, page: () => ChangePasswordScreen()),
       // TODO: add other screens here when needed
     ];
   }
