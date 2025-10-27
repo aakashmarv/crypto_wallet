@@ -12,12 +12,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 import '../../../constants/api_constants.dart';
 import '../../../constants/app_keys.dart';
+import '../../../models/address_entry.dart';
 import '../../../servieces/multi_wallet_service.dart';
 import '../../../servieces/secure_mnemonic_service.dart';
 import '../../../servieces/send_service.dart';
 import '../../../utils/helper_util.dart';
+import '../../../viewmodels/address_book_controller.dart';
 import '../../../widgets/app_button.dart';
 import 'package:http/http.dart';
+import '../../address_book/widget/address_book_picker.dart';
 import '../controller/home_controller.dart';
 
 class SendBottomSheet extends StatefulWidget {
@@ -229,35 +232,43 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                           ),
                           SizedBox(height: 3.h),
 
-                          // Recipient field
+                          // 🧾 Recipient field
                           TextFormField(
                             controller: _recipientController,
                             style: TextStyle(color: AppTheme.textPrimary),
                             decoration: _inputDecoration(
                               label: "Recipient Address",
-                              suffix: IconButton(
-                                icon: Icon(Icons.paste,
-                                    color: AppTheme.textSecondary),
-                                onPressed: () async {
-                                  final data = await Clipboard.getData(
-                                      Clipboard.kTextPlain);
-                                  if (data?.text?.isNotEmpty ?? false) {
-                                    _recipientController.text =
-                                        data!.text!.trim();
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content:
-                                          Text("Clipboard is empty")),
-                                    );
-                                  }
-                                },
+                              suffix: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // 📋 Paste from clipboard
+                                  IconButton(
+                                    icon: Icon(Icons.paste, color: AppTheme.textSecondary),
+                                    tooltip: "Paste from clipboard",
+                                    onPressed: () async {
+                                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                                      if (data?.text?.isNotEmpty ?? false) {
+                                        _recipientController.text = data!.text!.trim();
+                                      } else {
+                                      }
+                                    },
+                                  ),
+                                  // 📖 Open Address Book
+                                  IconButton(
+                                    icon: Icon(Icons.contacts_rounded, color: AppTheme.accentTeal),
+                                    tooltip: "Select from Address Book",
+                                    onPressed: _openAddressBookPicker,
+                                  ),
+                                ],
                               ),
                             ),
-                            validator: (v) => v == null || v.isEmpty
-                                ? "Enter recipient address"
-                                : null,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) return "Enter recipient address";
+                              if (!_isValidEthereumAddress(v)) return "Invalid Ethereum address";
+                              return null;
+                            },
                           ),
+
                           SizedBox(height: 1.5.h),
 
                           // Amount
@@ -354,6 +365,34 @@ class _SendBottomSheetState extends State<SendBottomSheet>
       ),
     );
   }
+  /// 📘 Opens Address Book Picker (reusable)
+  Future<void> _openAddressBookPicker() async {
+    try {
+      final selected = await showModalBottomSheet<AddressEntry>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => AddressBookPicker(
+          onSelect: (entry) {
+            _recipientController.text = entry.address.trim();
+          },
+        ),
+      );
+
+      if (selected != null) {
+        _recipientController.text = selected.address.trim();
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to open Address Book: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
+    }
+  }
+
 
 
   InputDecoration _inputDecoration({required String label, Widget? suffix}) {

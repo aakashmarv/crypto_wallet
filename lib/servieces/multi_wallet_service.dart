@@ -152,6 +152,27 @@ class MultiWalletService {
     return WalletInfo(address: addr, privateKeyHex: privateHex, index: index, path: path);
   }
 
+  // ✅ Private helper function: derive EthPrivateKey from mnemonic + index
+  Future<EthPrivateKey> derivePrivateKey(String mnemonic, int index) async {
+    try {
+      final seed = bip39.mnemonicToSeed(mnemonic);
+      final root = bip32.BIP32.fromSeed(seed);
+      final path = '$_bip44Prefix$index';
+      final derived = root.derivePath(path);
+
+      if (derived.privateKey == null) {
+        throw Exception('Failed to derive private key');
+      }
+
+      final privateKeyBytes = derived.privateKey!;
+      final privateKeyHex = '0x${privateKeyBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}';
+
+      return EthPrivateKey.fromHex(privateKeyHex);
+    } catch (e) {
+      throw Exception('Failed to derive private key: $e');
+    }
+  }
+
   // Remove cached decrypted data on logout
   Future<void> clearAll() async {
     await _secureService.clearAll();

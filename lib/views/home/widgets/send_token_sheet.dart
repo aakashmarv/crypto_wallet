@@ -1,11 +1,19 @@
 import 'package:cryptovault_pro/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import '../../../constants/app_keys.dart';
+import '../../../models/address_entry.dart';
+import '../../../servieces/multi_wallet_service.dart';
+import '../../../servieces/secure_mnemonic_service.dart';
+import '../../../servieces/send_token_service.dart';
+import '../../../servieces/sharedpreferences_service.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/helper_util.dart';
+import '../../address_book/widget/address_book_picker.dart';
 import '../../home/controller/home_controller.dart';
 
 class SendTokenSheet extends StatefulWidget {
@@ -24,14 +32,13 @@ class SendTokenSheet extends StatefulWidget {
 
 class _SendTokenSheetState extends State<SendTokenSheet>
     with SingleTickerProviderStateMixin {
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _recipientController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
-
-  final HomeController _homeController = Get.find<HomeController>();
 
   @override
   void initState() {
@@ -54,32 +61,152 @@ class _SendTokenSheetState extends State<SendTokenSheet>
   Future<void> _handleSendToken() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    final recipient = _recipientController.text.trim();
-    final amount = _amountController.text.trim();
-    final sender = _homeController.walletAddress.value.trim();
+    final recipientInput = _recipientController.text.trim();
+    final amountValue = double.tryParse(_amountController.text.trim()) ?? 0;
 
-    if (sender.isEmpty) {
-      Get.snackbar("Error", "Wallet address not found. Please re-login.",
-          backgroundColor: Colors.red, colorText: Colors.white);
+    if (amountValue <= 0) {
+      Get.snackbar(
+        "Invalid Amount",
+        "Please enter a valid amount greater than zero.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
+    final recipient = HelperUtil.toEthereumAddress(recipientInput);
+    final tokenAddress = HelperUtil.toEthereumAddress(widget.tokenAddress);
+
     HelperUtil.closeKeyboard(context);
 
-    // 🟢 You can integrate your transaction sending logic here
-    // e.g. call your SendService or SendController
-
-    Get.snackbar(
-      "Transaction Initiated",
-      "Sending $amount ${widget.tokenName} to $recipient",
-      backgroundColor: AppTheme.accentTeal,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
+    Get.dialog(
+      const Center(child: CircularProgressIndicator(color: Colors.tealAccent)),
+      barrierDismissible: false,
     );
 
-    Future.delayed(const Duration(milliseconds: 700), () {
-      if (mounted) Navigator.of(context).pop();
-    });
+    try {
+      // 🔐 Fetch password from secure storage
+      const storage = FlutterSecureStorage();
+      final storedPassword = await storage.read(key: AppKeys.userPassword);
+
+      if (storedPassword == null || storedPassword.isEmpty) {
+        Get.back();
+        Get.snackbar(
+          "Error",
+          "Password not found. Please re-login.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // 📦 Fetch sender from SharedPreferences (Ruby → 0x)
+      final prefs = await SharedPreferencesService.getInstance();
+      final rubyAddress = prefs.getString(AppKeys.walletAddress) ?? '';
+      final sender = HelperUtil.toEthereumAddress(rubyAddress);
+
+      if (sender.isEmpty) {
+        Get.back();
+        Get.snackbar(
+          "Error",
+          "Wallet address not found. Please re-login.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // ✅ Initialize SendTokenService
+      final sendService = SendTokenService(
+        MultiWalletService(SecureMnemonicService()),
+        SecureMnemonicService(),
+      );
+
+      // Debug info
+      debugPrint("=== 🟢 Sending Transaction Info ===");
+      debugPrint("Token Name     : ${widget.tokenName}");
+      debugPrint("Token Address  : $tokenAddress");
+      debugPrint("Sender Address : $sender");
+      debugPrint("Recipient Addr : $recipient");
+      debugPrint("Amount         : $amountValue");
+      debugPrint("====================================");
+
+      String txHash;
+
+      if (tokenAddress == "0x0000000000000000000000000000000000000000") {
+        txHash = await sendService.sendNative(
+          password: storedPassword,
+          recipient: recipient,
+          amount: amountValue,
+        );
+      } else {
+        txHash = await sendService.sendToken(
+          password: storedPassword,
+          tokenAddress: tokenAddress,
+          recipient: recipient,
+          amount: amountValue,
+        );
+      }
+
+      Get.back();
+
+      Get.snackbar(
+        "Transaction Sent ✅",
+        "Token: ${widget.tokenName}\nAmount: $amountValue\nRecipient: ${recipient.substring(0, 10)}...\nTx Hash: ${txHash.substring(0, 10)}...",
+        backgroundColor: AppTheme.accentTeal,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 5),
+        margin: const EdgeInsets.all(12),
+      );
+
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (mounted) Navigator.of(context).pop();
+      });
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        "Transaction Failed ❌",
+        e.toString().replaceAll("Exception: ", ""),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 5),
+        margin: const EdgeInsets.all(12),
+      );
+      debugPrint("❌ Transaction Error: $e");
+    }
+  }
+
+  /// 📘 Opens Address Book Picker (reusable)
+  Future<void> _openAddressBookPicker() async {
+    try {
+      final selected = await showModalBottomSheet<AddressEntry>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => AddressBookPicker(
+          onSelect: (entry) {
+            _recipientController.text = entry.address.trim();
+          },
+        ),
+      );
+
+      if (selected != null) {
+        _recipientController.text = selected.address.trim();
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to open Address Book: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override
@@ -143,15 +270,27 @@ class _SendTokenSheetState extends State<SendTokenSheet>
                             style: TextStyle(color: AppTheme.textPrimary),
                             decoration: _inputDecoration(
                               label: "Recipient Address",
-                              suffix: IconButton(
-                                icon: Icon(Icons.paste, color: AppTheme.textSecondary),
-                                onPressed: () async {
-                                  final data = await Clipboard.getData(Clipboard.kTextPlain);
-                                  if (data?.text?.isNotEmpty ?? false) {
-                                    _recipientController.text = data!.text!.trim();
-                                  }
-                                },
+                              suffix: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.paste, color: AppTheme.textSecondary),
+                                    onPressed: () async {
+                                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                                      if (data?.text?.isNotEmpty ?? false) {
+                                        _recipientController.text = data!.text!.trim();
+                                      }
+                                    },
+                                  ),
+                                  // 📖 Open Address Book
+                                  IconButton(
+                                    icon: Icon(Icons.contacts_rounded, color: AppTheme.accentTeal),
+                                    tooltip: "Select from Address Book",
+                                    onPressed: _openAddressBookPicker,
+                                  ),
+                                ],
                               ),
+
                             ),
                             validator: (v) {
                               if (v == null || v.isEmpty) {

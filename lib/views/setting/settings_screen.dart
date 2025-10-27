@@ -111,8 +111,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 _buildNavigationTile(
                   context,
                   icon: Icons.receipt_long,
-                  title: "View Transaction",
-                  onTap: () {},
+                  title: "View",
+                  onTap: () => Get.toNamed(AppRoutes.viewKeysScreen),
                 ),
                 _buildDivider(),
                 _buildNavigationTile(
@@ -140,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   context,
                   icon: Icons.help_outline,
                   title: "Help & Support",
-                  onTap: () {_launchURL("https://uxbill.com/about");
+                  onTap: () {_launchURL("https://www.google.com/");
                   },
                 ),
                 _buildDivider(),
@@ -148,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   context,
                   icon: Icons.privacy_tip,
                   title: "Privacy Policy",
-                  onTap: () {_launchURL("https://uxbill.com/about");},
+                  onTap: () {_launchURL("https://www.google.com/");},
                 ),
                 _buildDivider(),
                 _buildNavigationTile(

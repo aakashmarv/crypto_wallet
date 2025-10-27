@@ -41,6 +41,7 @@ dependencies:
   crypto: ^3.0.6
   shimmer: ^3.0.0
   url_launcher: ^6.3.2
+  lottie: ^3.3.2
 
 
 
@@ -65,6 +66,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/lottie/
   # CRITICAL ASSET MANAGEMENT RULES:
   # - DO NOT ADD NEW ASSET DIRECTORIES (assets/svg/, assets/icons/, etc.)
   # - ONLY USE EXISTING AND ITEMS AVAILABLE IN THE DIRECTORIES LISTED ABOVE (assets/, assets/images/)
