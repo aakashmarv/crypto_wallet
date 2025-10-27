@@ -9,6 +9,10 @@ class ApiConstants {
   static String getCoinUrl = "$baseUrl/getrubyprice";
 
   static String getTokenlistUrl(String walletAddress) => "$baseUrl/getaddressdetails/$walletAddress";
+  static String getTransactionUrl(String address, int page, int pageSize) =>
+      "$baseUrl/getTransction/$address/$page/$pageSize";
+  static String getImportTokenAddress(String walletAddress, String contractAddress)=>
+      "$baseUrl/importtokenaddress/$walletAddress/$contractAddress";
 
 
 }

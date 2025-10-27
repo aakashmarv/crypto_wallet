@@ -88,36 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
             Obx(() => ActionButtonsRowWidget(
                 walletAddress: _homeController.walletAddress.value)),
             SizedBox(height: 2.h),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 4.w),
-            //   child: Obx(() => Row(
-            //         children: [
-            //           Expanded(
-            //             child: Text(
-            //               _homeController.walletAddress.value.isEmpty
-            //                   ? 'Loading...'
-            //                   : _homeController.walletAddress.value,
-            //               style: GoogleFonts.jetBrainsMono(
-            //                 fontSize: 12.sp,
-            //                 fontWeight: FontWeight.w500,
-            //                 color: AppTheme.textSecondary,
-            //               ),
-            //               overflow: TextOverflow.ellipsis,
-            //             ),
-            //           ),
-            //           SizedBox(width: 2.w),
-            //           IconButton(
-            //             icon: Icon(Icons.copy,
-            //                 color: AppTheme.successGreen, size: 4.w),
-            //             onPressed: () {
-            //               Clipboard.setData(ClipboardData(
-            //                   text: _homeController.walletAddress.value));
-            //             },
-            //           ),
-            //         ],
-            //       )),
-            // ),
-            // SizedBox(height: 1.h),
             Expanded(
               child: DefaultTabController(
                 length: 2,
