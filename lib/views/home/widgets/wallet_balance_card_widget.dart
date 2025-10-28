@@ -36,7 +36,8 @@ class WalletBalanceCardWidget extends StatelessWidget {
   }
 
   String _formatUSD(double amount) {
-    if (amount < 0.01) return "<\$0.01";
+    if (amount <= 0) return "\$0.00";
+    if (amount < 0.01) return "\$0.01";
     return "\$${amount.toStringAsFixed(2)}";
   }
 

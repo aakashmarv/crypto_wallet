@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            /// balance card
            WalletBalanceCardWidget(),
             Obx(() => ActionButtonsRowWidget(
                 walletAddress: _homeController.walletAddress.value)),
