@@ -1,5 +1,6 @@
 import 'package:cryptovault_pro/views/home/widgets/send_token_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
@@ -74,8 +75,9 @@ class WalletTabsWidget extends StatelessWidget {
     );
   }
 }
+
 class _CoinsTabContent extends StatelessWidget {
-  final TokenListController controller = Get.put(TokenListController());
+  final TokenListController _tokenListController = Get.put(TokenListController());
 
   _CoinsTabContent({super.key});
 
@@ -117,7 +119,7 @@ class _CoinsTabContent extends StatelessWidget {
                     children: [
                       // Token List
                       Obx(() {
-                        if (controller.isLoading.value) {
+                        if (_tokenListController.isLoading.value) {
                           // 🔹 Loading shimmer placeholder
                           return ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
@@ -134,7 +136,7 @@ class _CoinsTabContent extends StatelessWidget {
                           );
                         }
 
-                        if (controller.tokenList.isEmpty) {
+                        if (_tokenListController.tokenList.isEmpty) {
                           // 🔹 Empty state
                           return Padding(
                             padding: EdgeInsets.only(top: 8.h),
@@ -170,47 +172,74 @@ class _CoinsTabContent extends StatelessWidget {
                         return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: controller.tokenList.length,
+                          itemCount: _tokenListController.tokenList.length,
                           itemBuilder: (context, index) {
-                            final token = controller.tokenList[index];
-                            return TokenItemCard(token: token);
+                            final token = _tokenListController.tokenList[index];
+                            return Dismissible(
+                              key: ValueKey(token.contractAddress),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(Icons.delete, color: Colors.redAccent, size: 7.w),
+                              ),
+                              onDismissed: (_) async {
+                                final removed = token;
+                                _tokenListController.tokenList.remove(token);
+                                HapticFeedback.mediumImpact();
+
+                                final success = await _tokenListController.removeToken(removed);
+
+                                if (!success) {
+                                  _tokenListController.tokenList.add(removed);
+                                  _tokenListController.tokenList.refresh();
+                                }
+                              },
+                              child: TokenItemCard(token: token),
+                            );
                           },
                         );
+
                       }),
                       SizedBox(height: 3.h),
-
-                      // 📥 Import Token Button
-                      GestureDetector(
-                        onTap: () => showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          builder: (_) => const ImportTokenSheet(),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          margin:
-                          EdgeInsets.only(bottom: 3.w, left: 4.w, right: 4.w),
-                          padding: EdgeInsets.symmetric(vertical: 1.2.h),
-                          decoration: BoxDecoration(
-                            color: AppTheme.surfaceElevated,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppTheme.accentTeal.withOpacity(0.2),
-                              width: 1,
-                            ),
+                      Obx(() {
+                        final hasTokens = _tokenListController.tokenList.isNotEmpty;
+                        return GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            builder: (_) => const ImportTokenSheet(),
                           ),
-                          child: Center(
-                            child: Text(
-                              'Import Token',
-                              style: GoogleFonts.inter(
-                                fontSize: 12.sp,
-                                color: AppTheme.textSecondary,
+                          child: Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(bottom: 3.w, left: 4.w, right: 4.w),
+                            padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                            decoration: BoxDecoration(
+                              color: AppTheme.surfaceElevated,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppTheme.accentTeal.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                hasTokens ? 'Add More Tokens' : 'Import Token',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12.sp,
+                                  color: AppTheme.textSecondary,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
+
                     ],
                   ),
                 ),
@@ -223,42 +252,107 @@ class _CoinsTabContent extends StatelessWidget {
   }
 }
 
-
 class _NFTsTabContent extends StatelessWidget {
+  final TokenListController _tokenListController = Get.find<TokenListController>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.photo_library_outlined,
-              size: 8.w,
-              color: Colors.grey.shade600,
+      child: Obx(() {
+        // ✅ Show "No NFTs" UI if list is empty or loading
+        if (_tokenListController.isLoading.value ||
+            _tokenListController.nftList.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.photo_library_outlined,
+                  size: 8.w,
+                  color: Colors.grey.shade600,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  'No NFTs found',
+                  style: GoogleFonts.inter(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Text(
+                  'Your NFT collection will appear here',
+                  style: GoogleFonts.inter(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey.shade500,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 2.h),
-            Text(
-              'No NFTs found',
-              style: GoogleFonts.inter(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade600,
+          );
+        }
+
+        // ✅ NFT Grid (Only shown when NFTs exist)
+        return GridView.builder(
+          padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,           // Two NFTs per row
+            crossAxisSpacing: 3.w,
+            mainAxisSpacing: 2.h,
+            childAspectRatio: 0.85,
+          ),
+          itemCount: _tokenListController.nftList.length,
+          itemBuilder: (_, index) {
+            final nft = _tokenListController.nftList[index];
+
+            return Container(
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceElevated,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.borderSubtle),
               ),
-            ),
-            SizedBox(height: 1.h),
-            Text(
-              'Your NFT collection will appear here',
-              style: GoogleFonts.inter(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey.shade500,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                      child: nft.image != null
+                          ? Image.network(
+                        nft.image!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (_, __, ___) => Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      )
+                          : Center(
+                        child: Icon(Icons.image_not_supported,
+                            color: Colors.grey, size: 24),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(2.w),
+                    child: Text(
+                      nft.name ?? "Unknown NFT",
+                      style: GoogleFonts.inter(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      }),
     );
   }
 }

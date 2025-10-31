@@ -121,14 +121,61 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                           : AppTheme.textSecondary,
                     ),
                   ),
+                  suffixIcon: _isEditing && _urlController.text.isNotEmpty
+                      ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _urlController.clear();
+                      });
+                    },
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 4.w,
+                      color: AppTheme.textSecondary,
+                    ),
+                  )
+                      : null,
                 ),
               ),
             ),
           ),
           SizedBox(width: 2.w),
           // Refresh Button
+          // GestureDetector(
+          //   onTap: widget.onRefresh,
+          //   child: Container(
+          //     width: 10.w,
+          //     height: 5.h,
+          //     decoration: BoxDecoration(
+          //       color: AppTheme.secondaryDark,
+          //       borderRadius: BorderRadius.circular(8),
+          //       border: Border.all(
+          //         color: AppTheme.borderSubtle,
+          //         width: 1,
+          //       ),
+          //     ),
+          //     child: widget.isLoading
+          //         ? Center(
+          //             child: SizedBox(
+          //               width: 4.w,
+          //               height: 4.w,
+          //               child: CircularProgressIndicator(
+          //                 strokeWidth: 2,
+          //                 valueColor: AlwaysStoppedAnimation<Color>(
+          //                   AppTheme.accentTeal,
+          //                 ),
+          //               ),
+          //             ),
+          //           )
+          //         : Icon(
+          //             Icons.refresh,
+          //             size: 5.w,
+          //             color: AppTheme.textSecondary,
+          //           ),
+          //   ),
+          // ),
           GestureDetector(
-            onTap: widget.onRefresh,
+            onTap: _handleSubmit, // ✅ now search triggers load
             child: Container(
               width: 10.w,
               height: 5.h,
@@ -142,24 +189,25 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
               ),
               child: widget.isLoading
                   ? Center(
-                      child: SizedBox(
-                        width: 4.w,
-                        height: 4.w,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppTheme.accentTeal,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Icon(
-                      Icons.refresh,
-                      size: 5.w,
-                      color: AppTheme.textSecondary,
+                child: SizedBox(
+                  width: 4.w,
+                  height: 4.w,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppTheme.accentTeal,
                     ),
+                  ),
+                ),
+              )
+                  : Icon(
+                Icons.search, // ✅ changed icon
+                size: 5.w,
+                color: AppTheme.textSecondary,
+              ),
             ),
           ),
+
         ],
       ),
     );

@@ -5,7 +5,7 @@ import '../servieces/api_service.dart';
 class ImportTokenRepository {
   final _dio = ApiService.dio;
 
-  Future<ImportTokenAddressResponse> getTransationHistory(String walletAddress, String contractAddress) async {
+  Future<ImportTokenAddressResponse> importTokenRepo(String walletAddress, String contractAddress) async {
     final response = await _dio.get(
         ApiConstants.getImportTokenAddress(walletAddress,contractAddress)
     );

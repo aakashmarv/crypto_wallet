@@ -22,14 +22,15 @@ class ImportTokenSheet extends StatefulWidget {
 
 class _ImportTokenSheetState extends State<ImportTokenSheet>
     with SingleTickerProviderStateMixin {
+
+  final HomeController _homeController = Get.find<HomeController>();
+  final ImportTokenController _importTokenController = Get.put(ImportTokenController());
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _tokenAddressController = TextEditingController();
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
-
-  final HomeController _homeController = Get.find<HomeController>();
-  final ImportTokenController _importTokenController = Get.put(ImportTokenController());
 
   @override
   void initState() {
@@ -59,8 +60,8 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
-
     HelperUtil.closeKeyboard(context);
+
     _importTokenController.isLoading.value = true;
 
     try {

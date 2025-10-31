@@ -1,4 +1,5 @@
 import 'package:cryptovault_pro/utils/snackbar_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:cryptovault_pro/constants/app_keys.dart';
 import '../models/responses/token_list_response.dart';
@@ -12,9 +13,16 @@ class TokenListController extends GetxController {
   /// Observables
   var isLoading = false.obs;
   var tokenList = <TokenInfo>[].obs;
+  var nftList = <NFTInfo>[].obs;
   var walletBalance = ''.obs;
   var walletAddress = ''.obs;
   var latestBlock = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getTokenList();
+  }
 
   /// Fetch token list
   Future<void> getTokenList() async {
@@ -26,7 +34,7 @@ class TokenListController extends GetxController {
       final address = prefs.getString(AppKeys.walletAddress);
 
       if (address == null || address.isEmpty) {
-        SnackbarUtil.showError("Error", "Wallet address not found.");
+        // SnackbarUtil.showError("Error", "Wallet address not found.");
         isLoading.value = false;
         return;
       }
@@ -34,6 +42,8 @@ class TokenListController extends GetxController {
       final response = await _repository.getTokenlist(address);
 
       if (response.status == true) {
+        tokenList.value = response.token ?? [];
+        nftList.value = response.nfts ?? [];
         if (response.token != null && response.token!.isNotEmpty) {
           tokenList.value = response.token!;
           walletBalance.value = response.balance ?? "0";
@@ -53,4 +63,24 @@ class TokenListController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<bool> removeToken(TokenInfo token) async {
+    final prefs = await SharedPreferencesService.getInstance();
+    final address = prefs.getString(AppKeys.walletAddress);
+
+    if (address == null || token.contractAddress == null) return false;
+
+    final success = await _repository.removeToken(address, token.contractAddress!);
+
+    if (success) {
+      Fluttertoast.showToast(msg: "${token.name ?? 'Token'} removed.");
+    } else {
+      Fluttertoast.showToast(msg: "Could not remove token. Try again.");
+    }
+
+    return success;
+  }
+
+
+
 }

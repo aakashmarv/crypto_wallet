@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 
+import '../constants/api_constants.dart';
+import '../constants/app_keys.dart';
 import '../repositories/coin_repository.dart';
+import '../servieces/sharedpreferences_service.dart';
 import '../utils/logger.dart';
 import '../utils/snackbar_util.dart';
 
@@ -14,7 +17,15 @@ class CoinPriceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchCoinPrice();
+    _initAndFetch();
+  }
+  Future<void> _initAndFetch() async {
+    // Load saved network before first fetch
+    final prefs = await SharedPreferencesService.getInstance();
+    final selected = prefs.getString(AppKeys.selectedNetwork) ?? "ruby";
+    ApiConstants.setNetwork(selected == "testnet");
+    appLog("🌐 Network applied on startup coin controller → $selected");
+    await fetchCoinPrice();
   }
 
   /// Fetch the coin price

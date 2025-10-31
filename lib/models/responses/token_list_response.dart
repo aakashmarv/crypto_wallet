@@ -7,6 +7,7 @@ class TokenListResponse {
   final int? inttrxLength;
   final int? latestBlock;
   final List<TokenInfo>? token;
+  final List<NFTInfo>? nfts;
   final int? contract;
 
   TokenListResponse({
@@ -18,6 +19,7 @@ class TokenListResponse {
     this.inttrxLength,
     this.latestBlock,
     this.token,
+    this.nfts,
     this.contract,
   });
 
@@ -41,6 +43,9 @@ class TokenListResponse {
           : int.tryParse(json['latestBlock']?.toString() ?? '0'),
       token: (json['token'] as List?)
           ?.map((e) => TokenInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      nfts: (json['nfts'] as List?)
+          ?.map((e) => NFTInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
       contract: json['contract'] is int
           ? json['contract']
@@ -100,3 +105,42 @@ class TokenInfo {
     };
   }
 }
+
+class NFTInfo {
+  final String? contractAddress;
+  final String? tokenId;
+  final String? name;
+  final String? image; // optional NFT image url
+  final int? balance;
+
+  NFTInfo({
+    this.contractAddress,
+    this.tokenId,
+    this.name,
+    this.image,
+    this.balance,
+  });
+
+  factory NFTInfo.fromJson(Map<String, dynamic> json) {
+    return NFTInfo(
+      contractAddress: json['contractAddress'] as String?,
+      tokenId: json['tokenId']?.toString(),
+      name: json['name'] as String?,
+      image: json['image'] as String?,
+      balance: json['balance'] is int
+          ? json['balance']
+          : int.tryParse(json['balance']?.toString() ?? '0'),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'contractAddress': contractAddress,
+      'tokenId': tokenId,
+      'name': name,
+      'image': image,
+      'balance': balance,
+    };
+  }
+}
+

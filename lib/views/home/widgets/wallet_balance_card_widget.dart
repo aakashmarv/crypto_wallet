@@ -189,7 +189,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
           curve: Curves.easeOutCubic,
           builder: (context, value, child) {
             return Text(
-              "Ruby ${_formatBalance(value.toString())}",
+              "${_formatBalance(value.toString())} RUBY ",
               style: GoogleFonts.inter(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.w700,

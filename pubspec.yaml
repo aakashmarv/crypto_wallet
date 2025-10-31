@@ -17,10 +17,7 @@ dependencies:
   web: ^1.1.1
 
   # Feature dependencies - safe to modify
-  cached_network_image: ^3.3.1
-  connectivity_plus: ^6.1.4
   fluttertoast: ^8.2.4
-  smooth_page_indicator: ^1.2.1
   webview_flutter: ^4.13.0
   camera: ^0.10.5+5
   permission_handler: ^11.1.0

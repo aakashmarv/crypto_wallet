@@ -21,26 +21,20 @@ class ImportTokenController extends GetxController {
       isLoading.value = true;
       errorMessage.value = '';
 
-      final response = await _repository.getTransationHistory(walletAddress, contractAddress);
+      final response = await _repository.importTokenRepo(walletAddress, contractAddress);
+
       if (response.status == true) {
-        await _fetchUpdatedTokenList();
+        SnackbarUtil.showSuccess("Success", "Token imported successfully!");
+        // 🔹 Fetch Tokens list from backend
+        await tokenListController.getTokenList();
       } else {
-        final message = response.msg ?? "Failed to import token.";
-        SnackbarUtil.showError("Error", message);
+        SnackbarUtil.showError("Error", response.msg ?? "Failed to import token.");
       }
     } catch (e, stack) {
       appLog("❌ ImportTokenController Error: $e\n$stack");
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
-    }
-  }
-
-  Future<void> _fetchUpdatedTokenList() async {
-    try {
-      await tokenListController.getTokenList();
-    } catch (e) {
-      appLog("⚠️ Failed to refresh token list: $e");
     }
   }
 }

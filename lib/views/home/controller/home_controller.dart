@@ -18,7 +18,15 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _applySavedNetwork();
     loadWalletData();
+  }
+  Future<void> _applySavedNetwork() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    final selected = prefs.getString(AppKeys.selectedNetwork) ?? "ruby";
+
+    ApiConstants.setNetwork(selected == "testnet");
+    appLog("🌐 Network applied on startup home controller → $selected");
   }
 
   Future<void> loadWalletData() async {

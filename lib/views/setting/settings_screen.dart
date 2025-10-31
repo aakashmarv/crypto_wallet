@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../constants/app_keys.dart';
 import '../../routes/app_routes.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../theme/app_theme.dart';
+import '../password_setup/widgets/biometric_setup_widget.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,6 +22,9 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   bool _isDarkMode = true;
+  bool _isBiometricEnabled = false;
+  bool _isBiometricAvailable = false;
+  String _biometricType = "Biometric";
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -26,6 +32,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
+    _checkBiometricAvailability();
+    _loadBiometricStatus();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -54,6 +62,22 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadBiometricStatus() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    setState(() {
+      _isBiometricEnabled = prefs.getBool(AppKeys.isBiometricEnable) ?? false;
+    });
+  }
+  Future<void> _checkBiometricAvailability() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() {
+      _isBiometricAvailable = true;
+      _biometricType = Theme.of(context).platform == TargetPlatform.iOS
+          ? "Face ID / Touch ID"
+          : "Fingerprint";
+    });
   }
   static Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -98,62 +122,76 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
             child: Column(
               children: [
-                _buildSwitchTile(
-                  context,
-                  icon: Icons.dark_mode,
-                  title: "Dark Mode",
-                  value: _isDarkMode,
-                  onChanged: (val) {
-                    setState(() => _isDarkMode = val);
-                  },
-                ),
-                _buildDivider(),
+
                 _buildNavigationTile(
                   context,
-                  icon: Icons.receipt_long,
-                  title: "View",
+                  icon: LucideIcons.keyRound,
+                  title: "Security Keys",
                   onTap: () => Get.toNamed(AppRoutes.viewKeysScreen),
                 ),
                 _buildDivider(),
                 _buildNavigationTile(
                   context,
-                  icon: Icons.book,
+                  icon: LucideIcons.notebook,
                   title: "Address Book",
                   onTap: () => Get.toNamed(AppRoutes.addressBook),
                 ),
                 _buildDivider(),
+                // _buildNavigationTile(
+                //   context,
+                //   icon: Icons.link,
+                //   title: "Connected Sites",
+                //   onTap: () {},
+                // ),
+                // _buildDivider(),
                 _buildNavigationTile(
                   context,
-                  icon: Icons.link,
-                  title: "Connected Sites",
-                  onTap: () {},
-                ),
-                _buildDivider(),
-                _buildNavigationTile(
-                  context,
-                  icon: Icons.lock_reset,
+                  icon: LucideIcons.rotateCcwKey,
                   title: "Change Password",
                   onTap: () => Get.toNamed(AppRoutes.changePassword),
                 ),
                 _buildDivider(),
+                // _buildSwitchTile(
+                //   context,
+                //   icon: Icons.dark_mode,
+                //   title: "Dark Mode",
+                //   value: _isDarkMode,
+                //   onChanged: (val) {
+                //     setState(() => _isDarkMode = val);
+                //   },
+                // ),
+                // _buildDivider(),
+                _buildSwitchTile(
+                  context,
+                  icon: LucideIcons.fingerprint,
+                  title: "Enable $_biometricType",
+                  value: _isBiometricEnabled && _isBiometricAvailable,
+                  onChanged: _isBiometricAvailable
+                      ? (val) {
+                    _handleBiometricToggle(val); // async ok to call; wrapper is sync
+                  }
+                      : null, // allowed now because parameter is nullable
+                ),
+
+                _buildDivider(),
                 _buildNavigationTile(
                   context,
-                  icon: Icons.help_outline,
+                  icon: LucideIcons.messageCircleQuestionMark,
                   title: "Help & Support",
-                  onTap: () {_launchURL("https://www.google.com/");
+                  onTap: () {_launchURL("https://rubynodeui.ctskola.io/help-support");
                   },
                 ),
                 _buildDivider(),
                 _buildNavigationTile(
                   context,
-                  icon: Icons.privacy_tip,
+                  icon: LucideIcons.shieldAlert,
                   title: "Privacy Policy",
-                  onTap: () {_launchURL("https://www.google.com/");},
+                  onTap: () {_launchURL("https://rubynodeui.ctskola.io/privacy-policy");},
                 ),
                 _buildDivider(),
                 _buildNavigationTile(
                   context,
-                  icon: Icons.logout,
+                  icon: LucideIcons.logOut,
                   title: "Logout",
                   isDestructive: true,
                   onTap: _handleLogout,
@@ -166,6 +204,85 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
       ),
     );
   }
+
+  Future<bool?> _showBiometricPrompt() async {
+    return await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.surfaceElevated,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              Icon(
+                Theme.of(context).platform == TargetPlatform.iOS
+                    ? Icons.face
+                    : Icons.fingerprint,
+                color: AppTheme.accentTeal,
+              ),
+              SizedBox(width: 12),
+              Text("Enable $_biometricType",
+                style: AppTheme.darkTheme.textTheme.titleLarge
+                    ?.copyWith(color: AppTheme.textPrimary),
+              ),
+            ],
+          ),
+          content: Text(
+            "Use your $_biometricType to quickly and securely access your wallet.",
+            style: AppTheme.darkTheme.textTheme.bodyMedium
+                ?.copyWith(color: AppTheme.textSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text("Cancel", style: TextStyle(color: AppTheme.textSecondary)),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context, true);
+                await Future.delayed(const Duration(milliseconds: 1000));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.accentTeal,
+                foregroundColor: AppTheme.primaryDark,
+              ),
+              child: const Text("Enable"),
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+  Future<void> _handleBiometricToggle(bool value) async {
+    if (value && _isBiometricAvailable) {
+      try {
+        HapticFeedback.lightImpact();
+        final bool? enabled = await _showBiometricPrompt();
+        if (enabled == true) {
+          final prefs = await SharedPreferencesService.getInstance();
+          await prefs.setBool(AppKeys.isBiometricEnable, true);
+          setState(() => _isBiometricEnabled = true);
+        } else {
+          setState(() => _isBiometricEnabled = false);
+        }
+      } catch (e) {
+        setState(() => _isBiometricEnabled = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to setup $_biometricType. Please try again."),
+            backgroundColor: AppTheme.errorRed,
+          ),
+        );
+      }
+    } else {
+      final prefs = await SharedPreferencesService.getInstance();
+      await prefs.setBool(AppKeys.isBiometricEnable, false);
+      setState(() => _isBiometricEnabled = false);
+    }
+  }
+
+
   // 🔘 Light Divider
   Widget _buildDivider() {
     return Padding(
@@ -244,8 +361,14 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   }
 
   // 🔘 Switch Tile Widget
-  Widget _buildSwitchTile(BuildContext context,
-      {required IconData icon, required String title, required bool value, required Function(bool) onChanged}) {
+// 🔘 Switch Tile Widget
+  Widget _buildSwitchTile(
+      BuildContext context, {
+        required IconData icon,
+        required String title,
+        required bool value,
+        required ValueChanged<bool>? onChanged, // <-- change here
+      }) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
@@ -254,10 +377,10 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           Container(
             padding: EdgeInsets.all(2.w),
             decoration: BoxDecoration(
-              color: AppTheme.accentTeal.withOpacity(0.15),
+              color: AppTheme.textPrimary.withOpacity(0.05),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: AppTheme.accentTeal, size: 5.5.w),
+            child: Icon(icon, color: AppTheme.black, size: 5.5.w),
           ),
           SizedBox(width: 3.5.w),
           Expanded(
@@ -272,14 +395,16 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           ),
           Switch(
             value: value,
-            onChanged: onChanged,
+            onChanged: onChanged, // <-- pass through; Switch expects void Function(bool)?
             activeColor: AppTheme.accentTeal,
             inactiveThumbColor: AppTheme.textSecondary,
-          )
+            inactiveTrackColor: AppTheme.borderSubtle,
+          ),
         ],
       ),
     );
   }
+
 
   // 🔘 Navigation Tile Widget
   Widget _buildNavigationTile(BuildContext context,

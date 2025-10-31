@@ -44,7 +44,7 @@ import '../views/import_existing_wallet/import_existing_wallet.dart';
 import '../views/mnemonic_phrase_display/mnemonic_phrase_display.dart';
 import '../views/onboarding_flow/onboarding_flow.dart';
 import '../views/password_setup/password_setup.dart';
-import '../views/view_mnemonic_private_key/view_keys_screen.dart';
+import '../views/view_mnemonic_private_key/security_keys_screen.dart';
 
 
 class AppRoutes {
@@ -101,7 +101,7 @@ class AppRoutes {
       _buildPage(name: passwordUnlockScreen, page: () => PasswordUnlockScreen()),
       _buildPage(name: addressBook, page: () => AddressBookScreen()),
       _buildPage(name: changePassword, page: () => ChangePasswordScreen()),
-      _buildPage(name: viewKeysScreen, page: () => ViewKeysScreen()),
+      _buildPage(name: viewKeysScreen, page: () => SecurityKeysScreen()),
       // TODO: add other screens here when needed
     ];
   }

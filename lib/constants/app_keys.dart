@@ -14,5 +14,7 @@ class AppKeys {
   static const String saltKey = 'mnemonic_salt';
   static const String ivKey = 'mnemonic_iv';
   static const pbkdf2Iterations = 100000; // recommended >=100k for mobile
+  static const String selectedNetwork = "selected_network";
+  static const String importedTokens = "imported_tokens";
 
 }

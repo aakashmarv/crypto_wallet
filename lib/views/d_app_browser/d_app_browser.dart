@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
+import '../../servieces/sharedpreferences_service.dart';
 import './widgets/browser_address_bar.dart';
 import './widgets/browser_navigation_controls.dart';
 import './widgets/connection_status_widget.dart';
@@ -22,14 +26,15 @@ class _DAppBrowserState extends State<DAppBrowser>
   late WebViewController _webViewController;
   late TabController _tabController;
 
-  String _currentUrl = 'https://app.uniswap.org';
+  // String _currentUrl = 'https://app.uniswap.org';
+  String _currentUrl = 'https://www.google.com/';
   bool _isLoading = false;
   bool _canGoBack = false;
   bool _canGoForward = false;
   bool _isConnected = true;
   bool _isBookmarked = false;
-  String _selectedNetwork = 'Ethereum';
-  String _walletAddress = '0x742d35Cc6634C0532925a3b8D4C9db96590c4C5d';
+  String _selectedNetwork = 'Ruby';
+  final RxString _walletAddress = ''.obs;
 
   final List<String> _bookmarkedUrls = [
     'https://app.uniswap.org',
@@ -68,7 +73,34 @@ class _DAppBrowserState extends State<DAppBrowser>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    _getWalletAddress();
     _initializeWebView();
+    /// blackscreen ke liy
+    // _webViewController = WebViewController()
+    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    //   ..setNavigationDelegate(
+    //     NavigationDelegate(
+    //       onPageStarted: (String url) {
+    //         setState(() {
+    //           _isLoading = true;
+    //           _currentUrl = url;
+    //           _isBookmarked = _bookmarkedUrls.contains(url);
+    //         });
+    //       },
+    //       onPageFinished: (String url) async {
+    //         setState(() {
+    //           _isLoading = false;
+    //         });
+    //         await _updateNavigationState();
+    //         await _injectWeb3();
+    //       },
+    //     ),
+    //   );
+  }
+
+  Future<void> _getWalletAddress() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    _walletAddress.value = prefs.getString(AppKeys.walletAddress) ?? '';
   }
 
   @override
@@ -176,7 +208,8 @@ class _DAppBrowserState extends State<DAppBrowser>
   }
 
   void _goHome() {
-    _handleUrlSubmitted('https://app.uniswap.org');
+    // _handleUrlSubmitted('https://app.uniswap.org');
+    _handleUrlSubmitted('https://www.google.com/');
   }
 
   void _toggleBookmark() {
@@ -233,12 +266,13 @@ class _DAppBrowserState extends State<DAppBrowser>
         child: Column(
           children: [
             // Connection Status
-            ConnectionStatusWidget(
+            Obx(() =>ConnectionStatusWidget(
               isConnected: _isConnected,
-              walletAddress: _walletAddress,
+              walletAddress: _walletAddress.value,
               selectedNetwork: _selectedNetwork,
-              onNetworkChanged: _handleNetworkChanged,
-            ),
+              // onNetworkChanged: _handleNetworkChanged,
+              onNetworkChanged: null,
+            )),
             // Address Bar
             BrowserAddressBar(
               currentUrl: _currentUrl,

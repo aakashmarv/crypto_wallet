@@ -7,7 +7,8 @@ class ConnectionStatusWidget extends StatelessWidget {
   final bool isConnected;
   final String walletAddress;
   final String selectedNetwork;
-  final Function(String) onNetworkChanged;
+  // final Function(String) onNetworkChanged;
+  final Function(String)? onNetworkChanged;
 
   const ConnectionStatusWidget({
     Key? key,
@@ -59,19 +60,25 @@ class ConnectionStatusWidget extends StatelessWidget {
                 if (isConnected) ...[
                   SizedBox(height: 0.2.h),
                   Text(
-                    '${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}',
+                    walletAddress.isEmpty || walletAddress.length < 10
+                        ? walletAddress.isEmpty
+                        ? 'Loading...'
+                        : walletAddress // If very short, show full
+                        : '${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}',
                     style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
                       fontSize: 11.sp,
                       color: AppTheme.textSecondary,
                     ),
                   ),
+
                 ],
               ],
             ),
           ),
           // Network Selector
           GestureDetector(
-            onTap: () => _showNetworkSelector(context),
+            // onTap: () => _showNetworkSelector(context),
+            onTap: onNetworkChanged == null ? null : () => _showNetworkSelector(context),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
               decoration: BoxDecoration(
@@ -122,7 +129,8 @@ class ConnectionStatusWidget extends StatelessWidget {
         iconColor = const Color(0xFF8247E5);
         break;
       default:
-        iconColor = AppTheme.textSecondary;
+        // iconColor = AppTheme.textSecondary;
+        iconColor = const Color(0xFF627EEA);
     }
 
     return Container(
@@ -176,7 +184,8 @@ class ConnectionStatusWidget extends StatelessWidget {
                         )
                       : null,
                   onTap: () {
-                    onNetworkChanged(network);
+                    // onNetworkChanged(network);
+                    onNetworkChanged?.call(network);
                     Navigator.pop(context);
                   },
                 )),
