@@ -13,6 +13,7 @@ import '../../../servieces/send_token_service.dart';
 import '../../../servieces/sharedpreferences_service.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/helper_util.dart';
+import '../../../utils/logger.dart';
 import '../../address_book/widget/address_book_picker.dart';
 import '../../home/controller/home_controller.dart';
 
@@ -126,13 +127,13 @@ class _SendTokenSheetState extends State<SendTokenSheet>
       );
 
       // Debug info
-      debugPrint("=== 🟢 Sending Transaction Info ===");
-      debugPrint("Token Name     : ${widget.tokenName}");
-      debugPrint("Token Address  : $tokenAddress");
-      debugPrint("Sender Address : $sender");
-      debugPrint("Recipient Addr : $recipient");
-      debugPrint("Amount         : $amountValue");
-      debugPrint("====================================");
+      appLog("=== 🟢 Sending Transaction Info ===");
+      appLog("Token Name     : ${widget.tokenName}");
+      appLog("Token Address  : $tokenAddress");
+      appLog("Sender Address : $sender");
+      appLog("Recipient Addr : $recipient");
+      appLog("Amount         : $amountValue");
+      appLog("====================================");
 
       String txHash;
 

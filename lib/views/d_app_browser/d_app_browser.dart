@@ -8,6 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
 import '../../servieces/sharedpreferences_service.dart';
+import '../../utils/logger.dart';
 import './widgets/browser_address_bar.dart';
 import './widgets/browser_navigation_controls.dart';
 import './widgets/connection_status_widget.dart';
@@ -178,7 +179,7 @@ class _DAppBrowserState extends State<DAppBrowser>
       await _webViewController.runJavaScript(web3Script);
     } catch (e) {
       if (kDebugMode) {
-        print('Web3 injection error: $e');
+        appLog('Web3 injection error: $e');
       }
     }
   }

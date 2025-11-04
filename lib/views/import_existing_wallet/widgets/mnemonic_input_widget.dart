@@ -2202,7 +2202,11 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                   QrScannerWidget(
                     context: context,
                     onScanComplete: (scannedData) {
-                      _validateMnemonic(scannedData);
+                      setState(() {
+                        _controller.text = scannedData.trim();
+                      });
+                      _validateMnemonic(scannedData.trim());
+                      widget.onMnemonicChanged(scannedData.trim());
                     },
                   );
                 },
@@ -2212,6 +2216,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                   size: 22,
                 ),
               ),
+
 
             ],
           ),

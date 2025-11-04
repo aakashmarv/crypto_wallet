@@ -56,7 +56,7 @@ class HomeController extends GetxController {
       appLog('[DEBUG] UI Balance Updated → $balance');
     } catch (e, st) {
       appLog('[ERROR] Balance load failed: $e');
-      print(st);
+      appLog(st);
     } finally {
       isLoadingBalance.value = false;
     }

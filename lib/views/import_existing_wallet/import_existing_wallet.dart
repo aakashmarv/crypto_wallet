@@ -9,6 +9,7 @@ import '../../constants/app_keys.dart';
 import '../../core/app_export.dart';
 import '../../servieces/mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
+import '../../utils/logger.dart';
 import './widgets/mnemonic_input_widget.dart';
 
 class ImportExistingWallet extends StatefulWidget {
@@ -68,9 +69,9 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     final wordCount = input.split(RegExp(r'\s+')).length;
     final isMnemonic = input.split(RegExp(r'\s+')).length >= 12 && MnemonicService.validateMnemonic(input);
     final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(input);
-    print('🧩 [Detection] Word count: $wordCount');
-    print('🧠 [Detection] isMnemonic: $isMnemonic');
-    print('🔑 [Detection] isPrivateKey: $isPrivateKey');
+    appLog('🧩 [Detection] Word count: $wordCount');
+    appLog('🧠 [Detection] isMnemonic: $isMnemonic');
+    appLog('🔑 [Detection] isPrivateKey: $isPrivateKey');
 
     if (!isMnemonic && !isPrivateKey) {
       _showToast('Invalid mnemonic or private key format', isError: true);
@@ -80,11 +81,11 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     final walletNameToSave = _walletName.isEmpty ? 'Imported' : _walletName;
     final prefs = await SharedPreferencesService.getInstance();
     await prefs.setString(AppKeys.currentWalletName, walletNameToSave);
-    print('💾 [Saved] Wallet name saved: $walletNameToSave');
-    print('➡️ [Navigation] Navigating to password setup with arguments:');
-    print('   fromImport: true');
-    print('   mnemonic/privateKey: $input');
-    print('   isPrivateKey: $isPrivateKey');
+    appLog('💾 [Saved] Wallet name saved: $walletNameToSave');
+    appLog('➡️ [Navigation] Navigating to password setup with arguments:');
+    appLog('   fromImport: true');
+    appLog('   mnemonic/privateKey: $input');
+    appLog('   isPrivateKey: $isPrivateKey');
     // ✅ Navigate to password setup, passing type information
     Get.toNamed(
       AppRoutes.passwordSetup,

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import '../../constants/app_keys.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/logger.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -74,19 +75,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   Future<bool> _validateCurrentPassword(String enteredPassword) async {
     try {
       final storedPassword = await storage.read(key: AppKeys.userPassword);
-      print('🔐 [ChangePassword] Validating current password...');
+      appLog('🔐 [ChangePassword] Validating current password...');
 
       if (storedPassword == null) {
-        print('⚠️ [ChangePassword] No stored password found.');
+        appLog('⚠️ [ChangePassword] No stored password found.');
         return false;
       }
 
       final isValid = storedPassword == enteredPassword;
-      print(
+      appLog(
           '🔐 [ChangePassword] Password validation: ${isValid ? "SUCCESS" : "FAILED"}');
       return isValid;
     } catch (e) {
-      print('❌ [ChangePassword] Error validating password: $e');
+      appLog('❌ [ChangePassword] Error validating password: $e');
       return false;
     }
   }
@@ -141,10 +142,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
       // Save new password
       final newPassword = _newPasswordController.text.trim();
-      print('🔑 [ChangePassword] Updating password...');
+      appLog('🔑 [ChangePassword] Updating password...');
 
       await storage.write(key: AppKeys.userPassword, value: newPassword);
-      print('💾 [SecureStorage] Password updated successfully.');
+      appLog('💾 [SecureStorage] Password updated successfully.');
 
       setState(() => _isLoading = false);
       HapticFeedback.heavyImpact();
@@ -156,8 +157,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
       await Future.delayed(const Duration(milliseconds: 500));
       Navigator.pop(context);
     } catch (e, stack) {
-      print('❌ [ChangePassword] Error: $e');
-      print(stack);
+      appLog('❌ [ChangePassword] Error: $e');
+      appLog(stack);
       setState(() => _isLoading = false);
 
       Get.snackbar(

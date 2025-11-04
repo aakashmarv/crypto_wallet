@@ -11,6 +11,7 @@ import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/logger.dart';
 import '../password_setup/widgets/biometric_setup_widget.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -324,24 +325,24 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     );
 
     if (confirm != true) {
-      print('🚫 [Logout] User canceled logout.');
+      appLog('🚫 [Logout] User canceled logout.');
       return;
     }
 
-    print('🔐 [Logout] Logout process started...');
+    appLog('🔐 [Logout] Logout process started...');
 
     try {
       // 🔹 Step 2: Clear all wallet-related data safely
       // a) Clear SharedPreferences
       final prefs = await SharedPreferencesService.getInstance();
       await prefs.clear();
-      print('🧹 [Logout] SharedPreferences cleared.');
+      appLog('🧹 [Logout] SharedPreferences cleared.');
 
       // b) Clear encrypted storage, mnemonic & AES keys,wallet caches, derived wallets, indexes
       final secureService = SecureMnemonicService();
       final multiWalletService = MultiWalletService(secureService);
       await multiWalletService.clearAll();
-      print('🧹 [Logout] MultiWalletService cache and indexes cleared.');
+      appLog('🧹 [Logout] MultiWalletService cache and indexes cleared.');
 
       // 🔹 Step 3: Provide feedback
       HapticFeedback.mediumImpact();
@@ -349,7 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
       Get.offAllNamed(AppRoutes.onboarding);
 
     } catch (e, stack) {
-      print(stack);
+      appLog(stack);
       Get.snackbar(
         'Logout Failed',
         'Something went wrong while logging out. Please restart the app.',

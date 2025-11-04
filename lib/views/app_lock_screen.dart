@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../routes/app_routes.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../utils/logger.dart';
+
 class AppLockScreen extends StatefulWidget {
   const AppLockScreen({super.key});
 
@@ -44,7 +46,7 @@ class _AppLockScreenState extends State<AppLockScreen> {
           return;
         }
       } catch (e) {
-        debugPrint("Biometric auth error: $e");
+        appLog("Biometric auth error: $e");
         // fallback to password
       }
     }

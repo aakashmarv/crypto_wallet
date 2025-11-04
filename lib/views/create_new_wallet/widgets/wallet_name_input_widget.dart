@@ -4,6 +4,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../utils/logger.dart';
 
 class WalletNameInputWidget extends StatefulWidget {
   final Function(String) onNameChanged;
@@ -67,7 +68,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
       widget.onValidationChanged(false);
     } catch (e) {
       // ignore: avoid_print
-      print('onValidationChanged dispose error: $e');
+      appLog('onValidationChanged dispose error: $e');
     }
 
     _nameController.removeListener(_validateInput);

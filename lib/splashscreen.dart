@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cryptovault_pro/routes/app_routes.dart';
 import 'package:cryptovault_pro/servieces/sharedpreferences_service.dart';
+import 'package:cryptovault_pro/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'constants/app_keys.dart';
@@ -42,9 +43,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     final isOnboardingComplete = prefs.getBool(AppKeys.onboardingComplete) ?? false;
     final bool isLogged = prefs.getBool(AppKeys.isLogin) ?? false;
     final isBiometricEnabled = prefs.getBool(AppKeys.isBiometricEnable) ?? false;
-    print("isOnboardingComplete splash :: $isOnboardingComplete ");
-    print("isLogged splash :: $isLogged ");
-    print("isBiometricEnable splash :: $isBiometricEnabled ");
+    appLog("isOnboardingComplete splash :: $isOnboardingComplete ");
+    appLog("isLogged splash :: $isLogged ");
+    appLog("isBiometricEnable splash :: $isBiometricEnabled ");
 
     await Future.delayed(const Duration(seconds: 3));
 

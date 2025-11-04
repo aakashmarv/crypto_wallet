@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../constants/app_keys.dart';
 import '../models/address_entry.dart';
 import '../servieces/sharedpreferences_service.dart';
+import '../utils/logger.dart';
 
 class AddressBookController extends GetxController {
   final RxList<AddressEntry> addresses = <AddressEntry>[].obs;
@@ -33,7 +34,7 @@ class AddressBookController extends GetxController {
         addresses.assignAll(list);
       }
     } catch (e, st) {
-      debugPrint('AddressBook load error: $e\n$st');
+      appLog('AddressBook load error: $e\n$st');
       addresses.clear();
     } finally {
       isLoading.value = false;
