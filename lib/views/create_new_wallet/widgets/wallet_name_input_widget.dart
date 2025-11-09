@@ -60,6 +60,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
     widget.onNameChanged(name);
     widget.onValidationChanged(isValid);
   }
+
   @override
   void dispose() {
     // Inform parent that this child is gone and the name should be considered empty.
@@ -79,132 +80,130 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: AppTheme.accentTherd.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.borderSubtle,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Wallet',
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
-              fontWeight: FontWeight.w600,
+          width: double.infinity,
+          padding: EdgeInsets.all(4.w),
+          decoration: BoxDecoration(
+            color: AppTheme.accentTherd.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.borderSubtle,
+              width: 1,
             ),
           ),
-          SizedBox(height: 2.h),
-          TextFormField(
-            controller: _nameController,
-            style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
-              color: AppTheme.textPrimary,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Please enter Wallet name',
-              hintStyle: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
-                color: AppTheme.textSecondary.withValues(alpha: 0.7),
-              ),
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(3.w),
-                child: Icon(
-                  Icons.account_balance_wallet,
-                  color: _isValid.value
-                      ? AppTheme.accentTeal
-                      : AppTheme.textSecondary,
-                  size: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Wallet',
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  color: AppTheme.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              suffixIcon: _nameController.text.isNotEmpty
-                  ? Padding(
-                padding: EdgeInsets.all(3.w),
-                child: Icon(
-                  _isValid.value ? Icons.check_circle : Icons.error,
-                  color: _isValid.value
-                      ? AppTheme.successGreen
-                      : AppTheme.errorRed,
-                  size: 20,
+              SizedBox(height: 2.h),
+              TextFormField(
+                controller: _nameController,
+                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.textPrimary,
                 ),
-              )
-                  : null,
-              errorText: _errorText.value.isEmpty ? null : _errorText.value,
-              errorStyle:
-              AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.errorRed,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.borderSubtle,
-                  width: 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.borderSubtle,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.accentTeal,
-                  width: 2,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.errorRed,
-                  width: 1,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.errorRed,
-                  width: 2,
-                ),
-              ),
-              filled: true,
-              fillColor: AppTheme.primaryDark,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 4.w,
-                vertical: 2.h,
-              ),
-            ),
-          ),
-          if (_isValid.value) ...[
-            SizedBox(height: 1.h),
-            Row(
-              children: [
-                Icon(
-                  Icons.info,
-                  color: AppTheme.successGreen,
-                  size: 16,
-                ),
-                SizedBox(width: 2.w),
-                Expanded(
-                  child: Text(
-                    'Great! Your wallet name looks good.',
-                    style:
-                    AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                      color: AppTheme.successGreen,
+                decoration: InputDecoration(
+                  hintText: 'Please enter Wallet name',
+                  hintStyle: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                    color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                  ),
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: Icon(
+                      Icons.account_balance_wallet,
+                      color: _isValid.value
+                          ? AppTheme.accentTeal
+                          : AppTheme.textSecondary,
+                      size: 20,
                     ),
                   ),
+                  suffixIcon: _nameController.text.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.all(3.w),
+                          child: Icon(
+                            _isValid.value ? Icons.check_circle : Icons.error,
+                            color: _isValid.value
+                                ? AppTheme.successGreen
+                                : AppTheme.errorRed,
+                            size: 20,
+                          ),
+                        )
+                      : null,
+                  errorText: _errorText.value.isEmpty ? null : _errorText.value,
+                  errorStyle: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                    color: AppTheme.errorRed,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppTheme.borderSubtle,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppTheme.borderSubtle,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppTheme.accentTeal,
+                      width: 2,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppTheme.errorRed,
+                      width: 1,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppTheme.errorRed,
+                      width: 2,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: AppTheme.primaryLight,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 4.w,
+                    vertical: 2.h,
+                  ),
+                ),
+              ),
+              if (_isValid.value) ...[
+                SizedBox(height: 1.h),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.info,
+                      color: AppTheme.successGreen,
+                      size: 16,
+                    ),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      child: Text(
+                        'Great! Your wallet name looks good.',
+                        style:
+                            AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.successGreen,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        ],
-      ),
-    ));
+            ],
+          ),
+        ));
   }
 }
-

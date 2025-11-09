@@ -67,7 +67,7 @@ class OnboardingPageWidget extends StatelessWidget {
               // Title
               Text(
                 title,
-                style: AppTheme.darkTheme.textTheme.headlineMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
@@ -79,7 +79,7 @@ class OnboardingPageWidget extends StatelessWidget {
               // Description
               Text(
                 description,
-                style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
                   color: AppTheme.textSecondary,
                   height: 1.6,
                 ),
@@ -104,7 +104,8 @@ class OnboardingPageWidget extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   feature,
-                                  style: AppTheme.darkTheme.textTheme.bodyMedium
+                                  style: AppTheme
+                                      .lightTheme.textTheme.bodyMedium
                                       ?.copyWith(
                                     color: AppTheme.textPrimary,
                                   ),

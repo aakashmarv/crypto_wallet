@@ -10,6 +10,7 @@ import '../../routes/app_routes.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
+import '../../servieces/theme_service.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/logger.dart';
 import '../password_setup/widgets/biometric_setup_widget.dart';
@@ -21,7 +22,8 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
+class _SettingsScreenState extends State<SettingsScreen>
+    with SingleTickerProviderStateMixin {
   bool _isDarkMode = true;
   bool _isBiometricEnabled = false;
   bool _isBiometricAvailable = false;
@@ -69,8 +71,10 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     final prefs = await SharedPreferencesService.getInstance();
     setState(() {
       _isBiometricEnabled = prefs.getBool(AppKeys.isBiometricEnable) ?? false;
+      _isDarkMode = prefs.getBool(AppKeys.isDarkMode) ?? false;
     });
   }
+
   Future<void> _checkBiometricAvailability() async {
     await Future.delayed(const Duration(milliseconds: 500));
     setState(() {
@@ -80,6 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           : "Fingerprint";
     });
   }
+
   static Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
     try {
@@ -97,13 +102,12 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         title: Text(
           "Settings",
@@ -123,7 +127,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
             child: Column(
               children: [
-
                 _buildNavigationTile(
                   context,
                   icon: LucideIcons.keyRound,
@@ -152,16 +155,19 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   onTap: () => Get.toNamed(AppRoutes.changePassword),
                 ),
                 _buildDivider(),
-                // _buildSwitchTile(
-                //   context,
-                //   icon: Icons.dark_mode,
-                //   title: "Dark Mode",
-                //   value: _isDarkMode,
-                //   onChanged: (val) {
-                //     setState(() => _isDarkMode = val);
-                //   },
-                // ),
-                // _buildDivider(),
+                _buildSwitchTile(
+                  context,
+                  icon: Icons.dark_mode,
+                  title: _isDarkMode ? "Dark Mode" : "Light Mode",
+                  value: _isDarkMode,
+                  onChanged: (val) async {
+                    setState(() => _isDarkMode = val);
+                    await Get.find<ThemeService>()
+                        .toggleTheme(val); // ✅ global theme change
+                  },
+                ),
+
+                _buildDivider(),
                 _buildSwitchTile(
                   context,
                   icon: LucideIcons.fingerprint,
@@ -169,8 +175,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   value: _isBiometricEnabled && _isBiometricAvailable,
                   onChanged: _isBiometricAvailable
                       ? (val) {
-                    _handleBiometricToggle(val); // async ok to call; wrapper is sync
-                  }
+                          _handleBiometricToggle(
+                              val); // async ok to call; wrapper is sync
+                        }
                       : null, // allowed now because parameter is nullable
                 ),
 
@@ -179,7 +186,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   context,
                   icon: LucideIcons.messageCircleQuestionMark,
                   title: "Help & Support",
-                  onTap: () {_launchURL("https://rubynodeui.ctskola.io/help-support");
+                  onTap: () {
+                    _launchURL("https://rubynodeui.ctskola.io/help-support");
                   },
                 ),
                 _buildDivider(),
@@ -187,7 +195,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   context,
                   icon: LucideIcons.shieldAlert,
                   title: "Privacy Policy",
-                  onTap: () {_launchURL("https://rubynodeui.ctskola.io/privacy-policy");},
+                  onTap: () {
+                    _launchURL("https://rubynodeui.ctskola.io/privacy-policy");
+                  },
                 ),
                 _buildDivider(),
                 _buildNavigationTile(
@@ -208,53 +218,58 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
 
   Future<bool?> _showBiometricPrompt() async {
     return await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.surfaceElevated,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Row(
-            children: [
-              Icon(
-                Theme.of(context).platform == TargetPlatform.iOS
-                    ? Icons.face
-                    : Icons.fingerprint,
-                color: AppTheme.accentTeal,
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: AppTheme.surfaceElevated,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              title: Row(
+                children: [
+                  Icon(
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? Icons.face
+                        : Icons.fingerprint,
+                    color: AppTheme.accentTeal,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    "Enable $_biometricType",
+                    style: AppTheme.lightTheme.textTheme.titleLarge
+                        ?.copyWith(color: AppTheme.textPrimary),
+                  ),
+                ],
               ),
-              SizedBox(width: 12),
-              Text("Enable $_biometricType",
-                style: AppTheme.darkTheme.textTheme.titleLarge
-                    ?.copyWith(color: AppTheme.textPrimary),
+              content: Text(
+                "Use your $_biometricType to quickly and securely access your wallet.",
+                style: AppTheme.lightTheme.textTheme.bodyMedium
+                    ?.copyWith(color: AppTheme.textSecondary),
               ),
-            ],
-          ),
-          content: Text(
-            "Use your $_biometricType to quickly and securely access your wallet.",
-            style: AppTheme.darkTheme.textTheme.bodyMedium
-                ?.copyWith(color: AppTheme.textSecondary),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text("Cancel", style: TextStyle(color: AppTheme.textSecondary)),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(context, true);
-                await Future.delayed(const Duration(milliseconds: 1000));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.accentTeal,
-                foregroundColor: AppTheme.primaryDark,
-              ),
-              child: const Text("Enable"),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text("Cancel",
+                      style: TextStyle(color: AppTheme.textSecondary)),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context, true);
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accentTeal,
+                    foregroundColor: AppTheme.primaryLight,
+                  ),
+                  child: const Text("Enable"),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
+
   Future<void> _handleBiometricToggle(bool value) async {
     if (value && _isBiometricAvailable) {
       try {
@@ -283,7 +298,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     }
   }
 
-
   // 🔘 Light Divider
   Widget _buildDivider() {
     return Padding(
@@ -302,7 +316,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         title: Text(
           'Confirm Logout',
           style: TextStyle(color: AppTheme.textPrimary),
@@ -314,7 +328,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
+            child:
+                Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -348,7 +363,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
       HapticFeedback.mediumImpact();
 
       Get.offAllNamed(AppRoutes.onboarding);
-
     } catch (e, stack) {
       appLog(stack);
       Get.snackbar(
@@ -364,12 +378,12 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   // 🔘 Switch Tile Widget
 // 🔘 Switch Tile Widget
   Widget _buildSwitchTile(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required bool value,
-        required ValueChanged<bool>? onChanged, // <-- change here
-      }) {
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required bool value,
+    required ValueChanged<bool>? onChanged, // <-- change here
+  }) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
@@ -396,7 +410,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           ),
           Switch(
             value: value,
-            onChanged: onChanged, // <-- pass through; Switch expects void Function(bool)?
+            onChanged:
+                onChanged, // <-- pass through; Switch expects void Function(bool)?
             activeColor: AppTheme.accentTeal,
             inactiveThumbColor: AppTheme.textSecondary,
             inactiveTrackColor: AppTheme.borderSubtle,
@@ -406,17 +421,21 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     );
   }
 
-
   // 🔘 Navigation Tile Widget
   Widget _buildNavigationTile(BuildContext context,
-      {required IconData icon, required String title, required VoidCallback onTap, bool isDestructive = false}) {
+      {required IconData icon,
+      required String title,
+      required VoidCallback onTap,
+      bool isDestructive = false}) {
     return InkWell(
       onTap: () {
         HapticFeedback.lightImpact();
         onTap();
       },
-      splashColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal).withOpacity(0.1),
-      highlightColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal).withOpacity(0.05),
+      splashColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal)
+          .withOpacity(0.1),
+      highlightColor: (isDestructive ? Colors.redAccent : AppTheme.accentTeal)
+          .withOpacity(0.05),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
@@ -430,11 +449,10 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                     : AppTheme.textPrimary.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                  icon,
-                  color: isDestructive ? Colors.redAccent : AppTheme.textPrimary,
-                  size: 5.5.w
-              ),
+              child: Icon(icon,
+                  color:
+                      isDestructive ? Colors.redAccent : AppTheme.textPrimary,
+                  size: 5.5.w),
             ),
             SizedBox(width: 3.5.w),
             Expanded(
@@ -443,19 +461,16 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: isDestructive ? Colors.redAccent : AppTheme.textPrimary,
+                  color:
+                      isDestructive ? Colors.redAccent : AppTheme.textPrimary,
                 ),
               ),
             ),
-            Icon(
-                Icons.chevron_right,
-                color: AppTheme.textSecondary.withOpacity(0.5),
-                size: 5.5.w
-            ),
+            Icon(Icons.chevron_right,
+                color: AppTheme.textSecondary.withOpacity(0.5), size: 5.5.w),
           ],
         ),
       ),
     );
   }
 }
-

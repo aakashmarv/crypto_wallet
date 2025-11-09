@@ -1,3 +1,4 @@
+import 'package:cryptovault_pro/utils/helper_util.dart';
 import 'package:cryptovault_pro/utils/snackbar_util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,7 @@ class TokenListController extends GetxController {
       final address = prefs.getString(AppKeys.walletAddress);
 
       if (address == null || address.isEmpty) {
-        // SnackbarUtil.showError("Error", "Wallet address not found.");
+        HelperUtil.toast("Wallet address not found.");
         isLoading.value = false;
         return;
       }
@@ -51,13 +52,12 @@ class TokenListController extends GetxController {
           appLog("✅ Token list fetched successfully (${tokenList.length} tokens)");
         } else {
           tokenList.clear();
-          SnackbarUtil.showError("Info", "No tokens found for this wallet.");
         }
       } else {
-        SnackbarUtil.showError("Error", "Failed to fetch token list. Please try again.");
+        HelperUtil.toast( "Failed to fetch token list. Please try again.");
       }
     } catch (e, st) {
-      SnackbarUtil.showError("Error", "Something went wrong while fetching token list.");
+      HelperUtil.toast("Something went wrong while fetching token list.");
       appLog("❌ Token list fetch error: $e\n$st");
     } finally {
       isLoading.value = false;

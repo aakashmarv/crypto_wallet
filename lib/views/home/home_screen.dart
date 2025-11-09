@@ -29,11 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(7.h),
         child: AppBar(
-          backgroundColor: AppTheme.primaryDark,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: SafeArea(
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: GoogleFonts.inter(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w400,
-                                color: AppTheme.textSecondary,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             /// balance card
-           WalletBalanceCardWidget(),
+            WalletBalanceCardWidget(),
             Obx(() => ActionButtonsRowWidget(
                 walletAddress: _homeController.walletAddress.value)),
             SizedBox(height: 2.h),

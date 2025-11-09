@@ -27,7 +27,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.darkTheme.colorScheme.surface,
+        color: AppTheme.lightTheme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppTheme.borderSubtle,
@@ -60,7 +60,8 @@ class PasswordRequirementsWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Password Requirements',
-                      style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                      style:
+                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                         color: AppTheme.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -140,7 +141,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: isValid ? AppTheme.successGreen : AppTheme.textSecondary,
               fontWeight: isValid ? FontWeight.w500 : FontWeight.w400,
             ),

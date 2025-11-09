@@ -28,9 +28,9 @@ class _SwapScreenState extends State<SwapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         title: Text(
           "Swap",
@@ -65,19 +65,21 @@ class _SwapScreenState extends State<SwapScreen> {
                     },
                     child: _isSwapped
                         ? _buildSwapSection(
-                      key: const ValueKey("to"),
-                      title: "To",
-                      controller: _toAmountController,
-                      selectedCoin: _toCoin,
-                      onCoinChanged: (coin) => setState(() => _toCoin = coin),
-                    )
+                            key: const ValueKey("to"),
+                            title: "To",
+                            controller: _toAmountController,
+                            selectedCoin: _toCoin,
+                            onCoinChanged: (coin) =>
+                                setState(() => _toCoin = coin),
+                          )
                         : _buildSwapSection(
-                      key: const ValueKey("from"),
-                      title: "From",
-                      controller: _fromAmountController,
-                      selectedCoin: _fromCoin,
-                      onCoinChanged: (coin) => setState(() => _fromCoin = coin),
-                    ),
+                            key: const ValueKey("from"),
+                            title: "From",
+                            controller: _fromAmountController,
+                            selectedCoin: _fromCoin,
+                            onCoinChanged: (coin) =>
+                                setState(() => _fromCoin = coin),
+                          ),
                   ),
                   SizedBox(height: 2.h),
 
@@ -94,7 +96,8 @@ class _SwapScreenState extends State<SwapScreen> {
                             shape: BoxShape.circle,
                             color: AppTheme.accentTeal.withOpacity(0.5),
                           ),
-                          child: Icon(Icons.swap_vert, color: AppTheme.textPrimary),
+                          child: Icon(Icons.swap_vert,
+                              color: AppTheme.textPrimary),
                         ),
                       ),
                     ),
@@ -115,19 +118,21 @@ class _SwapScreenState extends State<SwapScreen> {
                     },
                     child: _isSwapped
                         ? _buildSwapSection(
-                      key: const ValueKey("from"),
-                      title: "From",
-                      controller: _fromAmountController,
-                      selectedCoin: _fromCoin,
-                      onCoinChanged: (coin) => setState(() => _fromCoin = coin),
-                    )
+                            key: const ValueKey("from"),
+                            title: "From",
+                            controller: _fromAmountController,
+                            selectedCoin: _fromCoin,
+                            onCoinChanged: (coin) =>
+                                setState(() => _fromCoin = coin),
+                          )
                         : _buildSwapSection(
-                      key: const ValueKey("to"),
-                      title: "To",
-                      controller: _toAmountController,
-                      selectedCoin: _toCoin,
-                      onCoinChanged: (coin) => setState(() => _toCoin = coin),
-                    ),
+                            key: const ValueKey("to"),
+                            title: "To",
+                            controller: _toAmountController,
+                            selectedCoin: _toCoin,
+                            onCoinChanged: (coin) =>
+                                setState(() => _toCoin = coin),
+                          ),
                   ),
                   SizedBox(height: 8.h),
 
@@ -150,14 +155,13 @@ class _SwapScreenState extends State<SwapScreen> {
                 enabled: !_isLoading, // disable button while loading
                 trailingIcon: !_isLoading
                     ? Icon(
-                  Icons.swap_horiz,
-                  color: AppTheme.primaryDark, // match your button style
-                  size: 18.sp,
-                )
+                        Icons.swap_horiz,
+                        color: AppTheme.primaryLight, // match your button style
+                        size: 18.sp,
+                      )
                     : null,
               ),
             ),
-
           ],
         ),
       ),
@@ -214,7 +218,8 @@ class _SwapScreenState extends State<SwapScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     errorStyle: TextStyle(fontSize: 9.sp, color: Colors.red),
-                    suffixIcon: Icon(Icons.attach_money, color: AppTheme.textSecondary),
+                    suffixIcon:
+                        Icon(Icons.attach_money, color: AppTheme.textSecondary),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) return "Enter amount";
@@ -230,20 +235,24 @@ class _SwapScreenState extends State<SwapScreen> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.2.h),
                 decoration: BoxDecoration(
-                  color: AppTheme.secondaryDark.withOpacity(0.4),
+                  color: AppTheme.secondaryLight.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppTheme.borderSubtle),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: selectedCoin,
-                    dropdownColor: AppTheme.secondaryDark,
-                    icon: Icon(Icons.keyboard_arrow_down, color: AppTheme.textSecondary),
+                    dropdownColor: AppTheme.secondaryLight,
+                    icon: Icon(Icons.keyboard_arrow_down,
+                        color: AppTheme.textSecondary),
                     style: GoogleFonts.inter(
                       color: AppTheme.textPrimary,
                       fontSize: 11.sp,
                     ),
-                    items: _coins.map((coin) => DropdownMenuItem(value: coin, child: Text(coin))).toList(),
+                    items: _coins
+                        .map((coin) =>
+                            DropdownMenuItem(value: coin, child: Text(coin)))
+                        .toList(),
                     onChanged: (value) {
                       if (value != null) onCoinChanged(value);
                     },
@@ -262,7 +271,7 @@ class _SwapScreenState extends State<SwapScreen> {
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark.withOpacity(0.3),
+        color: AppTheme.secondaryLight.withOpacity(0.3),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppTheme.borderSubtle),
       ),

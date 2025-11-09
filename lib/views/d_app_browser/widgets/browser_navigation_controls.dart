@@ -94,7 +94,7 @@ class BrowserNavigationControls extends StatelessWidget {
           //       SizedBox(width: 1.w),
           //       Text(
           //         isSecure ? 'Secure' : 'Unsecure',
-          //         style: AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+          //         style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
           //           fontSize: 10.sp,
           //           color: isSecure
           //               ? AppTheme.successGreen
@@ -123,8 +123,8 @@ class BrowserNavigationControls extends StatelessWidget {
         height: 4.h,
         decoration: BoxDecoration(
           color: isEnabled
-              ? AppTheme.secondaryDark
-              : AppTheme.secondaryDark.withValues(alpha: 0.5),
+              ? AppTheme.secondaryLight
+              : AppTheme.secondaryLight.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
           // border: Border.all(
           //   color: AppTheme.borderSubtle,

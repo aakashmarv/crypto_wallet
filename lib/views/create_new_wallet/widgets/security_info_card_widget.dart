@@ -116,7 +116,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                       children: [
                         Text(
                           'Security Information',
-                          style: AppTheme.darkTheme.textTheme.titleMedium
+                          style: AppTheme.lightTheme.textTheme.titleMedium
                               ?.copyWith(
                             color: AppTheme.textPrimary,
                             fontWeight: FontWeight.w600,
@@ -126,7 +126,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                         Text(
                           'Learn how we protect your wallet',
                           style:
-                              AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                             color: AppTheme.textSecondary,
                           ),
                         ),
@@ -187,7 +187,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                         Expanded(
                           child: Text(
                             'Important: Write down your recovery phrase and store it safely. We cannot recover your wallet without it.',
-                            style: AppTheme.darkTheme.textTheme.bodySmall
+                            style: AppTheme.lightTheme.textTheme.bodySmall
                                 ?.copyWith(
                               color: AppTheme.warningOrange,
                               fontWeight: FontWeight.w500,
@@ -240,7 +240,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
               children: [
                 Text(
                   title,
-                  style: AppTheme.darkTheme.textTheme.titleSmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
                     color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -248,7 +248,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                 SizedBox(height: 0.5.h),
                 Text(
                   description,
-                  style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                     height: 1.4,
                   ),

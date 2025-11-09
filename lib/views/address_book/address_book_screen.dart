@@ -45,9 +45,9 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
   Widget build(BuildContext context) {
     final AddressBookController ctrl = Get.put(AddressBookController());
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppTheme.textPrimary),
@@ -55,7 +55,7 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
         ),
         title: Text(
           "Address Book",
-          style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+          style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
             color: AppTheme.textPrimary,
             fontWeight: FontWeight.w600,
           ),
@@ -69,7 +69,8 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
               child: Text(
                 'Save frequently used wallet addresses for quick access. Tap an item to copy, or use edit/delete.',
-                style: GoogleFonts.inter(fontSize: 10.sp, color: AppTheme.textSecondary),
+                style: GoogleFonts.inter(
+                    fontSize: 10.sp, color: AppTheme.textSecondary),
               ),
             ),
 
@@ -86,7 +87,8 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
 
                 return ListView.separated(
                   controller: _scrollController,
-                  padding: EdgeInsets.fromLTRB(3.w, 2.h, 3.w, 12.h), // Bottom padding to prevent FAB overlap
+                  padding: EdgeInsets.fromLTRB(3.w, 2.h, 3.w,
+                      12.h), // Bottom padding to prevent FAB overlap
                   itemCount: ctrl.addresses.length,
                   separatorBuilder: (_, __) => SizedBox(height: 1.h),
                   itemBuilder: (context, index) {
@@ -106,12 +108,29 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (c) => AlertDialog(
-                            backgroundColor: AppTheme.primaryDark,
-                            title: const Text('Delete Address',style: TextStyle(color: AppTheme.textPrimary),),
-                            content: Text('Are you sure you want to delete "${entry.name}"?',style: TextStyle(color: AppTheme.textPrimary),),
+                            backgroundColor: AppTheme.primaryLight,
+                            title: const Text(
+                              'Delete Address',
+                              style: TextStyle(color: AppTheme.textPrimary),
+                            ),
+                            content: Text(
+                              'Are you sure you want to delete "${entry.name}"?',
+                              style: TextStyle(color: AppTheme.textPrimary),
+                            ),
                             actions: [
-                              TextButton(onPressed: () => Navigator.of(c).pop(false), child: const Text('Cancel',style: TextStyle(color: AppTheme.textSecondary),)),
-                              TextButton(onPressed: () => Navigator.of(c).pop(true), child: const Text('Delete',style: TextStyle(color: AppTheme.errorRed),)),
+                              TextButton(
+                                  onPressed: () => Navigator.of(c).pop(false),
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: AppTheme.textSecondary),
+                                  )),
+                              TextButton(
+                                  onPressed: () => Navigator.of(c).pop(true),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: AppTheme.errorRed),
+                                  )),
                             ],
                           ),
                         );
@@ -138,9 +157,9 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
             curve: Curves.easeInOut,
             child: _isExpanded
                 ? Text(
-              'Add Address',
-              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-            )
+                    'Add Address',
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  )
                 : const SizedBox.shrink(),
           ),
           onPressed: () async {
@@ -166,14 +185,18 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bookmarks_outlined, size: 12.w, color: AppTheme.textSecondary),
+            Icon(Icons.bookmarks_outlined,
+                size: 12.w, color: AppTheme.textSecondary),
             SizedBox(height: 2.h),
-            Text('No saved addresses', style: GoogleFonts.inter(fontSize: 14.sp, color: AppTheme.textPrimary)),
+            Text('No saved addresses',
+                style: GoogleFonts.inter(
+                    fontSize: 14.sp, color: AppTheme.textPrimary)),
             SizedBox(height: 1.h),
             Text(
               'Tap the button below to add a new wallet address to your address book.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(fontSize: 10.sp, color: AppTheme.textSecondary),
+              style: GoogleFonts.inter(
+                  fontSize: 10.sp, color: AppTheme.textSecondary),
             ),
           ],
         ),
@@ -230,7 +253,19 @@ class _AddressCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // 🟢 Avatar
-          Container( width: 10.w, height: 10.w, decoration: BoxDecoration( color: AppTheme.accentTeal.withOpacity(0.12), shape: BoxShape.circle, ), child: Center(child: Text(entry.name.isNotEmpty ? entry.name[0].toUpperCase() : 'A',style: TextStyle( color: AppTheme.textPrimary ),)), ),
+          Container(
+            width: 10.w,
+            height: 10.w,
+            decoration: BoxDecoration(
+              color: AppTheme.accentTeal.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+                child: Text(
+              entry.name.isNotEmpty ? entry.name[0].toUpperCase() : 'A',
+              style: TextStyle(color: AppTheme.textPrimary),
+            )),
+          ),
           SizedBox(width: 3.w),
           // 🟡 Expanded Name + Address Column
           Expanded(
@@ -288,7 +323,9 @@ class _AddressCard extends StatelessWidget {
               ],
             ),
           ),
-SizedBox(width: 2.w,),
+          SizedBox(
+            width: 2.w,
+          ),
           // 🔴 Delete icon (far right)
           GestureDetector(
             onTap: onDelete,
@@ -305,7 +342,6 @@ SizedBox(width: 2.w,),
       ),
     );
   }
-
 }
 
 class AddEditAddressDialog extends StatefulWidget {
@@ -343,7 +379,8 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
   void _onSave() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    final id = widget.entry?.id ?? DateTime.now().millisecondsSinceEpoch.toString();
+    final id =
+        widget.entry?.id ?? DateTime.now().millisecondsSinceEpoch.toString();
     final label = _nameCtr.text.trim();
     final address = _addressCtr.text.trim();
 
@@ -355,8 +392,9 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
   Widget build(BuildContext context) {
     final isEdit = widget.entry != null;
     return AlertDialog(
-      backgroundColor: AppTheme.secondaryDark,
-      title: Text(isEdit ? 'Edit Address' : 'Add Address', style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+      backgroundColor: AppTheme.secondaryLight,
+      title: Text(isEdit ? 'Edit Address' : 'Add Address',
+          style: GoogleFonts.inter(color: AppTheme.textPrimary)),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -365,14 +403,19 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
               TextFormField(
                 controller: _nameCtr,
                 style: TextStyle(color: AppTheme.textPrimary),
-                decoration: InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: AppTheme.textSecondary)),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter a label' : null,
+                decoration: InputDecoration(
+                    labelText: 'Name',
+                    labelStyle: TextStyle(color: AppTheme.textSecondary)),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Enter a label' : null,
               ),
               SizedBox(height: 2.h),
               TextFormField(
                 controller: _addressCtr,
                 style: TextStyle(color: AppTheme.textPrimary),
-                decoration: InputDecoration(labelText: 'Address', labelStyle: TextStyle(color: AppTheme.textSecondary)),
+                decoration: InputDecoration(
+                    labelText: 'Address',
+                    labelStyle: TextStyle(color: AppTheme.textSecondary)),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Enter address';
                   if (!_isValidAddress(v)) return 'Invalid address format';
@@ -384,11 +427,17 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary))),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel',
+                style: TextStyle(color: AppTheme.textSecondary))),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentTeal),
           onPressed: _onSave,
-          child: Text(isEdit ? 'Update' : 'Save',style: TextStyle(color: Colors.white),),
+          child: Text(
+            isEdit ? 'Update' : 'Save',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

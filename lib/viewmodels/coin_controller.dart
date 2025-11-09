@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-
 import '../constants/api_constants.dart';
 import '../constants/app_keys.dart';
 import '../repositories/coin_repository.dart';
 import '../servieces/sharedpreferences_service.dart';
+import '../utils/helper_util.dart';
 import '../utils/logger.dart';
 import '../utils/snackbar_util.dart';
 
@@ -39,11 +39,11 @@ class CoinPriceController extends GetxController {
         coinPrice.value = response.result?.price ?? 0.0;
         appLog("✅ Coin price fetched: ${coinPrice.value}");
       } else {
-        SnackbarUtil.showError("Error", "Failed to fetch coin price.");
+        HelperUtil.toast( "Failed to fetch coin price.");
         appLog("⚠️ Invalid response or missing result.");
       }
     } catch (e, st) {
-      SnackbarUtil.showError("Error", "Something went wrong while fetching price.");
+      HelperUtil.toast( "Something went wrong while fetching price.");
       appLog("❌ Coin price fetch error: $e\n$st");
     } finally {
       isLoading.value = false;

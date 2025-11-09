@@ -30,7 +30,7 @@ class WalletTabsWidget extends StatelessWidget {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 4.w),
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark.withOpacity(0.5),
+            color: AppTheme.secondaryLight.withOpacity(0.5),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppTheme.borderSubtle, width: 1),
           ),
@@ -77,7 +77,8 @@ class WalletTabsWidget extends StatelessWidget {
 }
 
 class _CoinsTabContent extends StatelessWidget {
-  final TokenListController _tokenListController = Get.put(TokenListController());
+  final TokenListController _tokenListController =
+      Get.put(TokenListController());
 
   _CoinsTabContent({super.key});
 
@@ -185,14 +186,16 @@ class _CoinsTabContent extends StatelessWidget {
                                   color: Colors.redAccent.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Icon(Icons.delete, color: Colors.redAccent, size: 7.w),
+                                child: Icon(Icons.delete,
+                                    color: Colors.redAccent, size: 7.w),
                               ),
                               onDismissed: (_) async {
                                 final removed = token;
                                 _tokenListController.tokenList.remove(token);
                                 HapticFeedback.mediumImpact();
 
-                                final success = await _tokenListController.removeToken(removed);
+                                final success = await _tokenListController
+                                    .removeToken(removed);
 
                                 if (!success) {
                                   _tokenListController.tokenList.add(removed);
@@ -203,11 +206,11 @@ class _CoinsTabContent extends StatelessWidget {
                             );
                           },
                         );
-
                       }),
                       SizedBox(height: 3.h),
                       Obx(() {
-                        final hasTokens = _tokenListController.tokenList.isNotEmpty;
+                        final hasTokens =
+                            _tokenListController.tokenList.isNotEmpty;
                         return GestureDetector(
                           onTap: () => showModalBottomSheet(
                             context: context,
@@ -217,7 +220,8 @@ class _CoinsTabContent extends StatelessWidget {
                           ),
                           child: Container(
                             width: double.infinity,
-                            margin: EdgeInsets.only(bottom: 3.w, left: 4.w, right: 4.w),
+                            margin: EdgeInsets.only(
+                                bottom: 3.w, left: 4.w, right: 4.w),
                             padding: EdgeInsets.symmetric(vertical: 1.2.h),
                             decoration: BoxDecoration(
                               color: AppTheme.surfaceElevated,
@@ -239,7 +243,6 @@ class _CoinsTabContent extends StatelessWidget {
                           ),
                         );
                       }),
-
                     ],
                   ),
                 ),
@@ -253,7 +256,8 @@ class _CoinsTabContent extends StatelessWidget {
 }
 
 class _NFTsTabContent extends StatelessWidget {
-  final TokenListController _tokenListController = Get.find<TokenListController>();
+  final TokenListController _tokenListController =
+      Get.find<TokenListController>();
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +303,7 @@ class _NFTsTabContent extends StatelessWidget {
         return GridView.builder(
           padding: EdgeInsets.only(top: 1.h, bottom: 2.h),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,           // Two NFTs per row
+            crossAxisCount: 2, // Two NFTs per row
             crossAxisSpacing: 3.w,
             mainAxisSpacing: 2.h,
             childAspectRatio: 0.85,
@@ -318,20 +322,22 @@ class _NFTsTabContent extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12)),
                       child: nft.image != null
                           ? Image.network(
-                        nft.image!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (_, __, ___) => Center(
-                          child: Icon(Icons.broken_image, color: Colors.grey),
-                        ),
-                      )
+                              nft.image!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (_, __, ___) => Center(
+                                child: Icon(Icons.broken_image,
+                                    color: Colors.grey),
+                              ),
+                            )
                           : Center(
-                        child: Icon(Icons.image_not_supported,
-                            color: Colors.grey, size: 24),
-                      ),
+                              child: Icon(Icons.image_not_supported,
+                                  color: Colors.grey, size: 24),
+                            ),
                     ),
                   ),
                   Padding(
@@ -380,7 +386,7 @@ class TokenItemCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 1.5.h),
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark.withOpacity(0.08),
+        color: AppTheme.secondaryLight.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.borderSubtle),
       ),
@@ -440,8 +446,7 @@ class TokenItemCard extends StatelessWidget {
           TextButton(
             style: TextButton.styleFrom(
               foregroundColor: AppTheme.accentTeal,
-              padding:
-              EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -470,4 +475,3 @@ class TokenItemCard extends StatelessWidget {
     );
   }
 }
-

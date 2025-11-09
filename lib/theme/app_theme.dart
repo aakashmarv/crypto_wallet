@@ -4,30 +4,23 @@ import 'package:google_fonts/google_fonts.dart';
 /// A class that contains all theme configurations for the cryptocurrency application.
 class AppTheme {
   AppTheme._();
-// static const Color accentTeal = Color(0xFF3c065e); // Main accent - Modern purple
-
-
-  // Dark theme colors
-  // static const Color primaryDark = Color(0xFF1A1B23); // Deep background
-  // static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
-  // // static const Color accentTeal = Color(0xFF00D4AA); // Trust-building teal
-  // static const Color accentTeal = Color(0xFF455bff); // Trust-building teal
-  // static const Color warningOrange = Color(0xFFFF6B35); // Alert color
-  // static const Color successGreen = Color(0xFF00C896); // Success indicators
-  // static const Color textPrimary = Color(0xFFFFFFFF); // High contrast text
-  // static const Color textSecondary = Color(0xFFB8BCC8); // Supporting text
-  // static const Color borderSubtle = Color(0xFF3A3D4A); // Minimal borders
-  // static const Color surfaceElevated = Color(0xFF252831); // Modal backgrounds
-  // static const Color errorRed = Color(0xFFFF6B6B); // Error states
-  // static const Color shadowColor = Color(0x1A000000); // Subtle light shadow
-  // static const Color elevatedShadowColor = Color(0x1A000000);
-  // static const Color green = Color(0xFF068C06); // Fresh success green
+  // dark theme colors
+  static const Color primaryDark = Color(0xFF1A1B23); // Deep background
+  static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
+  // static const Color accentTeal = Color(0xFF455bff);
+  static const Color textPrimaryDark = Color(0xFFFFFFFF);
+  static const Color textSecondaryDark = Color(0xFFB8BCC8);
+  static const Color borderSubtleDark = Color(0xFF3A3D4A);
+  static const Color surfaceElevatedDark = Color(0xFF252831);
+  static const Color errorRedDark = Color(0xFFFF6B6B);
+  static const Color shadowColorDark = Color(0x1A000000);
+  static const Color elevatedShadowColorDark = Color(0x1A000000);
+  static const Color greenDark = Color(0xFF068C06);
 
 
   // light theme colors
-  static const Color primaryDark = Color(0xFFFAFAFB); // Clean light background
-  // static const Color primaryDark = Color(0xFFFFFCF2);
-  static const Color secondaryDark = Color(0xFFFFFFFF); // Pure white card surfaces
+  static const Color primaryLight = Color(0xFFFAFAFB); // Clean light background
+  static const Color secondaryLight = Color(0xFFFFFFFF); // Pure white card surfaces
   static const Color accentTeal = Color(0xFF455bff); // Main accent - Modern blue
   static const Color accentSecondry = Color(0xFFdde8ff);
   static const Color accentTherd = Color(0xFFecf3ff);
@@ -44,7 +37,6 @@ class AppTheme {
   static const Color elevatedShadowColor = Color(0x1A000000);
   static const Color black = Color(0xFF000000);
 
-  // static const Color borderSubtle = Color(0xFFE5E7EB); // Light gray borders
   // Brand gradient colors
   static const LinearGradient brandGradient = LinearGradient(
     colors: [accentTeal, accentTeal],
@@ -53,16 +45,16 @@ class AppTheme {
   );
 
   /// Dark theme optimized for cryptocurrency applications
-  static ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
+  static ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
     colorScheme: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       primary: accentTeal,
-      onPrimary: primaryDark,
+      onPrimary: primaryLight,
       primaryContainer: accentTeal.withAlpha(51),
       onPrimaryContainer: textPrimary,
       secondary: successGreen,
-      onSecondary: primaryDark,
+      onSecondary: primaryLight,
       secondaryContainer: successGreen.withAlpha(51),
       onSecondaryContainer: textPrimary,
       tertiary: warningOrange,
@@ -71,24 +63,24 @@ class AppTheme {
       onTertiaryContainer: textPrimary,
       error: errorRed,
       onError: textPrimary,
-      surface: primaryDark,
+      surface: primaryLight,
       onSurface: textPrimary,
       onSurfaceVariant: textSecondary,
       outline: borderSubtle,
       outlineVariant: borderSubtle.withAlpha(128),
       shadow: shadowColor,
-      scrim: primaryDark.withAlpha(204),
+      scrim: primaryLight.withAlpha(204),
       inverseSurface: textPrimary,
-      onInverseSurface: primaryDark,
+      onInverseSurface: primaryLight,
       inversePrimary: accentTeal,
     ),
-    scaffoldBackgroundColor: primaryDark,
-    cardColor: secondaryDark,
+    scaffoldBackgroundColor: primaryLight,
+    cardColor: secondaryLight,
     dividerColor: borderSubtle,
 
     // AppBar theme for secure, professional appearance
     appBarTheme: AppBarTheme(
-      backgroundColor: primaryDark,
+      backgroundColor: primaryLight,
       foregroundColor: textPrimary,
       elevation: 0,
       shadowColor: elevatedShadowColor,
@@ -110,7 +102,7 @@ class AppTheme {
 
     // Card theme with subtle elevation
     cardTheme: CardThemeData(
-      color: secondaryDark,
+      color: secondaryLight,
       elevation: 2.0,
       shadowColor: elevatedShadowColor,
       shape: RoundedRectangleBorder(
@@ -139,7 +131,7 @@ class AppTheme {
     // Floating action button for primary crypto actions
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: accentTeal,
-      foregroundColor: primaryDark,
+      foregroundColor: primaryLight,
       elevation: 4,
       focusElevation: 6,
       hoverElevation: 6,
@@ -152,7 +144,7 @@ class AppTheme {
     // Button themes for financial operations
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: primaryDark,
+        foregroundColor: primaryLight,
         backgroundColor: accentTeal,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         elevation: 2,
@@ -204,7 +196,7 @@ class AppTheme {
 
     // Input decoration for secure form fields
     inputDecorationTheme: InputDecorationTheme(
-      fillColor: secondaryDark,
+      fillColor: secondaryLight,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -265,7 +257,7 @@ class AppTheme {
         }
         return Colors.transparent;
       }),
-      checkColor: WidgetStateProperty.all(primaryDark),
+      checkColor: WidgetStateProperty.all(primaryLight),
       side: const BorderSide(color: borderSubtle, width: 2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
@@ -297,7 +289,7 @@ class AppTheme {
       inactiveTrackColor: borderSubtle,
       valueIndicatorColor: accentTeal,
       valueIndicatorTextStyle: GoogleFonts.inter(
-        color: primaryDark,
+        color: primaryLight,
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
@@ -415,43 +407,191 @@ class AppTheme {
     ),
   );
 
-  /// Light theme (minimal implementation for contrast)
-  static ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
+  /// Dark theme
+  static ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
     colorScheme: ColorScheme(
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       primary: accentTeal,
-      onPrimary: Colors.white,
-      primaryContainer: accentTeal.withAlpha(26),
-      onPrimaryContainer: primaryDark,
-      secondary: successGreen,
-      onSecondary: Colors.white,
-      secondaryContainer: successGreen.withAlpha(26),
-      onSecondaryContainer: primaryDark,
+      onPrimary: textPrimaryDark,
+      primaryContainer: accentTeal.withAlpha(51),
+      onPrimaryContainer: textPrimaryDark,
+
+      secondary: greenDark,
+      onSecondary: textPrimaryDark,
+      secondaryContainer: greenDark.withAlpha(51),
+      onSecondaryContainer: textPrimaryDark,
+
       tertiary: warningOrange,
-      onTertiary: Colors.white,
-      tertiaryContainer: warningOrange.withAlpha(26),
-      onTertiaryContainer: primaryDark,
-      error: errorRed,
-      onError: Colors.white,
-      surface: Colors.white,
-      onSurface: primaryDark,
-      onSurfaceVariant: const Color(0xFF6B7280),
-      outline: const Color(0xFFE5E7EB),
-      outlineVariant: const Color(0xFFF3F4F6),
-      shadow: const Color(0x1A000000),
-      scrim: primaryDark.withAlpha(128),
-      inverseSurface: primaryDark,
-      onInverseSurface: Colors.white,
+      onTertiary: textPrimaryDark,
+      tertiaryContainer: warningOrange.withAlpha(51),
+      onTertiaryContainer: textPrimaryDark,
+
+      error: errorRedDark,
+      onError: textPrimaryDark,
+
+      surface: primaryDark,
+      onSurface: textPrimaryDark,
+      onSurfaceVariant: textSecondaryDark,
+
+      outline: borderSubtleDark,
+      outlineVariant: borderSubtleDark,
+      shadow: shadowColorDark,
+      scrim: primaryDark.withAlpha(204),
+      inverseSurface: textPrimaryDark,
+      onInverseSurface: primaryDark,
       inversePrimary: accentTeal,
     ),
-    scaffoldBackgroundColor: Colors.white,
-    textTheme: _buildCryptoTextTheme(isLight: true),
+
+    scaffoldBackgroundColor: primaryDark,
+    cardColor: secondaryDark,
+    dividerColor: borderSubtleDark,
+
+    appBarTheme: AppBarTheme(
+      backgroundColor: primaryDark,
+      foregroundColor: textPrimaryDark,
+      elevation: 0,
+      shadowColor: elevatedShadowColorDark,
+      titleTextStyle: GoogleFonts.inter(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: textPrimaryDark,
+        letterSpacing: 0.15,
+      ),
+      iconTheme: const IconThemeData(
+        color: textPrimaryDark,
+        size: 24,
+      ),
+      actionsIconTheme: const IconThemeData(
+        color: textPrimaryDark,
+        size: 24,
+      ),
+    ),
+
+    cardTheme: CardThemeData(
+      color: secondaryDark,
+      elevation: 2.0,
+      shadowColor: elevatedShadowColorDark,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    ),
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: surfaceElevatedDark,
+      selectedItemColor: accentTeal,
+      unselectedItemColor: textSecondaryDark,
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+      selectedLabelStyle: GoogleFonts.inter(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ),
+      unselectedLabelStyle: GoogleFonts.inter(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      ),
+    ),
+
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: accentTeal,
+      foregroundColor: primaryDark,
+      elevation: 4,
+      focusElevation: 6,
+      hoverElevation: 6,
+      highlightElevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: primaryDark,
+        backgroundColor: accentTeal,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        elevation: 2,
+        shadowColor: elevatedShadowColorDark,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        textStyle: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
+      ),
+    ),
+
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: accentTeal,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        side: const BorderSide(color: accentTeal, width: 1.5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        textStyle: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
+        ),
+      ),
+    ),
+
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: accentTeal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        textStyle: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.25,
+        ),
+      ),
+    ),
+
+    textTheme: _buildCryptoTextTheme(isLight: false),
+
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: surfaceElevatedDark,
+      filled: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(color: borderSubtleDark, width: 1),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(color: borderSubtleDark, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(color: accentTeal, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(color: errorRedDark, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(color: errorRedDark, width: 2),
+      ),
+      labelStyle: GoogleFonts.inter(color: textSecondaryDark, fontSize: 14),
+      hintStyle: GoogleFonts.inter(color: textSecondaryDark, fontSize: 14),
+      prefixIconColor: textSecondaryDark,
+      suffixIconColor: textSecondaryDark,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    ),
   );
+
 
   /// Helper method to build cryptocurrency-optimized text theme
   static TextTheme _buildCryptoTextTheme({bool isLight = false}) {
-    final Color primaryTextColor = isLight ? primaryDark : textPrimary;
+    final Color primaryTextColor = isLight ? primaryLight : textPrimary;
     final Color secondaryTextColor =
         isLight ? const Color(0xFF6B7280) : textSecondary;
 
@@ -583,7 +723,7 @@ class AppTheme {
     return GoogleFonts.jetBrainsMono(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? (isLight ? primaryDark : textPrimary),
+      color: color ?? (isLight ? primaryLight : textPrimary),
       letterSpacing: 0.25,
       height: 1.4,
     );
@@ -619,7 +759,7 @@ class AppTheme {
           end: Alignment.bottomRight,
           colors: [
             surfaceElevated.withAlpha(204),
-            secondaryDark.withAlpha(153),
+            secondaryLight.withAlpha(153),
           ],
         ),
         boxShadow: [

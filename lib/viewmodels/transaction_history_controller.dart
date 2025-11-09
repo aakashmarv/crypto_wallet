@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../constants/app_keys.dart';
 import '../models/responses/transaction_history_response.dart';
 import '../servieces/sharedpreferences_service.dart';
+import '../utils/helper_util.dart';
 import '../utils/logger.dart';
 import '../utils/snackbar_util.dart';
 
@@ -26,7 +27,7 @@ class TransactionHistoryController extends GetxController {
       final address = prefs.getString(AppKeys.walletAddress);
 
       if (address == null || address.isEmpty) {
-        SnackbarUtil.showError("Error", "Wallet address not found.");
+        HelperUtil.toast("Wallet address not found.");
         isLoading.value = false;
         return;
       }
@@ -48,10 +49,10 @@ class TransactionHistoryController extends GetxController {
         appLog("✅ Transactions fetched successfully (${transactions.length} total)");
       } else {
         if (page == 1) transactions.clear();
-        SnackbarUtil.showError("Info", "No transactions found.");
+        HelperUtil.toast( "No transactions found.");
       }
     } catch (e, st) {
-      SnackbarUtil.showError("Error", "Something went wrong while fetching transactions.");
+      HelperUtil.toast("Something went wrong while fetching transactions.");
       appLog("❌ Transaction fetch error: $e\n$st");
     } finally {
       isLoading.value = false;

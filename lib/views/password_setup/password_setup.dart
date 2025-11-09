@@ -28,7 +28,8 @@ class PasswordSetup extends StatefulWidget {
 class _PasswordSetupState extends State<PasswordSetup>
     with TickerProviderStateMixin {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocusNode = FocusNode();
 
@@ -57,6 +58,7 @@ class _PasswordSetupState extends State<PasswordSetup>
     _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -119,7 +121,8 @@ class _PasswordSetupState extends State<PasswordSetup>
       HapticFeedback.lightImpact();
       // 🔹 Save password securely
       final password = _passwordController.text.trim();
-      appLog('🔑 [Password] Entered password: "${password.isNotEmpty ? '***hidden***' : '(empty)'}"');
+      appLog(
+          '🔑 [Password] Entered password: "${password.isNotEmpty ? '***hidden***' : '(empty)'}"');
       if (password.isNotEmpty) {
         await storage.write(key: AppKeys.userPassword, value: password);
         appLog('💾 [SecureStorage] Password saved successfully.');
@@ -188,11 +191,13 @@ class _PasswordSetupState extends State<PasswordSetup>
         // ✅ Store wallet info
         await prefs.setString(AppKeys.walletAddress, rubyAddress);
         await prefs.setBool(AppKeys.isLogin, true);
-        await prefs.setString(AppKeys.createdAt, DateTime.now().toIso8601String());
+        await prefs.setString(
+            AppKeys.createdAt, DateTime.now().toIso8601String());
         appLog('💾 [Prefs] Wallet address & login info saved.');
 
         // ✅ Save wallet metadata (for wallet list tracking)
-        final walletName = prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
+        final walletName =
+            prefs.getString(AppKeys.currentWalletName) ?? 'My Wallet';
         appLog('📘 [Wallet Name] Current wallet name: $walletName');
         final namesJson = prefs.getString(AppKeys.walletsListJson);
         List<Map<String, dynamic>> existing = [];
@@ -202,10 +207,12 @@ class _PasswordSetupState extends State<PasswordSetup>
             existing = (jsonDecode(namesJson) as List<dynamic>)
                 .map((e) => Map<String, dynamic>.from(e))
                 .toList();
-            appLog('📂 [Wallet List] Existing wallets loaded (${existing.length}).');
+            appLog(
+                '📂 [Wallet List] Existing wallets loaded (${existing.length}).');
           } catch (_) {
             existing = [];
-            appLog('⚠️ [Wallet List] Failed to decode existing list. Starting fresh.');
+            appLog(
+                '⚠️ [Wallet List] Failed to decode existing list. Starting fresh.');
           }
         }
 
@@ -217,7 +224,8 @@ class _PasswordSetupState extends State<PasswordSetup>
         });
 
         await prefs.setString(AppKeys.walletsListJson, jsonEncode(existing));
-        appLog('💾 [Wallet List] Wallet metadata added. Total wallets: ${existing.length}');
+        appLog(
+            '💾 [Wallet List] Wallet metadata added. Total wallets: ${existing.length}');
         appLog('🎉 [Success] Wallet imported successfully.');
         // ✅ Navigate to dashboard
         Get.offAllNamed(AppRoutes.dashboard);
@@ -233,7 +241,6 @@ class _PasswordSetupState extends State<PasswordSetup>
     }
   }
 
-
   Future<bool> _onWillPop() async {
     return await showDialog<bool>(
           context: context,
@@ -244,13 +251,13 @@ class _PasswordSetupState extends State<PasswordSetup>
             ),
             title: Text(
               'Leave Password Setup?',
-              style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                 color: AppTheme.textPrimary,
               ),
             ),
             content: Text(
               'Your progress will be lost if you go back now.',
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                 color: AppTheme.textSecondary,
               ),
             ),
@@ -280,15 +287,15 @@ class _PasswordSetupState extends State<PasswordSetup>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.primaryDark,
-                AppTheme.secondaryDark.withValues(alpha: 0.8),
+                AppTheme.primaryLight,
+                AppTheme.secondaryLight.withValues(alpha: 0.8),
               ],
             ),
           ),
@@ -307,13 +314,16 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 4.h),
                         _buildTitle(),
                         SizedBox(height: 3.h),
-                        Obx(()=> PasswordRequirementsWidget(
-                          password: _passwordController.text,
-                          isExpanded: _isRequirementsExpanded.value,
-                          onToggle: () {
-                            _isRequirementsExpanded.value = !_isRequirementsExpanded.value;
-                          },
-                        ),),
+                        Obx(
+                          () => PasswordRequirementsWidget(
+                            password: _passwordController.text,
+                            isExpanded: _isRequirementsExpanded.value,
+                            onToggle: () {
+                              _isRequirementsExpanded.value =
+                                  !_isRequirementsExpanded.value;
+                            },
+                          ),
+                        ),
                         SizedBox(height: 3.h),
                         _buildPasswordField(),
                         PasswordStrengthIndicatorWidget(
@@ -322,16 +332,19 @@ class _PasswordSetupState extends State<PasswordSetup>
                         SizedBox(height: 3.h),
                         _buildConfirmPasswordField(),
                         SizedBox(height: 3.h),
+
                         /// biometric setup
                         Obx(() => BiometricSetupWidget(
-                          isBiometricEnabled: _isBiometricEnabled.value,
-                          onBiometricToggle: (value) async {
-                            _isBiometricEnabled.value = value;
-                            final prefs = await SharedPreferencesService.getInstance();
-                            appLog("isBiometricEnable :: $value");
-                            await prefs.setBool(AppKeys.isBiometricEnable, value);
-                          },
-                        )),
+                              isBiometricEnabled: _isBiometricEnabled.value,
+                              onBiometricToggle: (value) async {
+                                _isBiometricEnabled.value = value;
+                                final prefs = await SharedPreferencesService
+                                    .getInstance();
+                                appLog("isBiometricEnable :: $value");
+                                await prefs.setBool(
+                                    AppKeys.isBiometricEnable, value);
+                              },
+                            )),
                         SizedBox(height: 4.h),
                         _buildSetPasswordButton(),
                         SizedBox(height: 3.h),
@@ -362,7 +375,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             child: Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -370,7 +383,9 @@ class _PasswordSetupState extends State<PasswordSetup>
                 ),
               ),
               child: Icon(
-                Platform.isIOS ? Icons.arrow_back_ios_new_rounded : Icons.arrow_back_rounded,
+                Platform.isIOS
+                    ? Icons.arrow_back_ios_new_rounded
+                    : Icons.arrow_back_rounded,
                 color: AppTheme.textPrimary,
                 size: 20,
               ),
@@ -380,7 +395,7 @@ class _PasswordSetupState extends State<PasswordSetup>
             child: Center(
               child: Text(
                 'Password Setup',
-                style: AppTheme.darkTheme.textTheme.headlineSmall?.copyWith(
+                style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
@@ -401,7 +416,7 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Step 2 of 3',
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.textSecondary,
               fontWeight: FontWeight.w500,
             ),
@@ -453,7 +468,7 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Create a Strong Password',
-            style: AppTheme.darkTheme.textTheme.headlineSmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w700,
             ),
@@ -461,7 +476,7 @@ class _PasswordSetupState extends State<PasswordSetup>
           SizedBox(height: 1.h),
           Text(
             'Your password will be used to unlock your wallet and authorize transactions. Make it strong and memorable.',
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.textSecondary,
               height: 1.5,
             ),
@@ -479,38 +494,42 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Password',
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 1.h),
           Obx(() => TextFormField(
-            controller: _passwordController,
-            focusNode: _passwordFocusNode,
-            obscureText: !_isPasswordVisible.value,
-            keyboardType: TextInputType.visiblePassword,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) {
-              _confirmPasswordFocusNode.requestFocus();
-            },
-            decoration: InputDecoration(
-              hintText: 'Enter your password',
-              hintStyle: TextStyle(color: AppTheme.hintTextColor,),
-              errorText: _passwordError.value.isNotEmpty ? _passwordError.value : null,
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(3.w),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: AppTheme.textSecondary,
-                  size: 20,
+                controller: _passwordController,
+                focusNode: _passwordFocusNode,
+                obscureText: !_isPasswordVisible.value,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) {
+                  _confirmPasswordFocusNode.requestFocus();
+                },
+                decoration: InputDecoration(
+                  hintText: 'Enter your password',
+                  hintStyle: TextStyle(
+                    color: AppTheme.hintTextColor,
+                  ),
+                  errorText: _passwordError.value.isNotEmpty
+                      ? _passwordError.value
+                      : null,
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: Icon(
+                      Icons.lock_outline,
+                      color: AppTheme.textSecondary,
+                      size: 20,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
-              color: AppTheme.textPrimary,
-            ),
-          )),
+                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.textPrimary,
+                ),
+              )),
         ],
       ),
     );
@@ -524,69 +543,72 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Confirm Password',
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 1.h),
           Obx(() => TextFormField(
-            controller: _confirmPasswordController,
-            focusNode: _confirmPasswordFocusNode,
-            obscureText: !_isConfirmPasswordVisible.value,
-            keyboardType: TextInputType.visiblePassword,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) {
-              if (_canSetPassword) {
-                _handleSetPassword();
-              }
-            },
-            decoration: InputDecoration(
-              hintText: 'Confirm your password',
-              hintStyle: TextStyle(color: AppTheme.hintTextColor,),
-              errorText: _confirmPasswordError.value.isNotEmpty
-                  ? _confirmPasswordError.value
-                  : null,
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_confirmPasswordController.text.isNotEmpty &&
-                      _confirmPasswordError.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(right: 2.w),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: AppTheme.successGreen,
-                        size: 20,
+                controller: _confirmPasswordController,
+                focusNode: _confirmPasswordFocusNode,
+                obscureText: !_isConfirmPasswordVisible.value,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  if (_canSetPassword) {
+                    _handleSetPassword();
+                  }
+                },
+                decoration: InputDecoration(
+                  hintText: 'Confirm your password',
+                  hintStyle: TextStyle(
+                    color: AppTheme.hintTextColor,
+                  ),
+                  errorText: _confirmPasswordError.value.isNotEmpty
+                      ? _confirmPasswordError.value
+                      : null,
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_confirmPasswordController.text.isNotEmpty &&
+                          _confirmPasswordError.isEmpty)
+                        Padding(
+                          padding: EdgeInsets.only(right: 2.w),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: AppTheme.successGreen,
+                            size: 20,
+                          ),
+                        ),
+                      IconButton(
+                        onPressed: () {
+                          _isConfirmPasswordVisible.value =
+                              !_isConfirmPasswordVisible.value;
+                        },
+                        icon: Icon(
+                          _isConfirmPasswordVisible.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppTheme.textSecondary,
+                          size: 20,
+                        ),
                       ),
-                    ),
-                  IconButton(
-                    onPressed: () {
-                        _isConfirmPasswordVisible.value = !_isConfirmPasswordVisible.value;
-                    },
-                    icon: Icon(
-                      _isConfirmPasswordVisible.value
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                    ],
+                  ),
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: Icon(
+                      Icons.lock_outline,
                       color: AppTheme.textSecondary,
                       size: 20,
                     ),
                   ),
-                ],
-              ),
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(3.w),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: AppTheme.textSecondary,
-                  size: 20,
                 ),
-              ),
-            ),
-            style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
-              color: AppTheme.textPrimary,
-            ),
-          )),
+                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.textPrimary,
+                ),
+              )),
         ],
       ),
     );
@@ -594,10 +616,10 @@ class _PasswordSetupState extends State<PasswordSetup>
 
   Widget _buildSetPasswordButton() {
     return Obx(() => AppButton(
-      label: "Set Password",
-      enabled: _canSetPassword,
-      isLoading: _isLoading.value,
-      onPressed: _handleSetPassword,
-    ));
+          label: "Set Password",
+          enabled: _canSetPassword,
+          isLoading: _isLoading.value,
+          onPressed: _handleSetPassword,
+        ));
   }
 }

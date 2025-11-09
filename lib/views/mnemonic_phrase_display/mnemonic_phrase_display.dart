@@ -80,6 +80,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       // Handle silently for platforms that don't support this
     }
   }
+
   // Generate the mnemonic phrase dynamically
   void _generateMnemonicPhrase() {
     final mnemonic = MnemonicService.generateMnemonic(); // 12 words by default
@@ -123,7 +124,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             SizedBox(width: 3.w),
             Text(
               'Security Reminder',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                 color: AppTheme.accentTeal,
               ),
             ),
@@ -131,7 +132,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         ),
         content: Text(
           'Make sure no one is looking at your screen. Your recovery phrase is now visible and should be kept completely private.',
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textPrimary,
             height: 1.4,
           ),
@@ -164,12 +165,15 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.6), // dark semi-transparent overlay
+      barrierColor:
+          Colors.black.withOpacity(0.6), // dark semi-transparent overlay
       pageBuilder: (context, animation, secondaryAnimation) {
         return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12), // 🔹 Blur background
+          filter:
+              ImageFilter.blur(sigmaX: 12, sigmaY: 12), // 🔹 Blur background
           child: FadeTransition(
-            opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            opacity:
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
             child: BackupVerificationDialog(
               mnemonicWords: _mnemonicWords,
               onVerificationComplete: _onVerificationComplete,
@@ -197,7 +201,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             SizedBox(width: 3.w),
             Text(
               'Incomplete Backup',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                 color: AppTheme.warningOrange,
               ),
             ),
@@ -207,7 +211,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
           !_isPhraseRevealed
               ? 'Please reveal and review your recovery phrase first.'
               : 'Please complete all security checklist items before proceeding.',
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textPrimary,
           ),
         ),
@@ -229,7 +233,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       _isBackupVerified = true;
     });
     final secureService = SecureMnemonicService();
-    final multiWalletService= MultiWalletService(secureService);
+    final multiWalletService = MultiWalletService(secureService);
     final prefs = await SharedPreferencesService.getInstance();
     final storage = FlutterSecureStorage();
 
@@ -239,7 +243,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     }
     // ✅ Encrypt and store mnemonic securely
     final mnemonic = _mnemonicWords.join(' ');
-    await secureService.encryptAndStoreMnemonic(mnemonic,storedPassword);
+    await secureService.encryptAndStoreMnemonic(mnemonic, storedPassword);
 
     // ✅ Derive wallet from this mnemonic
     final walletService = MultiWalletService(secureService);
@@ -272,7 +276,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         body: SafeArea(
           child: FadeTransition(
             opacity: _fadeAnimation,
@@ -353,7 +357,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
                   Expanded(
                     child: Text(
                       'Complete all checklist items to continue',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                         color: AppTheme.textSecondary,
                       ),
                     ),
@@ -367,11 +371,10 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             onPressed: _startBackupVerification,
             trailingIcon: Icon(
               Icons.arrow_forward,
-              color: AppTheme.primaryDark,
+              color: AppTheme.primaryLight,
               size: 5.w,
             ),
           )
-
         ],
       ),
     );
@@ -393,7 +396,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             SizedBox(width: 3.w),
             Text(
               'Exit Warning',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                 color: AppTheme.warningOrange,
               ),
             ),
@@ -401,7 +404,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         ),
         content: Text(
           'If you exit now without completing the backup verification, you may lose access to your wallet. Are you sure you want to continue?',
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textPrimary,
             height: 1.4,
           ),

@@ -74,7 +74,8 @@ class _SendBottomSheetState extends State<SendBottomSheet>
     _isSending.value = true;
 
     try {
-      appLog("🔹 Send button pressed — Recipient: $recipient | Amount: $amountStr $_selectedCoin");
+      appLog(
+          "🔹 Send button pressed — Recipient: $recipient | Amount: $amountStr $_selectedCoin");
 
       const storage = FlutterSecureStorage();
       final storedPassword = await storage.read(key: AppKeys.userPassword);
@@ -190,9 +191,8 @@ class _SendBottomSheetState extends State<SendBottomSheet>
         expand: false,
         builder: (_, scrollController) => Container(
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark,
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(24)),
+            color: AppTheme.secondaryLight,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SafeArea(
             top: false,
@@ -243,19 +243,22 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                                 children: [
                                   // 📋 Paste from clipboard
                                   IconButton(
-                                    icon: Icon(Icons.paste, color: AppTheme.textSecondary),
+                                    icon: Icon(Icons.paste,
+                                        color: AppTheme.textSecondary),
                                     tooltip: "Paste from clipboard",
                                     onPressed: () async {
-                                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                                      final data = await Clipboard.getData(
+                                          Clipboard.kTextPlain);
                                       if (data?.text?.isNotEmpty ?? false) {
-                                        _recipientController.text = data!.text!.trim();
-                                      } else {
-                                      }
+                                        _recipientController.text =
+                                            data!.text!.trim();
+                                      } else {}
                                     },
                                   ),
                                   // 📖 Open Address Book
                                   IconButton(
-                                    icon: Icon(Icons.contacts_rounded, color: AppTheme.accentTeal),
+                                    icon: Icon(Icons.contacts_rounded,
+                                        color: AppTheme.accentTeal),
                                     tooltip: "Select from Address Book",
                                     onPressed: _openAddressBookPicker,
                                   ),
@@ -263,8 +266,10 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.isEmpty) return "Enter recipient address";
-                              if (!_isValidEthereumAddress(v)) return "Invalid Ethereum address";
+                              if (v == null || v.isEmpty)
+                                return "Enter recipient address";
+                              if (!_isValidEthereumAddress(v))
+                                return "Invalid Ethereum address";
                               return null;
                             },
                           ),
@@ -274,8 +279,8 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                           // Amount
                           TextFormField(
                             controller: _amountController,
-                            keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             style: TextStyle(color: AppTheme.textPrimary),
                             decoration: _inputDecoration(label: "Amount"),
                             validator: (v) {
@@ -291,16 +296,17 @@ class _SendBottomSheetState extends State<SendBottomSheet>
 
                           // Coin dropdown
                           InkWell(
-                            onTap: () =>
-                                setState(() => _showCoins.value = !_showCoins.value),
+                            onTap: () => setState(
+                                () => _showCoins.value = !_showCoins.value),
                             borderRadius: BorderRadius.circular(14),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 3.w, vertical: 3.w),
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppTheme.borderSubtle),
+                                border:
+                                    Border.all(color: AppTheme.borderSubtle),
                                 borderRadius: BorderRadius.circular(14),
-                                color: AppTheme.secondaryDark.withOpacity(0.5),
+                                color: AppTheme.secondaryLight.withOpacity(0.5),
                               ),
                               child: Row(
                                 children: [
@@ -316,8 +322,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                                   ),
                                   AnimatedRotation(
                                     turns: _showCoins.value ? 0.5 : 0,
-                                    duration:
-                                    const Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     child: Icon(Icons.keyboard_arrow_down,
                                         color: AppTheme.accentTeal, size: 24),
                                   ),
@@ -336,7 +341,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                 SafeArea(
                   top: false,
                   child: Obx(
-                        () => IgnorePointer(
+                    () => IgnorePointer(
                       ignoring: _isSending.value,
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -344,14 +349,14 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                           label: _isSending.value ? "" : "Send",
                           enabled: !_isSending.value,
                           onPressed:
-                          _isSending.value ? null : _handleSendButton,
+                              _isSending.value ? null : _handleSendButton,
                           trailingIcon: _isSending.value
                               ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white),
-                          )
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2, color: Colors.white),
+                                )
                               : null,
                         ),
                       ),
@@ -365,6 +370,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
       ),
     );
   }
+
   /// 📘 Opens Address Book Picker (reusable)
   Future<void> _openAddressBookPicker() async {
     try {
@@ -392,8 +398,6 @@ class _SendBottomSheetState extends State<SendBottomSheet>
       );
     }
   }
-
-
 
   InputDecoration _inputDecoration({required String label, Widget? suffix}) {
     return InputDecoration(

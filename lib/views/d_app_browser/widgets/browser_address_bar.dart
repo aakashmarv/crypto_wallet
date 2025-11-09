@@ -63,7 +63,7 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
       height: 7.h,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.darkTheme.colorScheme.surface,
+        color: AppTheme.lightTheme.colorScheme.surface,
         border: Border(
           bottom: BorderSide(
             color: AppTheme.borderSubtle,
@@ -78,7 +78,7 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
             child: Container(
               height: 5.h,
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color:
@@ -95,12 +95,12 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                 },
                 onSubmitted: (_) => _handleSubmit(),
                 onEditingComplete: _handleSubmit,
-                style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                   fontSize: 12.sp,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Enter URL or search DApps...',
-                  hintStyle: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                  hintStyle: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
                     fontSize: 12.sp,
                   ),
@@ -123,17 +123,17 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                   ),
                   suffixIcon: _isEditing && _urlController.text.isNotEmpty
                       ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _urlController.clear();
-                      });
-                    },
-                    child: Icon(
-                      Icons.close_rounded,
-                      size: 4.w,
-                      color: AppTheme.textSecondary,
-                    ),
-                  )
+                          onTap: () {
+                            setState(() {
+                              _urlController.clear();
+                            });
+                          },
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 4.w,
+                            color: AppTheme.textSecondary,
+                          ),
+                        )
                       : null,
                 ),
               ),
@@ -147,7 +147,7 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
           //     width: 10.w,
           //     height: 5.h,
           //     decoration: BoxDecoration(
-          //       color: AppTheme.secondaryDark,
+          //       color: AppTheme.secondaryLight,
           //       borderRadius: BorderRadius.circular(8),
           //       border: Border.all(
           //         color: AppTheme.borderSubtle,
@@ -180,7 +180,7 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
               width: 10.w,
               height: 5.h,
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -189,25 +189,24 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
               ),
               child: widget.isLoading
                   ? Center(
-                child: SizedBox(
-                  width: 4.w,
-                  height: 4.w,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppTheme.accentTeal,
-                    ),
-                  ),
-                ),
-              )
+                      child: SizedBox(
+                        width: 4.w,
+                        height: 4.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.accentTeal,
+                          ),
+                        ),
+                      ),
+                    )
                   : Icon(
-                Icons.search, // ✅ changed icon
-                size: 5.w,
-                color: AppTheme.textSecondary,
-              ),
+                      Icons.search, // ✅ changed icon
+                      size: 5.w,
+                      color: AppTheme.textSecondary,
+                    ),
             ),
           ),
-
         ],
       ),
     );

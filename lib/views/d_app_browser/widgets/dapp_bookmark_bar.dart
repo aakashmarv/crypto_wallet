@@ -63,7 +63,7 @@ class DAppBookmarkBar extends StatelessWidget {
       height: 12.h,
       padding: EdgeInsets.symmetric(vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.secondaryLight,
         border: Border(
           bottom: BorderSide(
             color: AppTheme.borderSubtle,
@@ -78,7 +78,7 @@ class DAppBookmarkBar extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 4.w),
             child: Text(
               'Popular DApps',
-              style: AppTheme.darkTheme.textTheme.labelMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                 color: AppTheme.textSecondary,
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w500,
@@ -113,16 +113,16 @@ class DAppBookmarkBar extends StatelessWidget {
                             ),
                           ),
                           child: Icon(
-                      iconMap[dapp['icon']] ?? Icons.help_outline,
-                      size: 6.w,
-                      color: dapp['color'] as Color,
-                    ),
+                            iconMap[dapp['icon']] ?? Icons.help_outline,
+                            size: 6.w,
+                            color: dapp['color'] as Color,
+                          ),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
                           dapp['name'] as String,
-                          style:
-                              AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+                          style: AppTheme.lightTheme.textTheme.labelSmall
+                              ?.copyWith(
                             fontSize: 9.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -132,8 +132,8 @@ class DAppBookmarkBar extends StatelessWidget {
                         ),
                         Text(
                           dapp['category'] as String,
-                          style:
-                              AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+                          style: AppTheme.lightTheme.textTheme.labelSmall
+                              ?.copyWith(
                             fontSize: 8.sp,
                             color: AppTheme.textSecondary,
                           ),

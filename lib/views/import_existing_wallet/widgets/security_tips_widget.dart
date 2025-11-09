@@ -78,7 +78,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppTheme.borderSubtle,
@@ -120,7 +120,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                       children: [
                         Text(
                           'Security Tips',
-                          style: AppTheme.darkTheme.textTheme.titleMedium
+                          style: AppTheme.lightTheme.textTheme.titleMedium
                               ?.copyWith(
                             color: AppTheme.textPrimary,
                             fontWeight: FontWeight.w600,
@@ -129,7 +129,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                         Text(
                           'Important security information',
                           style:
-                              AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                             color: AppTheme.textSecondary,
                           ),
                         ),
@@ -208,7 +208,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
               children: [
                 Text(
                   title,
-                  style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -216,7 +216,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                 SizedBox(height: 0.5.h),
                 Text(
                   description,
-                  style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                     height: 1.4,
                   ),

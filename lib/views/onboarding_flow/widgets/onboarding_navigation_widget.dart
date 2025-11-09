@@ -38,7 +38,7 @@ class OnboardingNavigationWidget extends StatelessWidget {
                   ),
                   child: Text(
                     'Skip',
-                    style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
                       color: AppTheme.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
@@ -50,7 +50,7 @@ class OnboardingNavigationWidget extends StatelessWidget {
             onPressed: onNext,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.accentTeal,
-              foregroundColor: AppTheme.primaryDark,
+              foregroundColor: AppTheme.primaryLight,
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.2.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -59,8 +59,8 @@ class OnboardingNavigationWidget extends StatelessWidget {
             ),
             child: Text(
               isLastPage ? 'Get Started' : 'Next',
-              style: AppTheme.darkTheme.textTheme.bodyLarge?.copyWith(
-                color: AppTheme.primaryDark,
+              style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                color: AppTheme.primaryLight,
                 fontWeight: FontWeight.w600,
               ),
             ),

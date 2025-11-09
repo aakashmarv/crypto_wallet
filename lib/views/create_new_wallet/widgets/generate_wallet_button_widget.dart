@@ -133,16 +133,16 @@ class _GenerateWalletButtonWidgetState extends State<GenerateWalletButtonWidget>
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppTheme.primaryDark,
+                                    AppTheme.primaryLight,
                                   ),
                                 ),
                               ),
                               SizedBox(width: 3.w),
                               Text(
                                 'Generating...',
-                                style: AppTheme.darkTheme.textTheme.titleMedium
+                                style: AppTheme.lightTheme.textTheme.titleMedium
                                     ?.copyWith(
-                                  color: AppTheme.primaryDark,
+                                  color: AppTheme.primaryLight,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -150,17 +150,17 @@ class _GenerateWalletButtonWidgetState extends State<GenerateWalletButtonWidget>
                               Icon(
                                 Icons.add_circle_outline_rounded,
                                 color: widget.isEnabled
-                                    ? AppTheme.primaryDark
+                                    ? AppTheme.primaryLight
                                     : AppTheme.textSecondary,
                                 size: 24,
                               ),
                               SizedBox(width: 3.w),
                               Text(
                                 'Generate Wallet',
-                                style: AppTheme.darkTheme.textTheme.titleMedium
+                                style: AppTheme.lightTheme.textTheme.titleMedium
                                     ?.copyWith(
                                   color: widget.isEnabled
-                                      ? AppTheme.primaryDark
+                                      ? AppTheme.primaryLight
                                       : AppTheme.textSecondary,
                                   fontWeight: FontWeight.w600,
                                 ),

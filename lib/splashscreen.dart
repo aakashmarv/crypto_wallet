@@ -61,6 +61,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       return;
     }
 
+    await prefs.setBool(AppKeys.lockPending, false);
+
     if (isBiometricEnabled) {
       Get.offAllNamed(AppRoutes.appLock);
     } else {

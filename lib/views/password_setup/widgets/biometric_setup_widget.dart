@@ -70,67 +70,69 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
 
   Future<bool?> _showBiometricPrompt() async {
     return await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.surfaceElevated,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(
-                Theme.of(context).platform == TargetPlatform.iOS
-                    ? Icons.face
-                    : Icons.fingerprint,
-                color: AppTheme.accentTeal,
-                size: 24,
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: AppTheme.surfaceElevated,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              SizedBox(width: 3.w),
-              Expanded(
-                child: Text(
-                  'Enable $_biometricType',
-                  style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
-                    color: AppTheme.textPrimary,
+              title: Row(
+                children: [
+                  Icon(
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? Icons.face
+                        : Icons.fingerprint,
+                    color: AppTheme.accentTeal,
+                    size: 24,
                   ),
+                  SizedBox(width: 3.w),
+                  Expanded(
+                    child: Text(
+                      'Enable $_biometricType',
+                      style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              content: Text(
+                'Use your $_biometricType to quickly and securely access your wallet.',
+                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                  color: AppTheme.textSecondary,
                 ),
               ),
-            ],
-          ),
-          content: Text(
-            'Use your $_biometricType to quickly and securely access your wallet.',
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.textSecondary,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);;
-                throw Exception('Biometric setup cancelled');
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: AppTheme.textSecondary),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                // Simulate biometric authentication
-                await Future.delayed(const Duration(milliseconds: 1000));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.accentTeal,
-                foregroundColor: AppTheme.primaryDark,
-              ),
-              child: const Text('Enable'),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                    ;
+                    throw Exception('Biometric setup cancelled');
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: AppTheme.textSecondary),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop(true);
+                    // Simulate biometric authentication
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accentTeal,
+                    foregroundColor: AppTheme.primaryLight,
+                  ),
+                  child: const Text('Enable'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   void _showBiometricError() {
@@ -155,7 +157,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.darkTheme.colorScheme.surface,
+        color: AppTheme.lightTheme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppTheme.borderSubtle,
@@ -183,7 +185,8 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
                   children: [
                     Text(
                       'Enable $_biometricType',
-                      style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                      style:
+                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                         color: AppTheme.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -193,7 +196,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
                       _isBiometricAvailable
                           ? 'Quick and secure access to your wallet'
                           : '$_biometricType not available on this device',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                         color: AppTheme.textSecondary,
                       ),
                     ),

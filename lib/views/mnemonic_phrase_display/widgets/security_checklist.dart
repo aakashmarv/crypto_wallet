@@ -31,7 +31,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppTheme.borderSubtle,
@@ -59,7 +59,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
               SizedBox(width: 3.w),
               Text(
                 'Security Checklist',
-                style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -116,7 +116,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
                 Expanded(
                   child: Text(
                     'Ruby wallet & Dapp browser cannot recover your wallet if you lose your recovery phrase. This is your responsibility.',
-                    style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                       color: AppTheme.warningOrange,
                       height: 1.4,
                     ),
@@ -144,7 +144,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
             value: isChecked,
             onChanged: onChanged,
             activeColor: AppTheme.accentTeal,
-            checkColor: AppTheme.primaryDark,
+            checkColor: AppTheme.primaryLight,
             side: BorderSide(
               color: isChecked ? AppTheme.accentTeal : AppTheme.textSecondary,
               width: 1,
@@ -160,7 +160,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
             padding: EdgeInsets.only(top: 1.h),
             child: Text(
               text,
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                 color:
                     isChecked ? AppTheme.textPrimary : AppTheme.textSecondary,
                 height: 1.4,

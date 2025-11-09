@@ -33,7 +33,6 @@ class SendTokenSheet extends StatefulWidget {
 
 class _SendTokenSheetState extends State<SendTokenSheet>
     with SingleTickerProviderStateMixin {
-
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _recipientController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -222,9 +221,8 @@ class _SendTokenSheetState extends State<SendTokenSheet>
         builder: (_, scrollController) => Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark,
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(24)),
+            color: AppTheme.secondaryLight,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SafeArea(
             top: false,
@@ -275,23 +273,26 @@ class _SendTokenSheetState extends State<SendTokenSheet>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.paste, color: AppTheme.textSecondary),
+                                    icon: Icon(Icons.paste,
+                                        color: AppTheme.textSecondary),
                                     onPressed: () async {
-                                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                                      final data = await Clipboard.getData(
+                                          Clipboard.kTextPlain);
                                       if (data?.text?.isNotEmpty ?? false) {
-                                        _recipientController.text = data!.text!.trim();
+                                        _recipientController.text =
+                                            data!.text!.trim();
                                       }
                                     },
                                   ),
                                   // 📖 Open Address Book
                                   IconButton(
-                                    icon: Icon(Icons.contacts_rounded, color: AppTheme.accentTeal),
+                                    icon: Icon(Icons.contacts_rounded,
+                                        color: AppTheme.accentTeal),
                                     tooltip: "Select from Address Book",
                                     onPressed: _openAddressBookPicker,
                                   ),
                                 ],
                               ),
-
                             ),
                             validator: (v) {
                               if (v == null || v.isEmpty) {
@@ -307,8 +308,8 @@ class _SendTokenSheetState extends State<SendTokenSheet>
 
                           TextFormField(
                             controller: _amountController,
-                            keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             style: TextStyle(color: AppTheme.textPrimary),
                             decoration: _inputDecoration(label: "Amount"),
                             validator: (v) {
@@ -322,7 +323,6 @@ class _SendTokenSheetState extends State<SendTokenSheet>
                               return null;
                             },
                           ),
-
 
                           SizedBox(height: 3.h),
 
@@ -350,7 +350,7 @@ class _SendTokenSheetState extends State<SendTokenSheet>
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accentTeal,
                       disabledBackgroundColor:
-                      AppTheme.accentTeal.withOpacity(0.5),
+                          AppTheme.accentTeal.withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -375,6 +375,7 @@ class _SendTokenSheetState extends State<SendTokenSheet>
       ),
     );
   }
+
   InputDecoration _inputDecoration({required String label, Widget? suffix}) {
     return InputDecoration(
       labelText: label,
@@ -405,5 +406,4 @@ class _SendTokenSheetState extends State<SendTokenSheet>
       contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
     );
   }
-
 }

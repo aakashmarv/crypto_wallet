@@ -67,7 +67,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
 
     // ✅ Detect type of import: Mnemonic vs Private Key
     final wordCount = input.split(RegExp(r'\s+')).length;
-    final isMnemonic = input.split(RegExp(r'\s+')).length >= 12 && MnemonicService.validateMnemonic(input);
+    final isMnemonic = input.split(RegExp(r'\s+')).length >= 12 &&
+        MnemonicService.validateMnemonic(input);
     final isPrivateKey = RegExp(r'^(0x)?[0-9a-fA-F]{64}$').hasMatch(input);
     appLog('🧩 [Detection] Word count: $wordCount');
     appLog('🧠 [Detection] isMnemonic: $isMnemonic');
@@ -96,7 +97,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
       },
     );
   }
-
 
   void _showToast(String message, {bool isError = false}) {
     Fluttertoast.showToast(
@@ -127,11 +127,10 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -179,34 +178,32 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   Widget _buildAppBar() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-      decoration: BoxDecoration(
-      ),
+      decoration: BoxDecoration(),
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              padding: EdgeInsets.all(2.w),
-              decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppTheme.borderSubtle,
-                  width: 1,
+              onTap: () => Navigator.of(context).pop(),
+              child: Container(
+                padding: EdgeInsets.all(2.w),
+                decoration: BoxDecoration(
+                  color: AppTheme.secondaryLight,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppTheme.borderSubtle,
+                    width: 1,
+                  ),
                 ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textPrimary,
-                size: 24,
-              ),
-            )
-          ),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: AppTheme.textPrimary,
+                  size: 24,
+                ),
+              )),
           SizedBox(width: 4.w),
           Expanded(
             child: Text(
               'Import Wallet',
-              style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                 color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w600,
               ),
@@ -233,7 +230,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
                 SizedBox(width: 1.w),
                 Text(
                   'Secure',
-                  style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                     color: AppTheme.accentTeal,
                     fontWeight: FontWeight.w500,
                   ),
@@ -254,9 +251,9 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         onPressed: isActive ? _onImportStart : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.accentTeal,
-          foregroundColor: AppTheme.primaryDark,
+          foregroundColor: AppTheme.primaryLight,
           disabledBackgroundColor: AppTheme.borderSubtle,
-          disabledForegroundColor: AppTheme.primaryDark,
+          disabledForegroundColor: AppTheme.primaryLight,
           padding: EdgeInsets.symmetric(vertical: 4.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -265,44 +262,48 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
         ),
         child: _isImporting
             ? Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppTheme.secondaryDark,
-              ),
-            ),
-            SizedBox(width: 3.w),
-            Text(
-              'Importing Wallet...',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-                color: AppTheme.secondaryDark,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        )
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppTheme.secondaryLight,
+                    ),
+                  ),
+                  SizedBox(width: 3.w),
+                  Text(
+                    'Importing Wallet...',
+                    style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                      color: AppTheme.secondaryLight,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              )
             : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.download,
-              color: isActive ? AppTheme.secondaryDark : AppTheme.textSecondary,
-              size: 20,
-            ),
-            SizedBox(width: 3.w),
-            Text(
-              'Import Wallet',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
-                color:isActive ? AppTheme.secondaryDark : AppTheme.textSecondary,
-                fontWeight: FontWeight.w600,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.download,
+                    color: isActive
+                        ? AppTheme.secondaryLight
+                        : AppTheme.textSecondary,
+                    size: 20,
+                  ),
+                  SizedBox(width: 3.w),
+                  Text(
+                    'Import Wallet',
+                    style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                      color: isActive
+                          ? AppTheme.secondaryLight
+                          : AppTheme.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -331,7 +332,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
               SizedBox(width: 2.w),
               Text(
                 'Need Help?',
-                style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                   color: AppTheme.accentTeal,
                   fontWeight: FontWeight.w600,
                 ),
@@ -341,7 +342,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
           SizedBox(height: 1.h),
           Text(
             'Your recovery phrase is typically 12 or 24 words long. Make sure to enter them in the correct order with spaces between each word.',
-            style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.textSecondary,
               height: 1.4,
             ),
@@ -349,7 +350,7 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
           SizedBox(height: 1.h),
           Text(
             'Mock credentials for testing:\nRecovery phrase: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
-            style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.warningOrange,
               height: 1.4,
               fontStyle: FontStyle.italic,

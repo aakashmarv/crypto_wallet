@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import '../../../constants/bip39_wordlist.dart';
 import '../../../core/app_export.dart';
 
 class BackupVerificationDialog extends StatefulWidget {
@@ -54,20 +56,14 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
   }
 
   void _generateVerificationQuestions() {
-    // Generate 3 random word positions to verify
-    final indices = <int>[];
-    while (indices.length < 3) {
-      final randomIndex = (widget.mnemonicWords.length *
-              (DateTime.now().millisecondsSinceEpoch % 1000) /
-              1000)
-          .floor();
-      if (!indices.contains(randomIndex)) {
-        indices.add(randomIndex);
-      }
-    }
+    final rand = Random.secure();
 
-    _verificationIndices = indices..sort();
-    _userAnswers = List.filled(3, null);
+    final allIndices =
+        List<int>.generate(widget.mnemonicWords.length, (i) => i);
+    allIndices.shuffle(rand);
+
+    _verificationIndices = allIndices.take(3).toList(); // keep order as-is
+    _userAnswers = List<String?>.filled(3, null);
   }
 
   void _submitAnswer(String answer) {
@@ -139,22 +135,21 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 20.w,
-            height: 20.w,
-            decoration: BoxDecoration(
-              color: AppTheme.successGreen.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.check_circle,
-              color: AppTheme.successGreen,
-              size: 12.w,
-            )
-          ),
+              width: 20.w,
+              height: 20.w,
+              decoration: BoxDecoration(
+                color: AppTheme.successGreen.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check_circle,
+                color: AppTheme.successGreen,
+                size: 12.w,
+              )),
           SizedBox(height: 3.h),
           Text(
             'Backup Verified!',
-            style: AppTheme.darkTheme.textTheme.headlineSmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
               color: AppTheme.successGreen,
               fontWeight: FontWeight.w600,
             ),
@@ -163,7 +158,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
           SizedBox(height: 2.h),
           Text(
             'Your recovery phrase has been successfully verified. Your wallet is now secure!',
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.textSecondary,
               height: 1.4,
             ),
@@ -189,7 +184,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
             children: [
               Text(
                 'Verify Backup',
-                style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -249,7 +244,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                   Expanded(
                     child: Text(
                       'Incorrect words selected. Please try again.',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                         color: AppTheme.errorRed,
                       ),
                     ),
@@ -263,7 +258,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
           // Question
           Text(
             'Select word #${currentWordIndex + 1}',
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w500,
             ),
@@ -289,7 +284,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                 onPressed: () => _submitAnswer(word),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 4),
-                  backgroundColor: AppTheme.secondaryDark,
+                  backgroundColor: AppTheme.secondaryLight,
                   foregroundColor: AppTheme.textPrimary,
                   elevation: 0,
                   side: BorderSide(
@@ -315,7 +310,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
 
           Text(
             'Step ${_currentStep + 1} of 3',
-            style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.textSecondary,
             ),
           ),
@@ -324,47 +319,35 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
     );
   }
 
-
   List<String> _generateWordOptions(int correctIndex) {
+    // 1. Sahi shabd (Correct Word)
     final correctWord = widget.mnemonicWords[correctIndex];
-    final allWords = [
-      'abandon',
-      'ability',
-      'able',
-      'about',
-      'above',
-      'absent',
-      'absorb',
-      'abstract',
-      'absurd',
-      'abuse',
-      'access',
-      'accident',
-      'account',
-      'accuse',
-      'achieve',
-      'acid',
-      'acoustic',
-      'acquire',
-      'across',
-      'act',
-    ];
+
+    // 2. BIP-39 ki poori list (2048 words)
+    // 💡 Ab sirf reference kiya ja raha hai, list baar-baar nahi banegi
+    final allWords = BIP39_WORDLIST_ENGLISH;
 
     final options = <String>[correctWord];
+    final rand = Random.secure(); // Secure random generator
 
-    // Add 3 random words that are not the correct word
+    // 3. 3 galat shabdon ko chunna (Add 3 random incorrect words)
     while (options.length < 4) {
-      final randomWord = allWords[
-          (DateTime.now().millisecondsSinceEpoch + options.length) %
-              allWords.length];
+      // Random index generate karna (0 se list ki length tak)
+      final randomIndex = rand.nextInt(allWords.length);
+      final randomWord = allWords[randomIndex];
+
+      // Double check karna ki chuna hua shabd:
+      // a) Pehle se options mein na ho
+      // b) User ki original seed phrase (mnemonicWords) mein na ho
       if (!options.contains(randomWord) &&
           !widget.mnemonicWords.contains(randomWord)) {
         options.add(randomWord);
       }
     }
 
-    // Shuffle the options
-    options.shuffle();
+    // 4. Options ko shuffle karna (Shuffle the options)
+    options.shuffle(rand);
+
     return options;
   }
 }

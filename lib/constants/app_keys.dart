@@ -4,6 +4,7 @@ class AppKeys {
   static const String addressBookKey = "addressBookKey";
   static const String onboardingComplete = "onboarding_complete";
   static const String isBiometricEnable = "biometric_enabled";
+  static const String lockPending = "lock_pending";
   static const String userPassword = "user_password";
   static const String walletIndexesKey = 'wallet_indexes';
   static const String walletAddress = "wallet_address";
@@ -16,5 +17,5 @@ class AppKeys {
   static const pbkdf2Iterations = 100000; // recommended >=100k for mobile
   static const String selectedNetwork = "selected_network";
   static const String importedTokens = "imported_tokens";
-
+  static const String isDarkMode = "is_dark_mode";
 }

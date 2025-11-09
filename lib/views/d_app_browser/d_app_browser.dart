@@ -76,6 +76,7 @@ class _DAppBrowserState extends State<DAppBrowser>
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     _getWalletAddress();
     _initializeWebView();
+
     /// blackscreen ke liy
     // _webViewController = WebViewController()
     //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -262,18 +263,18 @@ class _DAppBrowserState extends State<DAppBrowser>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       body: SafeArea(
         child: Column(
           children: [
             // Connection Status
-            Obx(() =>ConnectionStatusWidget(
-              isConnected: _isConnected,
-              walletAddress: _walletAddress.value,
-              selectedNetwork: _selectedNetwork,
-              // onNetworkChanged: _handleNetworkChanged,
-              onNetworkChanged: null,
-            )),
+            Obx(() => ConnectionStatusWidget(
+                  isConnected: _isConnected,
+                  walletAddress: _walletAddress.value,
+                  selectedNetwork: _selectedNetwork,
+                  // onNetworkChanged: _handleNetworkChanged,
+                  onNetworkChanged: null,
+                )),
             // Address Bar
             BrowserAddressBar(
               currentUrl: _currentUrl,

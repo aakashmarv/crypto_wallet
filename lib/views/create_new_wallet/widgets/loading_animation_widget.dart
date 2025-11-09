@@ -153,7 +153,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
                     child: Center(
                       child: Icon(
                         Icons.security,
-                        color: AppTheme.primaryDark,
+                        color: AppTheme.primaryLight,
                         size: 32,
                       ),
                     ),
@@ -198,7 +198,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
             builder: (context, child) {
               return Text(
                 '${(_progressAnimation.value * 100).round()}%',
-                style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                   color: AppTheme.accentTeal,
                   fontWeight: FontWeight.w700,
                 ),
@@ -212,7 +212,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
           Text(
             widget.message,
             textAlign: TextAlign.center,
-            style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,
             ),
@@ -230,7 +230,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
               return Text(
                 _securitySteps[stepIndex],
                 textAlign: TextAlign.center,
-                style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                   color: AppTheme.textSecondary,
                   height: 1.4,
                 ),
@@ -244,7 +244,8 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildSecurityFeature(Icons.enhanced_encryption_rounded, 'Encrypted'),
+              _buildSecurityFeature(
+                  Icons.enhanced_encryption_rounded, 'Encrypted'),
               _buildSecurityFeature(Icons.verified_user, 'Verified'),
               _buildSecurityFeature(Icons.lock, 'Secured'),
             ],
@@ -272,7 +273,7 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
         SizedBox(height: 1.h),
         Text(
           label,
-          style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
             color: AppTheme.successGreen,
             fontWeight: FontWeight.w500,
           ),

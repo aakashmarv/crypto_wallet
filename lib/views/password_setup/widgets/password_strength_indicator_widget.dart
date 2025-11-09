@@ -63,8 +63,8 @@ class PasswordStrengthIndicatorWidget extends StatelessWidget {
     return password.isEmpty
         ? const SizedBox.shrink()
         : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 2.h),
@@ -73,14 +73,14 @@ class PasswordStrengthIndicatorWidget extends StatelessWidget {
                   children: [
                     Text(
                       'Password Strength',
-                      style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                         color: AppTheme.textSecondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
                       strengthText,
-                      style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                         color: strengthColor,
                         fontWeight: FontWeight.w600,
                       ),
@@ -112,6 +112,6 @@ class PasswordStrengthIndicatorWidget extends StatelessWidget {
                 ),
               ],
             ),
-        );
+          );
   }
 }

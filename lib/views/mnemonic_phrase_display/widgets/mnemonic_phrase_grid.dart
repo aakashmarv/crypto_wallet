@@ -33,7 +33,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          width:double.infinity,
+          width: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: AppTheme.surfaceElevated,
@@ -53,10 +53,9 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               Text(
                 'Mnemonic QR Code',
                 style: TextStyle(
-                  color: AppTheme.accentTeal,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.sp
-                ),
+                    color: AppTheme.accentTeal,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.sp),
               ),
               const SizedBox(height: 20),
               QrImageView(
@@ -66,7 +65,6 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                 gapless: false,
                 backgroundColor: Colors.white,
               ),
-
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -121,7 +119,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
             SizedBox(width: 3.w),
             Text(
               'Security Warning',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                 color: AppTheme.warningOrange,
               ),
             ),
@@ -129,7 +127,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
         ),
         content: Text(
           'Your recovery phrase has been copied to clipboard. It will be automatically cleared in 60 seconds for security.',
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textPrimary,
           ),
         ),
@@ -163,7 +161,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               width: double.infinity,
               padding: EdgeInsets.all(6.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -180,7 +178,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   SizedBox(height: 2.h),
                   Text(
                     'Your recovery phrase is hidden for security',
-                    style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                       color: AppTheme.textPrimary,
                     ),
                     textAlign: TextAlign.center,
@@ -188,7 +186,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   SizedBox(height: 1.h),
                   Text(
                     'Tap below to reveal your 12-word recovery phrase',
-                    style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
                     textAlign: TextAlign.center,
@@ -198,13 +196,13 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                     onPressed: widget.onRevealToggle,
                     icon: Icon(
                       Icons.visibility,
-                      color: AppTheme.primaryDark,
+                      color: AppTheme.primaryLight,
                       size: 5.w,
                     ),
                     label: Text('Reveal Recovery Phrase'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accentTeal,
-                      foregroundColor: AppTheme.primaryDark,
+                      foregroundColor: AppTheme.primaryLight,
                       padding:
                           EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                     ),
@@ -220,7 +218,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               children: [
                 Text(
                   'Your Recovery Phrase',
-                  style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                     color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -280,7 +278,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppTheme.accentTeal.withValues(alpha: 0.1)
-                          : AppTheme.secondaryDark,
+                          : AppTheme.secondaryLight,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected
@@ -294,8 +292,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                       children: [
                         Text(
                           '${index + 1}',
-                          style:
-                              AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+                          style: AppTheme.lightTheme.textTheme.labelSmall
+                              ?.copyWith(
                             color: AppTheme.textSecondary,
                             fontSize: 8.sp,
                           ),

@@ -20,7 +20,7 @@ class DepositBottomSheet extends StatelessWidget {
         maxChildSize: 0.75,
         builder: (_, controller) => Container(
           decoration: const BoxDecoration(
-            color: AppTheme.secondaryDark,
+            color: AppTheme.secondaryLight,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SingleChildScrollView(
@@ -84,8 +84,10 @@ class DepositBottomSheet extends StatelessWidget {
                     ),
                     SizedBox(width: 2.w),
                     IconButton(
-                      icon: Icon(Icons.copy, color: AppTheme.successGreen, size: 5.w),
-                      onPressed: () => HelperUtil.copyToClipboard(walletAddress),
+                      icon: Icon(Icons.copy,
+                          color: AppTheme.successGreen, size: 5.w),
+                      onPressed: () =>
+                          HelperUtil.copyToClipboard(walletAddress),
                     ),
                   ],
                 ),
@@ -98,4 +100,3 @@ class DepositBottomSheet extends StatelessWidget {
     );
   }
 }
-

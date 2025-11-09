@@ -16,7 +16,8 @@ class OnboardingFlow extends StatefulWidget {
   State<OnboardingFlow> createState() => _OnboardingFlowState();
 }
 
-class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStateMixin {
+class _OnboardingFlowState extends State<OnboardingFlow>
+    with TickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
   int _currentPage = 0;
@@ -39,8 +40,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStat
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          AppTheme.primaryDark,
-          AppTheme.secondaryDark.withValues(alpha: 0.3),
+          AppTheme.primaryLight,
+          AppTheme.secondaryLight.withValues(alpha: 0.3),
         ],
       ),
     },
@@ -59,7 +60,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStat
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          AppTheme.primaryDark,
+          AppTheme.primaryLight,
           AppTheme.successGreen.withValues(alpha: 0.2),
         ],
       ),
@@ -79,7 +80,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStat
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          AppTheme.primaryDark,
+          AppTheme.primaryLight,
           AppTheme.warningOrange.withValues(alpha: 0.2),
         ],
       ),
@@ -142,56 +143,59 @@ class _OnboardingFlowState extends State<OnboardingFlow> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     final currentGradient =
-    _onboardingData[_currentPage]["backgroundGradient"] as LinearGradient;
+        _onboardingData[_currentPage]["backgroundGradient"] as LinearGradient;
     return Scaffold(
-      body: AnimatedContainer(duration: const Duration(milliseconds: 300),
+      body: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
           gradient: currentGradient,
         ),
-      child: SafeArea(child: Column(
-        children: [
-          // Main Content
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: _onPageChanged,
-              itemCount: _totalPages,
-              itemBuilder: (context, index) {
-                final pageData = _onboardingData[index];
-                return OnboardingPageWidget(
-                  title: pageData["title"] as String,
-                  description: pageData["description"] as String,
-                  features: (pageData["features"] as List).cast<String>(),
-                  iconName: pageData["iconName"] as String,
-                  iconColor: pageData["iconColor"] as Color,
-                  // backgroundGradient: pageData["backgroundGradient"] as LinearGradient,
-                );
-              },
-            ),
-          ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Main Content
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  itemCount: _totalPages,
+                  itemBuilder: (context, index) {
+                    final pageData = _onboardingData[index];
+                    return OnboardingPageWidget(
+                      title: pageData["title"] as String,
+                      description: pageData["description"] as String,
+                      features: (pageData["features"] as List).cast<String>(),
+                      iconName: pageData["iconName"] as String,
+                      iconColor: pageData["iconColor"] as Color,
+                      // backgroundGradient: pageData["backgroundGradient"] as LinearGradient,
+                    );
+                  },
+                ),
+              ),
 
-          // Page Indicator
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 2.h),
-            child: PageIndicatorWidget(
-              currentPage: _currentPage,
-              totalPages: _totalPages,
-            ),
-          ),
+              // Page Indicator
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                child: PageIndicatorWidget(
+                  currentPage: _currentPage,
+                  totalPages: _totalPages,
+                ),
+              ),
 
-          // Navigation Buttons
-          OnboardingNavigationWidget(
-            currentPage: _currentPage,
-            totalPages: _totalPages,
-            onSkip: _skipOnboarding,
-            onNext: _nextPage,
-            isLastPage: _currentPage == _totalPages - 1,
-          ),
+              // Navigation Buttons
+              OnboardingNavigationWidget(
+                currentPage: _currentPage,
+                totalPages: _totalPages,
+                onSkip: _skipOnboarding,
+                onNext: _nextPage,
+                isLastPage: _currentPage == _totalPages - 1,
+              ),
 
-          SizedBox(height: 2.h),
-        ],
-      ),),),
+              SizedBox(height: 2.h),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-

@@ -11,8 +11,9 @@ import 'package:sizer/sizer.dart';
 import '../../constants/app_keys.dart';
 import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
+import '../../servieces/sharedpreferences_service.dart';
 import '../../theme/app_theme.dart';
-
+import 'package:local_auth/local_auth.dart';
 
 class SecurityKeysScreen extends StatefulWidget {
   const SecurityKeysScreen({super.key});
@@ -30,6 +31,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
 
   Timer? _mnemonicTimer;
   Timer? _privateKeyTimer;
+  final LocalAuthentication auth = LocalAuthentication();
 
   void _startAutoHideTimer({
     required bool isMnemonic,
@@ -64,6 +66,42 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
     }
   }
 
+  Future<void> _handleUnlock({required bool isMnemonic}) async {
+    final prefs = await SharedPreferencesService.getInstance();
+    final isBiometricEnabled =
+        prefs.getBool(AppKeys.isBiometricEnable) ?? false;
+
+    bool isAuthenticated = false;
+
+    if (isBiometricEnabled) {
+      isAuthenticated = await _authenticateWithFingerprint();
+    } else {
+      isAuthenticated = await _verifyPassword();
+    }
+
+    if (!isAuthenticated) return;
+
+    if (isMnemonic) {
+      _unlockMnemonic();
+    } else {
+      _unlockPrivateKey();
+    }
+  }
+
+  Future<bool> _authenticateWithFingerprint() async {
+    try {
+      return await auth.authenticate(
+        localizedReason: 'Authenticate to view sensitive key',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Biometric authentication failed");
+      return false;
+    }
+  }
 
   Future<bool> _verifyPassword() async {
     final storage = const FlutterSecureStorage();
@@ -79,16 +117,16 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark,
+            color: AppTheme.secondaryLight,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24),
               topRight: Radius.circular(24),
             ),
           ),
-          padding: EdgeInsets.fromLTRB(6.w, 3.h, 6.w, MediaQuery.of(context).viewInsets.bottom + 2.h),
+          padding: EdgeInsets.fromLTRB(
+              6.w, 3.h, 6.w, MediaQuery.of(context).viewInsets.bottom + 2.h),
           child: StatefulBuilder(
             builder: (context, setState) {
-
               return IntrinsicHeight(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +142,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                       ),
                     ),
                     SizedBox(height: 3.h),
-
                     Text(
                       "Enter Password",
                       style: GoogleFonts.inter(
@@ -114,7 +151,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                       ),
                     ),
                     SizedBox(height: 2.h),
-
                     TextField(
                       controller: controller,
                       obscureText: obscureText,
@@ -124,13 +160,16 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                         hintText: "Wallet Password",
                         hintStyle: TextStyle(color: AppTheme.textSecondary),
                         filled: true,
-                        fillColor: AppTheme.primaryDark,
+                        fillColor: AppTheme.primaryLight,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            obscureText ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                            obscureText
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
                             color: AppTheme.textSecondary,
                           ),
-                          onPressed: () => setState(() => obscureText = !obscureText),
+                          onPressed: () =>
+                              setState(() => obscureText = !obscureText),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -138,13 +177,12 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppTheme.accentTeal, width: 2),
+                          borderSide:
+                              BorderSide(color: AppTheme.accentTeal, width: 2),
                         ),
                       ),
                     ),
-
                     SizedBox(height: 3.h),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -152,29 +190,37 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                           onPressed: isLoading ? null : () => Get.back(),
                           child: Text(
                             "Cancel",
-                            style: TextStyle(color: AppTheme.textSecondary, fontSize: 11.sp),
+                            style: TextStyle(
+                                color: AppTheme.textSecondary, fontSize: 11.sp),
                           ),
                         ),
                         SizedBox(width: 2.w),
                         TextButton(
-                          onPressed: isLoading ? null : () async {
-                            setState(() => isLoading = true);
-                            await Future.delayed(const Duration(milliseconds: 300));
-                            Get.back(result: controller.text.trim());
-                          },
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  setState(() => isLoading = true);
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 300));
+                                  Get.back(result: controller.text.trim());
+                                },
                           child: isLoading
                               ? SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accentTeal),
-                            ),
-                          )
+                                  height: 18,
+                                  width: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppTheme.accentTeal),
+                                  ),
+                                )
                               : Text(
-                            "Verify Password",
-                            style: TextStyle(color: AppTheme.accentTeal, fontSize: 11.sp, fontWeight: FontWeight.w600),
-                          ),
+                                  "Verify Password",
+                                  style: TextStyle(
+                                      color: AppTheme.accentTeal,
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
                         ),
                       ],
                     ),
@@ -188,7 +234,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       enableDrag: true,
       isDismissible: true,
     );
-
 
     if (input == null) return false;
 
@@ -214,8 +259,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       return;
     }
 
-    if (!await _verifyPassword()) return;
-
     final storage = const FlutterSecureStorage();
     final password = await storage.read(key: AppKeys.userPassword);
 
@@ -223,14 +266,16 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
     final decrypted = await secureService.getDecryptedMnemonic(password!);
 
     if (decrypted == null || decrypted.trim().isEmpty) {
-      Fluttertoast.showToast(msg: "This wallet does not contain a recovery phrase.");
+      Fluttertoast.showToast(
+          msg: "This wallet does not contain a recovery phrase.");
       return;
     }
 
     // ✅ Check if it is actually a private key wallet
     if (_isPrivateKey(decrypted)) {
       setState(() {
-        _decryptedMnemonic = "Mnemonic not available — This wallet was imported using a private key.";
+        _decryptedMnemonic =
+            "Mnemonic not available — This wallet was imported using a private key.";
         _mnemonicUnlocked = true;
       });
       _startAutoHideTimer(isMnemonic: true);
@@ -255,8 +300,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       return;
     }
 
-    if (!await _verifyPassword()) return;
-
     final storage = const FlutterSecureStorage();
     final password = await storage.read(key: AppKeys.userPassword);
 
@@ -264,7 +307,8 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
     final decrypted = await secureService.getDecryptedMnemonic(password!);
 
     if (decrypted == null || decrypted.trim().isEmpty) {
-      Fluttertoast.showToast(msg: "This wallet does not contain a private key.");
+      Fluttertoast.showToast(
+          msg: "This wallet does not contain a private key.");
       return;
     }
 
@@ -279,7 +323,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       final walletService = MultiWalletService(secureService);
       final derived = await walletService.derivePrivateKey(decrypted, 0);
       finalPrivateKey =
-      "0x${derived.privateKeyInt.toRadixString(16).padLeft(64, '0')}";
+          "0x${derived.privateKeyInt.toRadixString(16).padLeft(64, '0')}";
       appLog("privatekey:: $finalPrivateKey");
     }
 
@@ -290,7 +334,6 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
 
     _startAutoHideTimer(isMnemonic: false);
   }
-
 
   Widget _buildSensitiveTile({
     required String label,
@@ -338,7 +381,8 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                   style: GoogleFonts.inter(
                     fontSize: 9.sp,
                     fontWeight: FontWeight.w500,
-                    color: unlocked ? AppTheme.accentTeal : AppTheme.textSecondary,
+                    color:
+                        unlocked ? AppTheme.accentTeal : AppTheme.textSecondary,
                   ),
                 ),
               ),
@@ -349,7 +393,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
           // VALUE AREA (with correct blur)
           Container(
             decoration: BoxDecoration(
-              color: AppTheme.primaryDark,
+              color: AppTheme.primaryLight,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppTheme.borderSubtle),
             ),
@@ -417,14 +461,17 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      unlocked ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                      unlocked
+                          ? Icons.visibility_off_rounded
+                          : Icons.visibility_rounded,
                       color: AppTheme.accentTeal,
                       size: 16.sp,
                     ),
                     SizedBox(width: 1.w),
                     Text(
                       unlocked ? "Hide" : "Show",
-                      style: TextStyle(color: AppTheme.accentTeal, fontSize: 10.sp),
+                      style: TextStyle(
+                          color: AppTheme.accentTeal, fontSize: 10.sp),
                     ),
                   ],
                 ),
@@ -433,24 +480,28 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
               InkWell(
                 onTap: unlocked
                     ? () {
-                  Clipboard.setData(ClipboardData(text: value));
-                  Get.snackbar("Copied!", "$label copied to clipboard.",
-                      backgroundColor: AppTheme.accentTeal,
-                      colorText: Colors.white,
-                      snackPosition: SnackPosition.BOTTOM);
-                }
+                        Clipboard.setData(ClipboardData(text: value));
+                        Get.snackbar("Copied!", "$label copied to clipboard.",
+                            backgroundColor: AppTheme.accentTeal,
+                            colorText: Colors.white,
+                            snackPosition: SnackPosition.BOTTOM);
+                      }
                     : null,
                 child: Row(
                   children: [
                     Icon(Icons.copy_rounded,
-                        color: unlocked ? AppTheme.accentTeal : AppTheme.textSecondary,
+                        color: unlocked
+                            ? AppTheme.accentTeal
+                            : AppTheme.textSecondary,
                         size: 16.sp),
                     SizedBox(width: 1.w),
                     Text(
                       "Copy",
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: unlocked ? AppTheme.accentTeal : AppTheme.textSecondary,
+                        color: unlocked
+                            ? AppTheme.accentTeal
+                            : AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -478,9 +529,9 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: AppTheme.textPrimary),
@@ -493,26 +544,21 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(height: 2.h),
-
           _buildSensitiveTile(
             label: "Mnemonic Phrase",
             value: _decryptedMnemonic,
             unlocked: _mnemonicUnlocked,
-            onUnlock: _unlockMnemonic,
+            onUnlock: () => _handleUnlock(isMnemonic: true),
           ),
-
           _buildSensitiveTile(
             label: "Private Key",
             value: _decryptedPrivateKey,
             unlocked: _privateKeyUnlocked,
-            onUnlock: _unlockPrivateKey,
+            onUnlock: () => _handleUnlock(isMnemonic: false),
           ),
-
           SizedBox(height: 4.h),
         ]),
       ),
     );
   }
 }
-
-

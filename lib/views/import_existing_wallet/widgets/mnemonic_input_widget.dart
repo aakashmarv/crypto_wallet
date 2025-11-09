@@ -2132,16 +2132,14 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
     widget.onValidationChanged(_isValid.value);
   }
 
-
   void _insertWord(String word) {
     final text = _controller.text;
     final selection = _controller.selection;
     // Find last space before cursor (to detect last word boundary)
     int lastSpaceIndex = text.lastIndexOf(' ', selection.baseOffset - 1);
     // Keep everything before that space
-    String prefix = lastSpaceIndex == -1
-        ? ''
-        : text.substring(0, lastSpaceIndex + 1);
+    String prefix =
+        lastSpaceIndex == -1 ? '' : text.substring(0, lastSpaceIndex + 1);
     // Replace last typed part (prefix) with selected word
     String newText = '$prefix$word ';
     // Update text field
@@ -2153,7 +2151,6 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
     _validateMnemonic(newText);
     widget.onMnemonicChanged(newText);
   }
-
 
   List<String> _getSuggestions() {
     final currentText = _controller.text.toLowerCase();
@@ -2192,7 +2189,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
             children: [
               Text(
                 'Recovery Phrase',
-                style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -2216,8 +2213,6 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                   size: 22,
                 ),
               ),
-
-
             ],
           ),
           SizedBox(height: 2.h),
@@ -2227,7 +2222,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
               maxHeight: 30.h,
             ),
             decoration: BoxDecoration(
-              color: AppTheme.primaryDark,
+              color: AppTheme.primaryLight,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _focusNode.hasFocus
@@ -2266,8 +2261,10 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
             children: [
               Text(
                 '${_words.length} words',
-                style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
-                  color: _isValid.value ? AppTheme.successGreen : AppTheme.textSecondary,
+                style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                  color: _isValid.value
+                      ? AppTheme.successGreen
+                      : AppTheme.textSecondary,
                 ),
               ),
               Row(
@@ -2281,7 +2278,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                     SizedBox(width: 1.w),
                     Text(
                       'Valid',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                         color: AppTheme.successGreen,
                         fontWeight: FontWeight.w500,
                       ),
@@ -2290,14 +2287,16 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                   SizedBox(width: 5.w),
                   GestureDetector(
                     onTap: () async {
-                      final data = await Clipboard.getData(Clipboard.kTextPlain);
+                      final data =
+                          await Clipboard.getData(Clipboard.kTextPlain);
                       if (data?.text != null && data!.text!.isNotEmpty) {
                         _controller.text = data.text!.trim();
                         _validateMnemonic(data.text!.trim());
                       }
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 4.w, vertical: 0.8.h),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -2315,14 +2314,14 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                       ),
                       child: Text(
                         'Paste',
-                        style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                        style:
+                            AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                           color: AppTheme.accentTeal,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ],
@@ -2331,7 +2330,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
             // SizedBox(height: 2.h),
             Text(
               'Suggestions',
-              style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+              style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                 color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
@@ -2358,7 +2357,7 @@ class _MnemonicInputWidgetState extends State<MnemonicInputWidget> {
                           ),
                           child: Text(
                             word,
-                            style: AppTheme.darkTheme.textTheme.bodySmall
+                            style: AppTheme.lightTheme.textTheme.bodySmall
                                 ?.copyWith(
                               color: AppTheme.accentTeal,
                               fontWeight: FontWeight.w500,

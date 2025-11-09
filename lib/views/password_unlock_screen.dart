@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:local_auth/local_auth.dart';
 import '../constants/app_keys.dart';
 import '../routes/app_routes.dart';
+import '../servieces/sharedpreferences_service.dart';
 import '../theme/app_theme.dart';
 
 class PasswordUnlockScreen extends StatefulWidget {
@@ -85,9 +86,27 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
         _isLoading = false;
       });
       _shakeAnimation();
-    } else if (enteredPassword == storedPassword) {
+      return;
+    }
+
+    if (enteredPassword == storedPassword) {
+      final prefs = await SharedPreferencesService.getInstance();
+      final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
+
+      // Clear flag on success
+      await prefs.setBool(AppKeys.lockPending, false);
+
       setState(() => _isLoading = false);
-      Get.offAllNamed(AppRoutes.dashboard);
+
+      if (lockPending) {
+        // Stack: <prevScreen> -> AppLockScreen -> PasswordUnlockScreen
+        // Return to previous screen: pop 2 times
+        Get.back(); // pop PasswordUnlockScreen
+        Get.back(); // pop AppLockScreen
+      } else {
+        // First-open
+        Get.offAllNamed(AppRoutes.dashboard);
+      }
     } else {
       setState(() {
         _error = 'Incorrect password';
@@ -116,7 +135,17 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
       );
 
       if (didAuthenticate) {
-        Get.offAllNamed(AppRoutes.dashboard);
+        final prefs = await SharedPreferencesService.getInstance();
+        final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
+
+        await prefs.setBool(AppKeys.lockPending, false);
+
+        if (lockPending) {
+          Get.back(); // pop PasswordUnlockScreen
+          Get.back(); // pop AppLockScreen
+        } else {
+          Get.offAllNamed(AppRoutes.dashboard);
+        }
       }
     } catch (e) {
       setState(() {
@@ -155,16 +184,6 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                             child: Container(
                               width: 25.w,
                               height: 25.w,
-                              // decoration: BoxDecoration(
-                              //   borderRadius: BorderRadius.circular(6.w),
-                              //   boxShadow: [
-                              //     BoxShadow(
-                              //       color: AppTheme.black.withOpacity(0.2),
-                              //       blurRadius: 8,
-                              //       offset: const Offset(0, 7),
-                              //     ),
-                              //   ],
-                              // ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6.w),
                                 child: Image.asset(
@@ -217,13 +236,6 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                                     : AppTheme.errorRed,
                                 width: 1,
                               ),
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Colors.black.withOpacity(0.04),
-                              //     blurRadius: 10,
-                              //     offset: Offset(0, 4),
-                              //   ),
-                              // ],
                             ),
                             child: TextField(
                               controller: _passwordController,

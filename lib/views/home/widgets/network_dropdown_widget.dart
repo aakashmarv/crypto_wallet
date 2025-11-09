@@ -51,12 +51,14 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
     Get.find<CoinPriceController>().fetchCoinPrice();
     Get.find<TokenListController>().getTokenList();
 
-    Fluttertoast.showToast(msg: "Network Switched: ${network == "testnet" ? "Ruby Testnet Active" : "Ruby Mainnet Active"}",
+    Fluttertoast.showToast(
+      msg:
+          "Network Switched: ${network == "testnet" ? "Ruby Testnet Active" : "Ruby Mainnet Active"}",
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,);
+      gravity: ToastGravity.BOTTOM,
+    );
     appLog("🌐 Network switched → $network");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
         await _saveNetwork(val == "Ruby" ? "ruby" : "testnet");
       },
       offset: const Offset(0, 40),
-      color: AppTheme.secondaryDark,
+      color: AppTheme.secondaryLight,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: AppTheme.borderSubtle, width: 1.2),
@@ -81,9 +83,11 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
           value: "Ruby",
           child: Row(
             children: [
-              Icon(_selected == "Ruby" ? Icons.circle : Icons.circle_outlined, size: 14, color: AppTheme.successGreen),
+              Icon(_selected == "Ruby" ? Icons.circle : Icons.circle_outlined,
+                  size: 14, color: AppTheme.successGreen),
               SizedBox(width: 2.w),
-              Text("Ruby", style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+              Text("Ruby",
+                  style: GoogleFonts.inter(color: AppTheme.textPrimary)),
             ],
           ),
         ),
@@ -91,9 +95,15 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
           value: "Ruby Testnet",
           child: Row(
             children: [
-              Icon( _selected == "Ruby Testnet" ? Icons.circle : Icons.circle_outlined, size: 14, color: AppTheme.successGreen),
+              Icon(
+                  _selected == "Ruby Testnet"
+                      ? Icons.circle
+                      : Icons.circle_outlined,
+                  size: 14,
+                  color: AppTheme.successGreen),
               SizedBox(width: 2.w),
-              Text("Ruby Testnet", style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+              Text("Ruby Testnet",
+                  style: GoogleFonts.inter(color: AppTheme.textPrimary)),
             ],
           ),
         ),
@@ -128,4 +138,3 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
     );
   }
 }
-

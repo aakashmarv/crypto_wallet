@@ -23,7 +23,7 @@ class ConnectionStatusWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.secondaryLight,
         border: Border(
           bottom: BorderSide(
             color: AppTheme.borderSubtle,
@@ -50,7 +50,7 @@ class ConnectionStatusWidget extends StatelessWidget {
               children: [
                 Text(
                   isConnected ? 'Connected' : 'Disconnected',
-                  style: AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                     color:
                         isConnected ? AppTheme.successGreen : AppTheme.errorRed,
                     fontSize: 10.sp,
@@ -62,15 +62,14 @@ class ConnectionStatusWidget extends StatelessWidget {
                   Text(
                     walletAddress.isEmpty || walletAddress.length < 10
                         ? walletAddress.isEmpty
-                        ? 'Loading...'
-                        : walletAddress // If very short, show full
+                            ? 'Loading...'
+                            : walletAddress // If very short, show full
                         : '${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}',
-                    style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                       fontSize: 11.sp,
                       color: AppTheme.textSecondary,
                     ),
                   ),
-
                 ],
               ],
             ),
@@ -78,11 +77,13 @@ class ConnectionStatusWidget extends StatelessWidget {
           // Network Selector
           GestureDetector(
             // onTap: () => _showNetworkSelector(context),
-            onTap: onNetworkChanged == null ? null : () => _showNetworkSelector(context),
+            onTap: onNetworkChanged == null
+                ? null
+                : () => _showNetworkSelector(context),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
               decoration: BoxDecoration(
-                color: AppTheme.primaryDark,
+                color: AppTheme.primaryLight,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -96,7 +97,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                   SizedBox(width: 1.w),
                   Text(
                     selectedNetwork,
-                    style: AppTheme.darkTheme.textTheme.labelSmall?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w500,
                     ),
@@ -165,7 +166,7 @@ class ConnectionStatusWidget extends StatelessWidget {
           children: [
             Text(
               'Select Network',
-              style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -174,7 +175,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                   leading: _getNetworkIcon(network),
                   title: Text(
                     network,
-                    style: AppTheme.darkTheme.textTheme.bodyMedium,
+                    style: AppTheme.lightTheme.textTheme.bodyMedium,
                   ),
                   trailing: selectedNetwork == network
                       ? Icon(

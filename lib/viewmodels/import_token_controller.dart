@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../viewmodels/token_list_controller.dart';
 import '../../../utils/logger.dart';
 import '../repositories/import_token_repository.dart';
+import '../utils/helper_util.dart';
 
 class ImportTokenController extends GetxController {
   final ImportTokenRepository _repository = ImportTokenRepository();
@@ -24,11 +25,11 @@ class ImportTokenController extends GetxController {
       final response = await _repository.importTokenRepo(walletAddress, contractAddress);
 
       if (response.status == true) {
-        SnackbarUtil.showSuccess("Success", "Token imported successfully!");
+        HelperUtil.toast( "Token imported successfully!");
         // 🔹 Fetch Tokens list from backend
         await tokenListController.getTokenList();
       } else {
-        SnackbarUtil.showError("Error", response.msg ?? "Failed to import token.");
+        HelperUtil.toast( response.msg ?? "Failed to import token.");
       }
     } catch (e, stack) {
       appLog("❌ ImportTokenController Error: $e\n$stack");

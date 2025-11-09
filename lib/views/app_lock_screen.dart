@@ -42,7 +42,8 @@ class _AppLockScreenState extends State<AppLockScreen> {
         );
 
         if (authenticated) {
-          _goToHome();
+          // _goToHome();
+          await _onUnlockSuccess();
           return;
         }
       } catch (e) {
@@ -50,13 +51,34 @@ class _AppLockScreenState extends State<AppLockScreen> {
         // fallback to password
       }
     }
+    // ❗️Fallback: password screen par jana hai
+    // First-open vs resume ko detect karke navigate karo:
+    final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
 
-    // fallback: show password screen
-    Get.offAllNamed(AppRoutes.passwordUnlockScreen);
+    if (lockPending) {
+      // Background-resume flow: stack preserve
+      Get.toNamed(AppRoutes.passwordUnlockScreen);
+    } else {
+      // First-open flow: splash se aaya — stack clean
+      Get.offAllNamed(AppRoutes.passwordUnlockScreen);
+    }
   }
 
-  void _goToHome() {
-    Get.offAllNamed(AppRoutes.dashboard);
+
+  Future<void> _onUnlockSuccess() async {
+    final prefs = await SharedPreferencesService.getInstance();
+    final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
+
+    // Success pe flag clear
+    await prefs.setBool(AppKeys.lockPending, false);
+
+    if (lockPending) {
+      // Background-resume: AppLockScreen ko pop kar do → pichhli screen dikhegi
+      Get.back();
+    } else {
+      // First-open: Dashboard pe le jao
+      Get.offAllNamed(AppRoutes.dashboard);
+    }
   }
 
   @override

@@ -25,14 +25,14 @@ class ProgressIndicatorWidget extends StatelessWidget {
             children: [
               Text(
                 'Step $currentStep of $totalSteps',
-                style: AppTheme.darkTheme.textTheme.titleSmall?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
                 '${((currentStep / totalSteps) * 100).round()}%',
-                style: AppTheme.darkTheme.textTheme.titleSmall?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.accentTeal,
                   fontWeight: FontWeight.w600,
                 ),
@@ -129,14 +129,14 @@ class ProgressIndicatorWidget extends StatelessWidget {
             child: isCompleted
                 ? Icon(
                     Icons.check,
-                    color: AppTheme.primaryDark,
+                    color: AppTheme.primaryLight,
                     size: 16,
                   )
                 : Text(
                     stepNumber.toString(),
-                    style: AppTheme.darkTheme.textTheme.labelMedium?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                       color: isCompleted || isCurrent
-                          ? AppTheme.primaryDark
+                          ? AppTheme.primaryLight
                           : AppTheme.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
@@ -146,7 +146,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
         SizedBox(height: 1.h),
         Text(
           label,
-          style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
             color: textColor,
             fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
           ),

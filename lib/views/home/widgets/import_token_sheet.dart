@@ -22,9 +22,9 @@ class ImportTokenSheet extends StatefulWidget {
 
 class _ImportTokenSheetState extends State<ImportTokenSheet>
     with SingleTickerProviderStateMixin {
-
   final HomeController _homeController = Get.find<HomeController>();
-  final ImportTokenController _importTokenController = Get.put(ImportTokenController());
+  final ImportTokenController _importTokenController =
+      Get.put(ImportTokenController());
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _tokenAddressController = TextEditingController();
@@ -35,8 +35,8 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
   @override
   void initState() {
     super.initState();
-    _animController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _animController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
     _fadeAnimation =
         CurvedAnimation(parent: _animController, curve: Curves.easeInOut);
     _animController.forward();
@@ -95,7 +95,7 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
         builder: (_, scrollController) => Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark,
+            color: AppTheme.secondaryLight,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SafeArea(
@@ -121,7 +121,10 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                     child: SingleChildScrollView(
                       controller: scrollController,
                       physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // ✅ only form scrolls
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context)
+                              .viewInsets
+                              .bottom), // ✅ only form scrolls
                       child: Column(
                         children: [
                           Text(
@@ -141,21 +144,26 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                             style: TextStyle(color: AppTheme.textPrimary),
                             decoration: InputDecoration(
                               labelText: "Token Contract Address",
-                              labelStyle: TextStyle(color: AppTheme.textSecondary),
+                              labelStyle:
+                                  TextStyle(color: AppTheme.textSecondary),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppTheme.borderSubtle),
+                                borderSide:
+                                    BorderSide(color: AppTheme.borderSubtle),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppTheme.accentTeal),
+                                borderSide:
+                                    BorderSide(color: AppTheme.accentTeal),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 1.5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 1.5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               errorStyle: TextStyle(
@@ -163,11 +171,14 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                                 fontSize: 10.sp,
                               ),
                               suffixIcon: IconButton(
-                                icon: Icon(Icons.paste, color: AppTheme.textSecondary),
+                                icon: Icon(Icons.paste,
+                                    color: AppTheme.textSecondary),
                                 onPressed: () async {
-                                  final clipboard = await Clipboard.getData(Clipboard.kTextPlain);
+                                  final clipboard = await Clipboard.getData(
+                                      Clipboard.kTextPlain);
                                   if (clipboard?.text?.isNotEmpty ?? false) {
-                                    _tokenAddressController.text = clipboard!.text!.trim();
+                                    _tokenAddressController.text =
+                                        clipboard!.text!.trim();
                                   }
                                 },
                               ),
@@ -176,7 +187,8 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                               if (value == null || value.isEmpty) {
                                 return "Enter token contract address";
                               }
-                              if (!value.startsWith('r') && !value.startsWith('0x')) {
+                              if (!value.startsWith('r') &&
+                                  !value.startsWith('0x')) {
                                 return "Invalid token address";
                               }
                               return null;
@@ -192,7 +204,8 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                               fontSize: 10.sp,
                             ),
                           ),
-                          SizedBox(height: 10.h), // ✅ space before bottom button
+                          SizedBox(
+                              height: 10.h), // ✅ space before bottom button
                         ],
                       ),
                     ),
@@ -203,37 +216,39 @@ class _ImportTokenSheetState extends State<ImportTokenSheet>
                 SafeArea(
                   top: false,
                   child: Obx(() => ElevatedButton(
-                    onPressed: _importTokenController.isLoading.value
-                        ? null
-                        : _handleImportToken,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.accentTeal,
-                      disabledBackgroundColor:
-                      AppTheme.accentTeal.withOpacity(0.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding:
-                      EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 20.w),
-                    ),
-                    child: _importTokenController.isLoading.value
-                        ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2),
-                    )
-                        : Text(
-                      "Import Token",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  )),
+                        onPressed: _importTokenController.isLoading.value
+                            ? null
+                            : _handleImportToken,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentTeal,
+                          disabledBackgroundColor:
+                              AppTheme.accentTeal.withOpacity(0.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 1.5.h, horizontal: 20.w),
+                        ),
+                        child: _importTokenController.isLoading.value
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white, strokeWidth: 2),
+                              )
+                            : Text(
+                                "Import Token",
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                      )),
                 ),
-                SizedBox(height: 1.h,)
+                SizedBox(
+                  height: 1.h,
+                )
               ],
             ),
           ),

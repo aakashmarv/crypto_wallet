@@ -64,7 +64,7 @@ class _QrScannerScreenState extends State<_QrScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       body: Stack(
         children: [
           MobileScanner(
@@ -102,7 +102,7 @@ class _QrScannerScreenState extends State<_QrScannerScreen> {
             child: Text(
               'Position the QR code within the frame',
               textAlign: TextAlign.center,
-              style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                 color: Colors.white70,
               ),
             ),

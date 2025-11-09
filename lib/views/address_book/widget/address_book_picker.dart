@@ -24,7 +24,7 @@ class AddressBookPicker extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: AppTheme.secondaryDark,
+            color: AppTheme.secondaryLight,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),

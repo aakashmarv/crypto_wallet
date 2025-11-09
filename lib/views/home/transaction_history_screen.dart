@@ -11,12 +11,14 @@ class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+  State<TransactionHistoryScreen> createState() =>
+      _TransactionHistoryScreenState();
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final ScrollController _scrollController = ScrollController();
-  final TransactionHistoryController controller = Get.put(TransactionHistoryController());
+  final TransactionHistoryController controller =
+      Get.put(TransactionHistoryController());
 
   String? _walletAddress;
 
@@ -41,7 +43,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   /// 🧭 Scroll listener for pagination
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 &&
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100 &&
         !controller.isLoading.value &&
         controller.transactions.length < controller.totalTransactions.value) {
       controller.loadMoreTransactions();
@@ -56,7 +59,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
         title: Text(
           "Transaction History",
@@ -67,7 +70,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         iconTheme: IconThemeData(color: AppTheme.textPrimary),
       ),
@@ -156,7 +159,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           }
 
           final tx = transactions[index];
-          final isSent = tx.from?.toLowerCase() == _walletAddress?.toLowerCase();
+          final isSent =
+              tx.from?.toLowerCase() == _walletAddress?.toLowerCase();
 
           final formattedDate = DateFormat('dd MMM yyyy, hh:mm a').format(
             DateTime.tryParse(tx.createdAt ?? '') ?? DateTime.now(),
@@ -166,7 +170,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             margin: EdgeInsets.only(bottom: 1.8.h),
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
-              color: AppTheme.secondaryDark.withOpacity(0.15),
+              color: AppTheme.secondaryLight.withOpacity(0.15),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppTheme.borderSubtle, width: 1),
             ),
@@ -181,7 +185,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         : AppTheme.successGreen.withOpacity(0.1),
                   ),
                   child: Icon(
-                    isSent ? Icons.call_made_rounded : Icons.call_received_rounded,
+                    isSent
+                        ? Icons.call_made_rounded
+                        : Icons.call_received_rounded,
                     color: isSent ? AppTheme.errorRed : AppTheme.successGreen,
                     size: 18.sp,
                   ),
@@ -228,7 +234,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w700,
-                        color: isSent ? AppTheme.errorRed : AppTheme.successGreen,
+                        color:
+                            isSent ? AppTheme.errorRed : AppTheme.successGreen,
                       ),
                     ),
                     SizedBox(height: 0.3.h),
@@ -265,5 +272,3 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 }
-
-

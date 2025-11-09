@@ -22,7 +22,7 @@ class ImportProgressWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryDark,
+        color: AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppTheme.borderSubtle,
@@ -37,7 +37,7 @@ class ImportProgressWidget extends StatelessWidget {
             children: [
               Text(
                 'Import Progress',
-                style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -57,7 +57,7 @@ class ImportProgressWidget extends StatelessWidget {
                 ),
                 child: Text(
                   'Step $currentStep of $totalSteps',
-                  style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                     color: AppTheme.accentTeal,
                     fontWeight: FontWeight.w500,
                   ),
@@ -95,7 +95,7 @@ class ImportProgressWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   currentStepDescription,
-                  style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
                 ),

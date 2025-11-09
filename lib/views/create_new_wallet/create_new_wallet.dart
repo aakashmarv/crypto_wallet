@@ -55,16 +55,17 @@ class _CreateNewWalletState extends State<CreateNewWallet>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        resizeToAvoidBottomInset: true, // ✅ allow safe scrolling when keyboard opens
-        backgroundColor: AppTheme.primaryDark,
+        resizeToAvoidBottomInset:
+            true, // ✅ allow safe scrolling when keyboard opens
+        backgroundColor: AppTheme.primaryLight,
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.primaryDark,
-                AppTheme.secondaryDark.withValues(alpha: 0.8),
+                AppTheme.primaryLight,
+                AppTheme.secondaryLight.withValues(alpha: 0.8),
               ],
             ),
           ),
@@ -78,19 +79,23 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                     physics: const ClampingScrollPhysics(),
                     child: ConstrainedBox(
                       // ✅ Ensures it fills full height for same design look
-                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      constraints:
+                          BoxConstraints(minHeight: constraints.maxHeight),
                       child: IntrinsicHeight(
                         child: Column(
                           children: [
                             // 🟩 App Bar
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4.w, vertical: 2.h),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       'Create New Wallet',
-                                      style: AppTheme.darkTheme.textTheme.headlineSmall?.copyWith(
+                                      style: AppTheme
+                                          .lightTheme.textTheme.headlineSmall
+                                          ?.copyWith(
                                         color: AppTheme.textPrimary,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -111,62 +116,72 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                               child: Obx(() {
                                 return _isGenerating.value
                                     ? Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4.w),
-                                    child: LoadingAnimationWidget(
-                                      message: 'Creating your secure wallet...',
-                                      progress: _generationProgress.value,
-                                    ),
-                                  ),
-                                )
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4.w),
+                                          child: LoadingAnimationWidget(
+                                            message:
+                                                'Creating your secure wallet...',
+                                            progress: _generationProgress.value,
+                                          ),
+                                        ),
+                                      )
                                     : Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 2.h),
-                                      // Welcome Text
-                                      Text(
-                                        'Let\'s create your wallet',
-                                        style: AppTheme.darkTheme.textTheme.headlineMedium?.copyWith(
-                                          color: AppTheme.textPrimary,
-                                          fontWeight: FontWeight.w700,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 2.h),
+                                            // Welcome Text
+                                            Text(
+                                              'Let\'s create your wallet',
+                                              style: AppTheme.lightTheme
+                                                  .textTheme.headlineMedium
+                                                  ?.copyWith(
+                                                color: AppTheme.textPrimary,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(height: 1.h),
+                                            Text(
+                                              'Your wallet will be secured with industry-standard encryption and stored safely on your device.',
+                                              style: AppTheme.lightTheme
+                                                  .textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                color: AppTheme.textSecondary,
+                                                height: 1.5,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.h),
+                                            // Wallet Name Input
+                                            WalletNameInputWidget(
+                                              onNameChanged: _onNameChanged,
+                                              onValidationChanged:
+                                                  _onValidationChanged,
+                                            ),
+                                            SizedBox(height: 3.h),
+                                            // Security Information Card
+                                            const SecurityInfoCardWidget(),
+                                            SizedBox(height: 4.h),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(height: 1.h),
-                                      Text(
-                                        'Your wallet will be secured with industry-standard encryption and stored safely on your device.',
-                                        style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
-                                          color: AppTheme.textSecondary,
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      // Wallet Name Input
-                                      WalletNameInputWidget(
-                                        onNameChanged: _onNameChanged,
-                                        onValidationChanged: _onValidationChanged,
-                                      ),
-                                      SizedBox(height: 3.h),
-                                      // Security Information Card
-                                      const SecurityInfoCardWidget(),
-                                      SizedBox(height: 4.h),
-                                    ],
-                                  ),
-                                );
+                                      );
                               }),
                             ),
 
                             // 🟩 Bottom Navigation  Button Area
                             Obx(() {
-                              if (_isGenerating.value) return const SizedBox.shrink();
+                              if (_isGenerating.value)
+                                return const SizedBox.shrink();
                               return Container(
                                 padding: EdgeInsets.all(4.w),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.primaryDark,
+                                  color: AppTheme.primaryLight,
                                   border: Border(
                                     top: BorderSide(
-                                      color: AppTheme.borderSubtle.withValues(alpha: 0.3),
+                                      color: AppTheme.borderSubtle
+                                          .withValues(alpha: 0.3),
                                       width: 1,
                                     ),
                                   ),
@@ -175,31 +190,39 @@ class _CreateNewWalletState extends State<CreateNewWallet>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Obx(() => GenerateWalletButtonWidget(
-                                      isEnabled: _isNameValid.value,
-                                      isLoading: _isGenerating.value,
-                                      onPressed: _generateWallet,
-                                    )),
+                                          isEnabled: _isNameValid.value,
+                                          isLoading: _isGenerating.value,
+                                          onPressed: _generateWallet,
+                                        )),
                                     SizedBox(height: 2.h),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Already have a wallet? ',
-                                          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                                          style: AppTheme
+                                              .lightTheme.textTheme.bodyMedium
+                                              ?.copyWith(
                                             color: AppTheme.textSecondary,
                                           ),
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context, AppRoutes.importExistingWallet);
+                                            Navigator.pushNamed(context,
+                                                AppRoutes.importExistingWallet);
                                           },
                                           child: Text(
                                             'Import it',
-                                            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                                            style: AppTheme
+                                                .lightTheme.textTheme.bodyMedium
+                                                ?.copyWith(
                                               color: AppTheme.accentTeal,
                                               fontWeight: FontWeight.w600,
-                                              decoration: TextDecoration.underline,
-                                              decorationColor: AppTheme.accentTeal,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  AppTheme.accentTeal,
                                             ),
                                           ),
                                         ),
@@ -223,22 +246,21 @@ class _CreateNewWalletState extends State<CreateNewWallet>
     );
   }
 
-
   // @override
   // Widget build(BuildContext context) {
   //   return WillPopScope(
   //     onWillPop: _onWillPop,
   //     child: Scaffold(
   //       resizeToAvoidBottomInset: false,
-  //       backgroundColor: AppTheme.primaryDark,
+  //       backgroundColor: AppTheme.primaryLight,
   //       body: Container(
   //         decoration: BoxDecoration(
   //           gradient: LinearGradient(
   //             begin: Alignment.topCenter,
   //             end: Alignment.bottomCenter,
   //             colors: [
-  //               AppTheme.primaryDark,
-  //               AppTheme.secondaryDark.withValues(alpha: 0.8),
+  //               AppTheme.primaryLight,
+  //               AppTheme.secondaryLight.withValues(alpha: 0.8),
   //             ],
   //           ),
   //         ),
@@ -256,7 +278,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   //                       Expanded(
   //                         child: Text(
   //                           'Create New Wallet',
-  //                           style: AppTheme.darkTheme.textTheme.headlineSmall
+  //                           style: AppTheme.lightTheme.textTheme.headlineSmall
   //                               ?.copyWith(
   //                             color: AppTheme.textPrimary,
   //                             fontWeight: FontWeight.w700,
@@ -304,7 +326,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   //                           SizedBox(height: 1.h),
   //                           Text(
   //                             'Your wallet will be secured with industry-standard encryption and stored safely on your device.',
-  //                             style: AppTheme.darkTheme.textTheme.bodyMedium
+  //                             style: AppTheme.lightTheme.textTheme.bodyMedium
   //                                 ?.copyWith(
   //                               color: AppTheme.textSecondary,
   //                               height: 1.5,
@@ -331,7 +353,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   //                   return Container(
   //                     padding: EdgeInsets.all(4.w),
   //                     decoration: BoxDecoration(
-  //                       color: AppTheme.primaryDark,
+  //                       color: AppTheme.primaryLight,
   //                       border: Border(
   //                         top: BorderSide(
   //                           color: AppTheme.borderSubtle.withValues(alpha: 0.3),
@@ -353,7 +375,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   //                           children: [
   //                             Text(
   //                               'Already have a wallet? ',
-  //                               style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+  //                               style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
   //                                 color: AppTheme.textSecondary,
   //                               ),
   //                             ),
@@ -363,7 +385,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   //                               },
   //                               child: Text(
   //                                 'Import it',
-  //                                 style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+  //                                 style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
   //                                   color: AppTheme.accentTeal,
   //                                   fontWeight: FontWeight.w600,
   //                                   decoration: TextDecoration.underline,
@@ -387,7 +409,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
   // }
 
   void _onNameChanged(String name) {
-      _walletName.value = name;
+    _walletName.value = name;
   }
 
   void _onValidationChanged(bool isValid) {
@@ -407,7 +429,10 @@ class _CreateNewWalletState extends State<CreateNewWallet>
       await prefs.setString(AppKeys.currentWalletName, _walletName.value);
       // Navigate to mnemonic phrase display
       if (mounted) {
-        Get.toNamed(AppRoutes.passwordSetup,arguments: {'fromImport': false},);
+        Get.toNamed(
+          AppRoutes.passwordSetup,
+          arguments: {'fromImport': false},
+        );
       }
     } catch (e) {
       // Handle error
@@ -418,7 +443,6 @@ class _CreateNewWalletState extends State<CreateNewWallet>
       if (mounted) {
         _isGenerating.value = false;
         _generationProgress.value = 0.0;
-
       }
     }
   }
@@ -436,7 +460,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
     for (final step in steps) {
       await Future.delayed(Duration(milliseconds: step['delay'] as int));
       if (mounted) {
-          _generationProgress.value = step['progress'] as double;
+        _generationProgress.value = step['progress'] as double;
       }
     }
   }
@@ -459,7 +483,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
             SizedBox(width: 3.w),
             Text(
               'Error',
-              style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                 color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w600,
               ),
@@ -468,7 +492,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
         ),
         content: Text(
           message,
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textSecondary,
           ),
         ),
@@ -477,7 +501,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               'OK',
-              style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
+              style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
                 color: AppTheme.accentTeal,
                 fontWeight: FontWeight.w600,
               ),
@@ -508,7 +532,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
               SizedBox(width: 3.w),
               Text(
                 'Cancel Generation?',
-                style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -517,7 +541,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
           ),
           content: Text(
             'Wallet generation is in progress. Are you sure you want to cancel?',
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.textSecondary,
             ),
           ),
@@ -526,7 +550,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(
                 'Continue',
-                style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
                   color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -536,7 +560,7 @@ class _CreateNewWalletState extends State<CreateNewWallet>
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(
                 'Cancel',
-                style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
+                style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
                   color: AppTheme.errorRed,
                   fontWeight: FontWeight.w600,
                 ),

@@ -1,9 +1,7 @@
 import 'dart:math' as math;
-
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'logger.dart';
 
 
@@ -59,6 +57,14 @@ class HelperUtil {
     if (showToast) {
       Fluttertoast.showToast(msg: 'Copied to clipboard');
     }
+  }
+  static void toast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,           // iOS aur Web ke liye time
+    );
   }
 
 }

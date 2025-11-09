@@ -176,9 +176,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryDark,
+        backgroundColor: AppTheme.primaryLight,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppTheme.textPrimary),
@@ -186,7 +186,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         ),
         title: Text(
           "Change Password",
-          style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+          style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
             color: AppTheme.textPrimary,
             fontWeight: FontWeight.w600,
           ),
@@ -270,7 +270,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                   Container(
                     padding: EdgeInsets.all(3.w),
                     decoration: BoxDecoration(
-                      color: AppTheme.secondaryDark.withOpacity(0.3),
+                      color: AppTheme.secondaryLight.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -337,7 +337,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
           ),
           decoration: InputDecoration(
             filled: true,
-            // fillColor: AppTheme.secondaryDark.withOpacity(0.3),
+            // fillColor: AppTheme.secondaryLight.withOpacity(0.3),
             hintText: '••••••••',
             hintStyle:
                 TextStyle(color: AppTheme.textSecondary.withOpacity(0.5)),

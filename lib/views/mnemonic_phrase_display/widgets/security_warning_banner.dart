@@ -44,7 +44,8 @@ class _SecurityWarningBannerState extends State<SecurityWarningBanner> {
                   Expanded(
                     child: Text(
                       'Critical Security Warning',
-                      style: AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                      style:
+                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                         color: AppTheme.warningOrange,
                         fontWeight: FontWeight.w600,
                       ),
@@ -71,7 +72,7 @@ class _SecurityWarningBannerState extends State<SecurityWarningBanner> {
                 children: [
                   Text(
                     'Your recovery phrase is the ONLY way to restore your wallet. If you lose it, your funds will be permanently lost.',
-                    style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                       color: AppTheme.textPrimary,
                       height: 1.4,
                     ),
@@ -111,7 +112,7 @@ class _SecurityWarningBannerState extends State<SecurityWarningBanner> {
         Expanded(
           child: Text(
             tip,
-            style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.textSecondary,
               height: 1.3,
             ),

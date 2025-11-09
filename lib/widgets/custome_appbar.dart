@@ -27,7 +27,7 @@ class CustomeAppbar extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -48,7 +48,7 @@ class CustomeAppbar extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTheme.darkTheme.textTheme.titleLarge?.copyWith(
+                  style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                     color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -57,7 +57,7 @@ class CustomeAppbar extends StatelessWidget {
                   SizedBox(height: 0.5.h),
                   Text(
                     subtitle!,
-                    style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
                   ),

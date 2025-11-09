@@ -51,13 +51,14 @@ class TransactionApprovalDialog extends StatelessWidget {
                       Text(
                         'Transaction Approval',
                         style:
-                            AppTheme.darkTheme.textTheme.titleMedium?.copyWith(
+                            AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
                         'Review transaction details',
-                        style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                        style:
+                            AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                           color: AppTheme.textSecondary,
                         ),
                       ),
@@ -71,7 +72,7 @@ class TransactionApprovalDialog extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(4.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryDark,
+                color: AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppTheme.borderSubtle,
@@ -116,7 +117,7 @@ class TransactionApprovalDialog extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'This transaction will be executed on ${transactionData['network'] ?? 'Ethereum'} network',
-                      style: AppTheme.darkTheme.textTheme.bodySmall?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                         color: AppTheme.accentTeal,
                         fontSize: 11.sp,
                       ),
@@ -139,7 +140,7 @@ class TransactionApprovalDialog extends StatelessWidget {
                     ),
                     child: Text(
                       'Reject',
-                      style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
+                      style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
                         color: AppTheme.errorRed,
                         fontWeight: FontWeight.w600,
                       ),
@@ -156,8 +157,8 @@ class TransactionApprovalDialog extends StatelessWidget {
                     ),
                     child: Text(
                       'Approve',
-                      style: AppTheme.darkTheme.textTheme.labelLarge?.copyWith(
-                        color: AppTheme.primaryDark,
+                      style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
+                        color: AppTheme.primaryLight,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -177,14 +178,14 @@ class TransactionApprovalDialog extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
             color: AppTheme.textSecondary,
           ),
         ),
         Expanded(
           child: Text(
             value,
-            style: AppTheme.darkTheme.textTheme.bodyMedium?.copyWith(
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.right,
