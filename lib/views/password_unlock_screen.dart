@@ -7,7 +7,6 @@ import 'package:local_auth/local_auth.dart';
 import '../constants/app_keys.dart';
 import '../routes/app_routes.dart';
 import '../servieces/sharedpreferences_service.dart';
-import '../theme/app_theme.dart';
 
 class PasswordUnlockScreen extends StatefulWidget {
   const PasswordUnlockScreen({super.key});
@@ -19,7 +18,7 @@ class PasswordUnlockScreen extends StatefulWidget {
 class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
     with SingleTickerProviderStateMixin {
   final _passwordController = TextEditingController();
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   final LocalAuthentication auth = LocalAuthentication();
   String _error = '';
   bool _isLoading = false;
@@ -37,23 +36,23 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0.0, 0.6, curve: Curves.easeOut),
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
       ),
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.2),
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0.2, 0.8, curve: Curves.easeOutCubic),
+        curve: const Interval(0.2, 0.8, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -75,7 +74,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
       _error = '';
     });
 
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 300));
 
     final storedPassword = await storage.read(key: AppKeys.userPassword);
     final enteredPassword = _passwordController.text.trim();
@@ -93,18 +92,14 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
       final prefs = await SharedPreferencesService.getInstance();
       final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
 
-      // Clear flag on success
       await prefs.setBool(AppKeys.lockPending, false);
 
       setState(() => _isLoading = false);
 
       if (lockPending) {
-        // Stack: <prevScreen> -> AppLockScreen -> PasswordUnlockScreen
-        // Return to previous screen: pop 2 times
-        Get.back(); // pop PasswordUnlockScreen
-        Get.back(); // pop AppLockScreen
+        Get.back();
+        Get.back();
       } else {
-        // First-open
         Get.offAllNamed(AppRoutes.dashboard);
       }
     } else {
@@ -137,12 +132,11 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
       if (didAuthenticate) {
         final prefs = await SharedPreferencesService.getInstance();
         final lockPending = prefs.getBool(AppKeys.lockPending) ?? false;
-
         await prefs.setBool(AppKeys.lockPending, false);
 
         if (lockPending) {
-          Get.back(); // pop PasswordUnlockScreen
-          Get.back(); // pop AppLockScreen
+          Get.back();
+          Get.back();
         } else {
           Get.offAllNamed(AppRoutes.dashboard);
         }
@@ -157,32 +151,35 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // ✅ Prevents layout jump on keyboard
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: 8.h),
-                        // App Logo
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Center(
-                            child: Container(
-                              width: 25.w,
-                              height: 25.w,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6.w),
+        child: Stack(
+          children: [
+            /// Main Scrollable Content
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  reverse: true,
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(height: 8.h),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Center(
+                              child: Container(
+                                width: 25.w,
+                                height: 25.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.w),
+                                ),
+                                clipBehavior: Clip.antiAlias,
                                 child: Image.asset(
                                   'assets/images/applogo.png',
                                   fit: BoxFit.cover,
@@ -190,176 +187,194 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10.h),
-                        // Welcome Back Text
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: SlideTransition(
-                            position: _slideAnimation,
+                          SizedBox(height: 10.h),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: SlideTransition(
+                              position: _slideAnimation,
+                              child: Text(
+                                'Welcome Back',
+                                style: GoogleFonts.inter(
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
                             child: Text(
-                              'Welcome Back',
-                              style: GoogleFonts.inter(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
+                              'Enter your password to continue',
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5.h),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: TextField(
+                              controller: _passwordController,
+                              obscureText: true,
+                              style: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface,
-                                letterSpacing: 0.5,
+                                fontSize: 14.sp,
+                                letterSpacing: 2,
                               ),
-                            ),
-                          ),
-                        ),
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Text(
-                            'Enter your password to continue',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.h),
-                        // Password Field
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: TextField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 14.sp,
-                              letterSpacing: 2,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Enter password',
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
-                                letterSpacing: 0.5,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.lock_outline_rounded,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                size: 6.w,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 13),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.fingerprint,
-                                  color: Theme.of(context).colorScheme.primary,
+                              decoration: InputDecoration(
+                                hintText: 'Enter password',
+                                hintStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant
+                                      .withOpacity(0.6),
+                                  letterSpacing: 0.5,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.lock_outline_rounded,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                   size: 6.w,
                                 ),
-                                onPressed: _authenticateWithFingerprint,
-                              ),
-                            ),
-                            onSubmitted: (_) {
-                              if (_isButtonEnabled) _unlock();
-                            },
-                          ),
-                        ),
-                        if (_error.isNotEmpty)
-                          Padding(
-                            padding: EdgeInsets.only(top: 1.h, left: 1.w),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                _error,
-                                style: TextStyle(
-                                  color: Color(0xFFEF4444),
-                                  fontSize: 11.sp,
+                                border: InputBorder.none,
+                                contentPadding:
+                                const EdgeInsets.symmetric(vertical: 13),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.fingerprint,
+                                    color:
+                                    Theme.of(context).colorScheme.primary,
+                                    size: 6.w,
+                                  ),
+                                  onPressed: _authenticateWithFingerprint,
                                 ),
                               ),
+                              onSubmitted: (_) {
+                                if (_isButtonEnabled) _unlock();
+                              },
                             ),
                           ),
-                        SizedBox(height: 10.h),
-                        // Unlock Button
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Container(
-                            width: double.infinity,
-                            height: 6.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3.w),
-                              boxShadow: _isButtonEnabled
-                                  ? [
-                                      BoxShadow(
-                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                                        blurRadius: 12,
-                                        offset: Offset(0, 6),
-                                      ),
-                                    ]
-                                  : [],
-                            ),
-                            child: ElevatedButton(
-                              onPressed: _isButtonEnabled ? _unlock : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _isButtonEnabled
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.outline,
-                                disabledBackgroundColor: Theme.of(context).colorScheme.outline,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: _isLoading
-                                  ? SizedBox(
-                                      height: 3.w,
-                                      width: 3.w,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.5,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              Theme.of(context).colorScheme.onPrimary,),
-                                      ),
-                                    )
-                                  : Text(
-                                      'Unlock',
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: _isButtonEnabled
-                                            ? Theme.of(context).colorScheme.onPrimary
-                                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        // Footer
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 2.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.shield_outlined,
-                                  size: 4.w,
-                                  color: Color(0xFF9CA3AF),
-                                ),
-                                SizedBox(width: 2.w),
-                                Text(
-                                  'Secured with encryption',
+                          if (_error.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(top: 1.h, left: 1.w),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _error,
                                   style: TextStyle(
-                                    color: Color(0xFF9CA3AF),
+                                    color: const Color(0xFFEF4444),
                                     fontSize: 11.sp,
                                   ),
                                 ),
-                              ],
+                              ),
+                            ),
+                          SizedBox(height: 10.h),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Container(
+                              width: double.infinity,
+                              height: 6.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3.w),
+                                boxShadow: _isButtonEnabled
+                                    ? [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.3),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ]
+                                    : [],
+                              ),
+                              child: ElevatedButton(
+                                onPressed: _isButtonEnabled ? _unlock : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _isButtonEnabled
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.outline,
+                                  disabledBackgroundColor:
+                                  Theme.of(context).colorScheme.outline,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: _isLoading
+                                    ? SizedBox(
+                                  height: 3.w,
+                                  width: 3.w,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    valueColor:
+                                    AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    ),
+                                  ),
+                                )
+                                    : Text(
+                                  'Unlock',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: _isButtonEnabled
+                                        ? Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary
+                                        : Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 14.h), // space before bottom text
+                        ],
+                      ),
                     ),
                   ),
+                );
+              },
+            ),
+            /// ✅ Fixed Bottom "Secured with encryption" Text
+            Positioned(
+              bottom: 5, // safe from gestures
+              left: 0,
+              right: 0,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.shield_outlined,
+                      size: 4.w,
+                      color: const Color(0xFF9CA3AF),
+                    ),
+                    SizedBox(width: 2.w),
+                    Text(
+                      'Secured with encryption',
+                      style: TextStyle(
+                        color: const Color(0xFF9CA3AF),
+                        fontSize: 11.sp,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
