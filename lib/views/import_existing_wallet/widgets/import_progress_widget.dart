@@ -22,10 +22,12 @@ class ImportProgressWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryLight,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppTheme.surfaceElevatedDark
+            : AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme.borderSubtle,
+          color: Theme.of(context).colorScheme.outline,
           width: 1,
         ),
       ),
@@ -37,8 +39,8 @@ class ImportProgressWidget extends StatelessWidget {
             children: [
               Text(
                 'Import Progress',
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),

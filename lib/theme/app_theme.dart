@@ -7,7 +7,6 @@ class AppTheme {
   // dark theme colors
   static const Color primaryDark = Color(0xFF1A1B23); // Deep background
   static const Color secondaryDark = Color(0xFF2A2D3A); // Card surfaces
-  // static const Color accentTeal = Color(0xFF455bff);
   static const Color textPrimaryDark = Color(0xFFFFFFFF);
   static const Color textSecondaryDark = Color(0xFFB8BCC8);
   static const Color borderSubtleDark = Color(0xFF3A3D4A);
@@ -416,24 +415,19 @@ class AppTheme {
       onPrimary: textPrimaryDark,
       primaryContainer: accentTeal.withAlpha(51),
       onPrimaryContainer: textPrimaryDark,
-
       secondary: greenDark,
       onSecondary: textPrimaryDark,
       secondaryContainer: greenDark.withAlpha(51),
       onSecondaryContainer: textPrimaryDark,
-
       tertiary: warningOrange,
       onTertiary: textPrimaryDark,
       tertiaryContainer: warningOrange.withAlpha(51),
       onTertiaryContainer: textPrimaryDark,
-
       error: errorRedDark,
       onError: textPrimaryDark,
-
       surface: primaryDark,
       onSurface: textPrimaryDark,
       onSurfaceVariant: textSecondaryDark,
-
       outline: borderSubtleDark,
       outlineVariant: borderSubtleDark,
       shadow: shadowColorDark,

@@ -30,7 +30,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
         color: AppTheme.lightTheme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.borderSubtle,
+          color: Theme.of(context).colorScheme.outline,
           width: 1,
         ),
         gradient: LinearGradient(
@@ -60,9 +60,8 @@ class PasswordRequirementsWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Password Requirements',
-                      style:
-                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                        color: AppTheme.textPrimary,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -81,8 +80,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             height: isExpanded ? null : 0,
-            child:
-                isExpanded ? _buildRequirementsList() : const SizedBox.shrink(),
+            child: isExpanded ? _buildRequirementsList() : const SizedBox.shrink(),
           ),
         ],
       ),

@@ -2,10 +2,8 @@ import 'package:cryptovault_pro/views/home/widgets/send_token_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../models/responses/token_list_response.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/helper_util.dart';
@@ -24,27 +22,28 @@ class WalletTabsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       children: [
         // Tab Bar
         Container(
           margin: EdgeInsets.symmetric(horizontal: 4.w),
           decoration: BoxDecoration(
-            color: AppTheme.secondaryLight.withOpacity(0.5),
+            color: cs.surfaceVariant.withOpacity(0.5),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.borderSubtle, width: 1),
+            border: Border.all(color: cs.outline, width: 1),
           ),
           child: TabBar(
             controller: tabController,
             indicator: BoxDecoration(
-              color: AppTheme.accentTeal,
+              color: cs.primary,
               borderRadius: BorderRadius.circular(12),
             ),
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorPadding: EdgeInsets.all(0.5.w),
             dividerColor: Colors.transparent,
-            labelColor: Colors.white,
-            unselectedLabelColor: AppTheme.textSecondary,
+            labelColor: cs.onPrimary,
+            unselectedLabelColor: cs.onSurfaceVariant,
             labelStyle: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -84,6 +83,7 @@ class _CoinsTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
       child: Column(
@@ -97,7 +97,7 @@ class _CoinsTabContent extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: cs.onSurface,
                 ),
               ),
             ],
@@ -130,7 +130,7 @@ class _CoinsTabContent extends StatelessWidget {
                               margin: EdgeInsets.symmetric(vertical: 1.h),
                               height: 8.h,
                               decoration: BoxDecoration(
-                                color: AppTheme.borderSubtle.withOpacity(0.5),
+                                color: cs.onSurfaceVariant.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
@@ -209,8 +209,8 @@ class _CoinsTabContent extends StatelessWidget {
                       }),
                       SizedBox(height: 3.h),
                       Obx(() {
-                        final hasTokens =
-                            _tokenListController.tokenList.isNotEmpty;
+                        final hasTokens = _tokenListController.tokenList.isNotEmpty;
+                        final cs = Theme.of(context).colorScheme;
                         return GestureDetector(
                           onTap: () => showModalBottomSheet(
                             context: context,
@@ -224,10 +224,12 @@ class _CoinsTabContent extends StatelessWidget {
                                 bottom: 3.w, left: 4.w, right: 4.w),
                             padding: EdgeInsets.symmetric(vertical: 1.2.h),
                             decoration: BoxDecoration(
-                              color: AppTheme.surfaceElevated,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? AppTheme.surfaceElevatedDark
+                                  : AppTheme.surfaceElevated,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: AppTheme.accentTeal.withOpacity(0.2),
+                                color: cs.primary.withOpacity(0.25),
                                 width: 1,
                               ),
                             ),
@@ -236,7 +238,7 @@ class _CoinsTabContent extends StatelessWidget {
                                 hasTokens ? 'Add More Tokens' : 'Import Token',
                                 style: GoogleFonts.inter(
                                   fontSize: 12.sp,
-                                  color: AppTheme.textSecondary,
+                                  color: cs.onSurfaceVariant,
                                 ),
                               ),
                             ),
@@ -382,13 +384,16 @@ class TokenItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       margin: EdgeInsets.only(bottom: 1.5.h),
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryLight.withOpacity(0.08),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppTheme.surfaceElevatedDark
+            : AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderSubtle),
+        border: Border.all(color: cs.outline),
       ),
       child: Row(
         children: [
@@ -402,7 +407,7 @@ class TokenItemCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: cs.onSurface,
                   ),
                 ),
                 SizedBox(height: 0.5.h),
@@ -411,7 +416,7 @@ class TokenItemCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 9.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppTheme.textSecondary,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -427,7 +432,7 @@ class TokenItemCard extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary,
+                  color: cs.onSurface,
                 ),
               ),
               SizedBox(height: 0.5.h),
@@ -435,7 +440,7 @@ class TokenItemCard extends StatelessWidget {
                 'RUBY',
                 style: GoogleFonts.inter(
                   fontSize: 9.sp,
-                  color: AppTheme.textSecondary,
+                    color: cs.onSurfaceVariant
                 ),
               ),
             ],
@@ -445,7 +450,7 @@ class TokenItemCard extends StatelessWidget {
           // ✅ Send Button
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor: AppTheme.accentTeal,
+              foregroundColor: cs.primary,
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

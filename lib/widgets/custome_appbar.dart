@@ -48,8 +48,8 @@ class CustomeAppbar extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                    color: AppTheme.textPrimary,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith( //change
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

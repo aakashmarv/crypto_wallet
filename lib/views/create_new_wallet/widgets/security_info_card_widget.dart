@@ -118,7 +118,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                           'Security Information',
                           style: AppTheme.lightTheme.textTheme.titleMedium
                               ?.copyWith(
-                            color: AppTheme.textPrimary,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -241,7 +241,7 @@ class _SecurityInfoCardWidgetState extends State<SecurityInfoCardWidget>
                 Text(
                   title,
                   style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-                    color: AppTheme.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

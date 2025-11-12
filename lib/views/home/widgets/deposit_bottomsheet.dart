@@ -19,8 +19,8 @@ class DepositBottomSheet extends StatelessWidget {
         minChildSize: 0.35,
         maxChildSize: 0.75,
         builder: (_, controller) => Container(
-          decoration: const BoxDecoration(
-            color: AppTheme.secondaryLight,
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SingleChildScrollView(
@@ -35,7 +35,7 @@ class DepositBottomSheet extends StatelessWidget {
                   height: 0.7.h,
                   margin: EdgeInsets.only(bottom: 2.h),
                   decoration: BoxDecoration(
-                    color: AppTheme.borderSubtle,
+                    color: Theme.of(context).colorScheme.outline.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -45,7 +45,7 @@ class DepositBottomSheet extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -54,7 +54,7 @@ class DepositBottomSheet extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(2.w),
                   decoration: BoxDecoration(
-                    color: AppTheme.surfaceElevated,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: QrImageView(
@@ -77,7 +77,7 @@ class DepositBottomSheet extends StatelessWidget {
                         style: GoogleFonts.jetBrainsMono(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppTheme.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -85,7 +85,7 @@ class DepositBottomSheet extends StatelessWidget {
                     SizedBox(width: 2.w),
                     IconButton(
                       icon: Icon(Icons.copy,
-                          color: AppTheme.successGreen, size: 5.w),
+                          color: Theme.of(context).colorScheme.primary, size: 5.w),
                       onPressed: () =>
                           HelperUtil.copyToClipboard(walletAddress),
                     ),

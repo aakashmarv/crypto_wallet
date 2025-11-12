@@ -20,13 +20,14 @@ class ConnectionStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryLight,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           bottom: BorderSide(
-            color: AppTheme.borderSubtle,
+            color: Theme.of(context).colorScheme.outline,
             width: 0.5,
           ),
         ),
@@ -67,7 +68,7 @@ class ConnectionStatusWidget extends StatelessWidget {
                         : '${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}',
                     style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                       fontSize: 11.sp,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -83,10 +84,12 @@ class ConnectionStatusWidget extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
               decoration: BoxDecoration(
-                color: AppTheme.primaryLight,
+                color: isDark
+                    ? Theme.of(context).colorScheme.surfaceContainerHighest
+                    : AppTheme.primaryLight,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: AppTheme.borderSubtle,
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
               ),
@@ -97,16 +100,17 @@ class ConnectionStatusWidget extends StatelessWidget {
                   SizedBox(width: 1.w),
                   Text(
                     selectedNetwork,
-                    style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(width: 1.w),
                   Icon(
                     Icons.keyboard_arrow_down,
                     size: 4.w,
-                    color: AppTheme.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ],
               ),
@@ -154,7 +158,7 @@ class ConnectionStatusWidget extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surfaceElevated,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

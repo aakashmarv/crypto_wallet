@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sizer/sizer.dart';
-import '../../theme/app_theme.dart';
 import '../../viewmodels/coin_controller.dart';
 import '../../viewmodels/selectedIndex_controller.dart';
 import '../d_app_browser/d_app_browser.dart';
@@ -58,14 +57,14 @@ class DashboardScreen extends StatelessWidget {
               // ✅ Top Divider
               Container(
                 height: 1,
-                color: AppTheme.borderSubtle,
+                color: Theme.of(context).colorScheme.outline,
               ),
               BottomNavigationBar(
                 currentIndex: _selectedIndexController.selectedIndex.value,
                 onTap: _selectedIndexController.changeTab,
-                backgroundColor: AppTheme.surfaceElevated,
-                selectedItemColor: AppTheme.accentTeal,
-                unselectedItemColor: AppTheme.textSecondary,
+                backgroundColor: Theme.of(context).cardColor,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
                 type: BottomNavigationBarType.fixed,
                 selectedLabelStyle: TextStyle(
                   fontSize: 10.sp,
@@ -81,8 +80,8 @@ class DashboardScreen extends StatelessWidget {
                       LucideIcons.house,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 0
-                          ? AppTheme.accentTeal
-                          : AppTheme.textSecondary,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     label: 'Home',
                   ),
@@ -91,8 +90,8 @@ class DashboardScreen extends StatelessWidget {
                       LucideIcons.compass,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 1
-                          ? AppTheme.accentTeal
-                          : AppTheme.textSecondary,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     label: 'Browser',
                   ),
@@ -101,8 +100,8 @@ class DashboardScreen extends StatelessWidget {
                       LucideIcons.settings,
                       size: 6.w,
                       color: _selectedIndexController.selectedIndex.value == 2
-                          ? AppTheme.accentTeal
-                          : AppTheme.textSecondary,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     label: 'Settings',
                   ),

@@ -26,7 +26,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
               Text(
                 'Step $currentStep of $totalSteps',
                 style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-                  color: AppTheme.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),

@@ -13,6 +13,7 @@ import '../../servieces/multi_wallet_service.dart';
 import '../../servieces/secure_mnemonic_service.dart';
 import '../../servieces/sharedpreferences_service.dart';
 import '../../utils/helper_util.dart';
+import '../../utils/secure_screen_mixin.dart';
 import '../../widgets/app_button.dart';
 import './widgets/backup_verification_dialog.dart';
 import './widgets/mnemonic_phrase_grid.dart';
@@ -27,7 +28,7 @@ class MnemonicPhraseDisplay extends StatefulWidget {
 }
 
 class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, SecureScreenMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -112,7 +113,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceElevated,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
@@ -124,16 +125,16 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             SizedBox(width: 3.w),
             Text(
               'Security Reminder',
-              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                color: AppTheme.accentTeal,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
         ),
         content: Text(
           'Make sure no one is looking at your screen. Your recovery phrase is now visible and should be kept completely private.',
-          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-            color: AppTheme.textPrimary,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
             height: 1.4,
           ),
         ),
@@ -276,7 +277,6 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppTheme.primaryLight,
         body: SafeArea(
           child: FadeTransition(
             opacity: _fadeAnimation,
@@ -331,10 +331,10 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowColor,
+            color: Theme.of(context).shadowColor.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -350,15 +350,15 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
                 children: [
                   Icon(
                     Icons.info,
-                    color: AppTheme.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 4.w,
                   ),
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
                       'Complete all checklist items to continue',
-                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textSecondary,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -371,7 +371,7 @@ class _MnemonicPhraseDisplayState extends State<MnemonicPhraseDisplay>
             onPressed: _startBackupVerification,
             trailingIcon: Icon(
               Icons.arrow_forward,
-              color: AppTheme.primaryLight,
+              color: Theme.of(context).colorScheme.onPrimary,
               size: 5.w,
             ),
           )

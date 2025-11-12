@@ -63,10 +63,10 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
       height: 7.h,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: Theme.of(context).scaffoldBackgroundColor,
         border: Border(
           bottom: BorderSide(
-            color: AppTheme.borderSubtle,
+            color: Theme.of(context).colorScheme.outline,
             width: 0.5,
           ),
         ),
@@ -75,67 +75,56 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
         children: [
           // URL Input Field
           Expanded(
-            child: Container(
-              height: 5.h,
-              decoration: BoxDecoration(
-                color: AppTheme.secondaryLight,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color:
-                      _isEditing ? AppTheme.accentTeal : AppTheme.borderSubtle,
-                  width: 1,
-                ),
+            child: TextField(
+              controller: _urlController,
+              onTap: () {
+                setState(() {
+                  _isEditing = true;
+                });
+              },
+              onSubmitted: (_) => _handleSubmit(),
+              onEditingComplete: _handleSubmit,
+              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                fontSize: 12.sp,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
-              child: TextField(
-                controller: _urlController,
-                onTap: () {
-                  setState(() {
-                    _isEditing = true;
-                  });
-                },
-                onSubmitted: (_) => _handleSubmit(),
-                onEditingComplete: _handleSubmit,
-                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+              decoration: InputDecoration(
+                hintText: 'Enter URL or search DApps...',
+                hintStyle: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 12.sp,
                 ),
-                decoration: InputDecoration(
-                  hintText: 'Enter URL or search DApps...',
-                  hintStyle: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.textSecondary,
-                    fontSize: 12.sp,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 3.w,
-                    vertical: 1.h,
-                  ),
-                  prefixIcon: Container(
-                    width: 6.w,
-                    height: 6.w,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.lock,
-                      size: 4.w,
-                      color: widget.currentUrl.startsWith('https://')
-                          ? AppTheme.successGreen
-                          : AppTheme.textSecondary,
-                    ),
-                  ),
-                  suffixIcon: _isEditing && _urlController.text.isNotEmpty
-                      ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _urlController.clear();
-                            });
-                          },
-                          child: Icon(
-                            Icons.close_rounded,
-                            size: 4.w,
-                            color: AppTheme.textSecondary,
-                          ),
-                        )
-                      : null,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 3.w,
+                  vertical: 1.h,
                 ),
+                prefixIcon: Container(
+                  width: 6.w,
+                  height: 6.w,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.lock,
+                    size: 4.w,
+                    color: widget.currentUrl.startsWith('https://')
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                suffixIcon: _isEditing && _urlController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _urlController.clear();
+                          });
+                        },
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 4.w,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      )
+                    : null,
               ),
             ),
           ),
@@ -180,10 +169,10 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
               width: 10.w,
               height: 5.h,
               decoration: BoxDecoration(
-                color: AppTheme.secondaryLight,
+                color: Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppTheme.borderSubtle,
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
               ),
@@ -195,15 +184,15 @@ class _BrowserAddressBarState extends State<BrowserAddressBar> {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            AppTheme.accentTeal,
+                            Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
                     )
                   : Icon(
-                      Icons.search, // ✅ changed icon
+                      Icons.search,
                       size: 5.w,
-                      color: AppTheme.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
             ),
           ),

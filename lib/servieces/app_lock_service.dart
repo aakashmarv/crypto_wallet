@@ -6,6 +6,7 @@ import '../routes/app_routes.dart';
 
 class AppLockService extends GetxService with WidgetsBindingObserver {
   bool _shouldLock = false;
+  // RxBool blurOverlay = false.obs;
 
   Future<AppLockService> init() async {
     WidgetsBinding.instance.addObserver(this);
@@ -16,11 +17,13 @@ class AppLockService extends GetxService with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     final prefs = await SharedPreferencesService.getInstance();
     if (state == AppLifecycleState.paused) {
+      // blurOverlay.value = true;
       _shouldLock = true; // App background me gaya
       await prefs.setBool(AppKeys.lockPending, true);
     }
 
     if (state == AppLifecycleState.resumed && _shouldLock) {
+      // blurOverlay.value = false;
       _shouldLock = false; // App wapas aaya
       final isBiometricEnabled = await prefs.getBool(AppKeys.isBiometricEnable) ?? false;
 

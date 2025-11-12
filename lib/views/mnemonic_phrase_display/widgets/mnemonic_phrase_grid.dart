@@ -107,7 +107,7 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceElevated,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
@@ -127,8 +127,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
         ),
         content: Text(
           'Your recovery phrase has been copied to clipboard. It will be automatically cleared in 60 seconds for security.',
-          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-            color: AppTheme.textPrimary,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith( // change
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         actions: [
@@ -161,10 +161,10 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               width: double.infinity,
               padding: EdgeInsets.all(6.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryLight,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppTheme.borderSubtle,
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
               ),
@@ -172,14 +172,14 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                 children: [
                   Icon(
                     Icons.visibility_off,
-                    color: AppTheme.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 12.w,
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     'Your recovery phrase is hidden for security',
-                    style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                      color: AppTheme.textPrimary,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -218,8 +218,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
               children: [
                 Text(
                   'Your Recovery Phrase',
-                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                    color: AppTheme.textPrimary,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -272,19 +272,18 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                   onTap: () => setState(() {
                     _selectedWordIndex = isSelected ? null : index;
                   }),
-                  // onLongPress: () => _showWordDefinition(index, word),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme.accentTeal.withValues(alpha: 0.1)
-                          : AppTheme.secondaryLight,
+                          ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                          : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected
-                            ? AppTheme.accentTeal
-                            : AppTheme.textSecondary,
-                        width: isSelected ? 1.5 : 0.5,
+                            ? Theme.of(context).colorScheme.primary
+                            : AppTheme.borderSubtleDark,
+                        width: isSelected ? 1.2 : 0.8,
                       ),
                     ),
                     child: Column(
@@ -292,9 +291,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                       children: [
                         Text(
                           '${index + 1}',
-                          style: AppTheme.lightTheme.textTheme.labelSmall
-                              ?.copyWith(
-                            color: AppTheme.textSecondary,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             fontSize: 8.sp,
                           ),
                         ),
@@ -305,8 +303,8 @@ class _MnemonicPhraseGridState extends State<MnemonicPhraseGrid> {
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w500,
                             color: isSelected
-                                ? AppTheme.accentTeal
-                                : AppTheme.textPrimary,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
                           ),
                           textAlign: TextAlign.center,
                         ),

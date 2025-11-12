@@ -45,18 +45,17 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
   Widget build(BuildContext context) {
     final AddressBookController ctrl = Get.put(AddressBookController());
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () => Get.back(),
         ),
         title: Text(
           "Address Book",
           style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-            color: AppTheme.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -70,7 +69,7 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
               child: Text(
                 'Save frequently used wallet addresses for quick access. Tap an item to copy, or use edit/delete.',
                 style: GoogleFonts.inter(
-                    fontSize: 10.sp, color: AppTheme.textSecondary),
+                    fontSize: 10.sp, color: Theme.of(context).colorScheme.onSurfaceVariant,),
               ),
             ),
 
@@ -108,28 +107,27 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (c) => AlertDialog(
-                            backgroundColor: AppTheme.primaryLight,
-                            title: const Text(
+                            backgroundColor: Theme.of(context).colorScheme.surface,
+                            title:  Text(
                               'Delete Address',
-                              style: TextStyle(color: AppTheme.textPrimary),
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                             ),
                             content: Text(
                               'Are you sure you want to delete "${entry.name}"?',
-                              style: TextStyle(color: AppTheme.textPrimary),
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                             ),
                             actions: [
                               TextButton(
                                   onPressed: () => Navigator.of(c).pop(false),
-                                  child: const Text(
+                                  child:  Text(
                                     'Cancel',
-                                    style: TextStyle(
-                                        color: AppTheme.textSecondary),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                   )),
                               TextButton(
                                   onPressed: () => Navigator.of(c).pop(true),
-                                  child: const Text(
+                                  child:  Text(
                                     'Delete',
-                                    style: TextStyle(color: AppTheme.errorRed),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.error),
                                   )),
                             ],
                           ),
@@ -158,7 +156,8 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
             child: _isExpanded
                 ? Text(
                     'Add Address',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimary),
                   )
                 : const SizedBox.shrink(),
           ),
@@ -186,17 +185,17 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bookmarks_outlined,
-                size: 12.w, color: AppTheme.textSecondary),
+                size: 12.w, color: Theme.of(context).colorScheme.onSurfaceVariant),
             SizedBox(height: 2.h),
             Text('No saved addresses',
                 style: GoogleFonts.inter(
-                    fontSize: 14.sp, color: AppTheme.textPrimary)),
+                    fontSize: 14.sp, color: Theme.of(context).colorScheme.onSurface, )),
             SizedBox(height: 1.h),
             Text(
               'Tap the button below to add a new wallet address to your address book.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
-                  fontSize: 10.sp, color: AppTheme.textSecondary),
+                  fontSize: 10.sp, color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
           ],
         ),
@@ -212,7 +211,7 @@ class _AddressBookScreenState extends State<AddressBookScreen> {
         margin: EdgeInsets.only(bottom: 2.h),
         height: 9.h,
         decoration: BoxDecoration(
-          color: AppTheme.borderSubtle.withOpacity(0.4),
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
           borderRadius: BorderRadius.circular(12),
         ),
       ),
@@ -238,9 +237,9 @@ class _AddressCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderSubtle, width: 1),
+        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -257,13 +256,13 @@ class _AddressCard extends StatelessWidget {
             width: 10.w,
             height: 10.w,
             decoration: BoxDecoration(
-              color: AppTheme.accentTeal.withOpacity(0.12),
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
               shape: BoxShape.circle,
             ),
             child: Center(
                 child: Text(
               entry.name.isNotEmpty ? entry.name[0].toUpperCase() : 'A',
-              style: TextStyle(color: AppTheme.textPrimary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             )),
           ),
           SizedBox(width: 3.w),
@@ -280,7 +279,7 @@ class _AddressCard extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -290,7 +289,7 @@ class _AddressCard extends StatelessWidget {
                       child: Icon(
                         Icons.edit,
                         size: 11.sp,
-                        color: AppTheme.accentTeal,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -305,7 +304,7 @@ class _AddressCard extends StatelessWidget {
                       HelperUtil.shortAddress(entry.address),
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 10.sp,
-                        color: AppTheme.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -315,7 +314,7 @@ class _AddressCard extends StatelessWidget {
                       child: Icon(
                         Icons.copy,
                         size: 12.sp,
-                        color: AppTheme.textSecondary.withOpacity(0.8),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8),
                       ),
                     ),
                   ],
@@ -392,9 +391,9 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
   Widget build(BuildContext context) {
     final isEdit = widget.entry != null;
     return AlertDialog(
-      backgroundColor: AppTheme.secondaryLight,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       title: Text(isEdit ? 'Edit Address' : 'Add Address',
-          style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+          style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface)),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -402,20 +401,20 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
             children: [
               TextFormField(
                 controller: _nameCtr,
-                style: TextStyle(color: AppTheme.textPrimary),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 decoration: InputDecoration(
                     labelText: 'Name',
-                    labelStyle: TextStyle(color: AppTheme.textSecondary)),
+                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? 'Enter a label' : null,
               ),
               SizedBox(height: 2.h),
               TextFormField(
                 controller: _addressCtr,
-                style: TextStyle(color: AppTheme.textPrimary),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 decoration: InputDecoration(
                     labelText: 'Address',
-                    labelStyle: TextStyle(color: AppTheme.textSecondary)),
+                    labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Enter address';
                   if (!_isValidAddress(v)) return 'Invalid address format';

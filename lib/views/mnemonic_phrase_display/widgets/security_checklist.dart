@@ -34,7 +34,7 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
         color: AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.borderSubtle,
+          color: Theme.of(context).colorScheme.outline,
           width: 1,
         ),
         gradient: LinearGradient(
@@ -59,8 +59,8 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
               SizedBox(width: 3.w),
               Text(
                 'Security Checklist',
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -143,10 +143,12 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
           child: Checkbox(
             value: isChecked,
             onChanged: onChanged,
-            activeColor: AppTheme.accentTeal,
-            checkColor: AppTheme.primaryLight,
+            activeColor: Theme.of(context).colorScheme.primary,
+            checkColor: Theme.of(context).colorScheme.onPrimary,
             side: BorderSide(
-              color: isChecked ? AppTheme.accentTeal : AppTheme.textSecondary,
+              color: isChecked
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.outline,
               width: 1,
             ),
             shape: RoundedRectangleBorder(
@@ -160,9 +162,10 @@ class _SecurityChecklistState extends State<SecurityChecklist> {
             padding: EdgeInsets.only(top: 1.h),
             child: Text(
               text,
-              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                color:
-                    isChecked ? AppTheme.textPrimary : AppTheme.textSecondary,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: isChecked
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.4,
               ),
             ),

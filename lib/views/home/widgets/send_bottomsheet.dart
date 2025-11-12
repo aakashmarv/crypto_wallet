@@ -191,12 +191,12 @@ class _SendBottomSheetState extends State<SendBottomSheet>
         expand: false,
         builder: (_, scrollController) => Container(
           decoration: BoxDecoration(
-            color: AppTheme.secondaryLight,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SafeArea(
             top: false,
-            bottom: false, // ⛔ prevent double bottom padding
+            bottom: false, // prevent double bottom padding
             child: Column(
               children: [
                 // 🔹 Handle bar
@@ -205,7 +205,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                   height: 0.8.h,
                   margin: EdgeInsets.only(top: 1.5.h, bottom: 2.h),
                   decoration: BoxDecoration(
-                    color: AppTheme.borderSubtle,
+                    color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
@@ -227,7 +227,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                             style: GoogleFonts.inter(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           SizedBox(height: 3.h),
@@ -235,7 +235,8 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                           // 🧾 Recipient field
                           TextFormField(
                             controller: _recipientController,
-                            style: TextStyle(color: AppTheme.textPrimary),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface,),
+                            cursorColor: Theme.of(context).colorScheme.primary,
                             decoration: _inputDecoration(
                               label: "Recipient Address",
                               suffix: Row(
@@ -244,7 +245,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                                   // 📋 Paste from clipboard
                                   IconButton(
                                     icon: Icon(Icons.paste,
-                                        color: AppTheme.textSecondary),
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                                     tooltip: "Paste from clipboard",
                                     onPressed: () async {
                                       final data = await Clipboard.getData(
@@ -258,7 +259,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                                   // 📖 Open Address Book
                                   IconButton(
                                     icon: Icon(Icons.contacts_rounded,
-                                        color: AppTheme.accentTeal),
+                                      color: Theme.of(context).colorScheme.primary,),
                                     tooltip: "Select from Address Book",
                                     onPressed: _openAddressBookPicker,
                                   ),
@@ -281,7 +282,8 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                             controller: _amountController,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
-                            style: TextStyle(color: AppTheme.textPrimary),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface,),
+                            cursorColor: Theme.of(context).colorScheme.primary,
                             decoration: _inputDecoration(label: "Amount"),
                             validator: (v) {
                               if (v == null || v.isEmpty) return "Enter amount";
@@ -303,10 +305,11 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                               padding: EdgeInsets.symmetric(
                                   horizontal: 3.w, vertical: 3.w),
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: AppTheme.borderSubtle),
+                                border: Border.all(color: Theme.of(context).colorScheme.outline,),
                                 borderRadius: BorderRadius.circular(14),
-                                color: AppTheme.secondaryLight.withOpacity(0.5),
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? AppTheme.borderSubtleDark
+                                    : AppTheme.borderSubtle,
                               ),
                               child: Row(
                                 children: [
@@ -324,7 +327,7 @@ class _SendBottomSheetState extends State<SendBottomSheet>
                                     turns: _showCoins.value ? 0.5 : 0,
                                     duration: const Duration(milliseconds: 300),
                                     child: Icon(Icons.keyboard_arrow_down,
-                                        color: AppTheme.accentTeal, size: 24),
+                                        color: Theme.of(context).colorScheme.primary,  size: 24),
                                   ),
                                 ],
                               ),
@@ -402,14 +405,14 @@ class _SendBottomSheetState extends State<SendBottomSheet>
   InputDecoration _inputDecoration({required String label, Widget? suffix}) {
     return InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: AppTheme.textSecondary),
+      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant,),
       suffixIcon: suffix,
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppTheme.borderSubtle),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline,),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppTheme.accentTeal),
+        borderSide: BorderSide( color: Theme.of(context).colorScheme.primary, ),
         borderRadius: BorderRadius.circular(12),
       ),
       errorBorder: OutlineInputBorder(

@@ -245,14 +245,16 @@ class _PasswordSetupState extends State<PasswordSetup>
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            backgroundColor: AppTheme.surfaceElevated,
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? AppTheme.surfaceElevatedDark
+                : AppTheme.surfaceElevated,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
               'Leave Password Setup?',
-              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                color: AppTheme.textPrimary,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             content: Text(
@@ -287,17 +289,16 @@ class _PasswordSetupState extends State<PasswordSetup>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: AppTheme.primaryLight,
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppTheme.primaryLight,
-                AppTheme.secondaryLight.withValues(alpha: 0.8),
-              ],
-            ),
+            // gradient: LinearGradient(
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            //   colors: [
+            //     AppTheme.primaryLight,
+            //     AppTheme.secondaryLight.withValues(alpha: 0.8),
+            //   ],
+            // ),
           ),
           child: SafeArea(
             child: Column(
@@ -361,6 +362,7 @@ class _PasswordSetupState extends State<PasswordSetup>
   }
 
   Widget _buildHeader() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       child: Row(
@@ -375,10 +377,12 @@ class _PasswordSetupState extends State<PasswordSetup>
             child: Container(
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryLight,
+                color: isDark
+                    ? AppTheme.surfaceElevatedDark //change
+                    : AppTheme.secondaryLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppTheme.borderSubtle,
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
               ),
@@ -386,7 +390,7 @@ class _PasswordSetupState extends State<PasswordSetup>
                 Platform.isIOS
                     ? Icons.arrow_back_ios_new_rounded
                     : Icons.arrow_back_rounded,
-                color: AppTheme.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 20,
               ),
             ),
@@ -395,8 +399,8 @@ class _PasswordSetupState extends State<PasswordSetup>
             child: Center(
               child: Text(
                 'Password Setup',
-                style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -468,8 +472,8 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Create a Strong Password',
-            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-              color: AppTheme.textPrimary,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -494,8 +498,8 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Password',
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -509,10 +513,13 @@ class _PasswordSetupState extends State<PasswordSetup>
                 onFieldSubmitted: (_) {
                   _confirmPasswordFocusNode.requestFocus();
                 },
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
                 decoration: InputDecoration(
                   hintText: 'Enter your password',
-                  hintStyle: TextStyle(
-                    color: AppTheme.hintTextColor,
+                  hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   errorText: _passwordError.value.isNotEmpty
                       ? _passwordError.value
@@ -521,13 +528,10 @@ class _PasswordSetupState extends State<PasswordSetup>
                     padding: EdgeInsets.all(3.w),
                     child: Icon(
                       Icons.lock_outline,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ),
-                ),
-                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textPrimary,
                 ),
               )),
         ],
@@ -543,8 +547,8 @@ class _PasswordSetupState extends State<PasswordSetup>
         children: [
           Text(
             'Confirm Password',
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -560,10 +564,13 @@ class _PasswordSetupState extends State<PasswordSetup>
                     _handleSetPassword();
                   }
                 },
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
                 decoration: InputDecoration(
                   hintText: 'Confirm your password',
-                  hintStyle: TextStyle(
-                    color: AppTheme.hintTextColor,
+                  hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   errorText: _confirmPasswordError.value.isNotEmpty
                       ? _confirmPasswordError.value
@@ -600,14 +607,12 @@ class _PasswordSetupState extends State<PasswordSetup>
                     padding: EdgeInsets.all(3.w),
                     child: Icon(
                       Icons.lock_outline,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ),
                 ),
-                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textPrimary,
-                ),
+
               )),
         ],
       ),

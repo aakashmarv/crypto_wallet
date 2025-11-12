@@ -83,10 +83,10 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
           width: double.infinity,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
-            color: AppTheme.accentTherd.withOpacity(0.4),
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme.borderSubtle,
+              color: Theme.of(context).colorScheme.outline,
               width: 1,
             ),
           ),
@@ -95,29 +95,29 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
             children: [
               Text(
                 'Wallet',
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               SizedBox(height: 2.h),
               TextFormField(
                 controller: _nameController,
-                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Please enter Wallet name',
-                  hintStyle: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                  hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
                   ),
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(3.w),
                     child: Icon(
                       Icons.account_balance_wallet,
                       color: _isValid.value
-                          ? AppTheme.accentTeal
-                          : AppTheme.textSecondary,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ),
@@ -140,21 +140,21 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: AppTheme.borderSubtle,
+                      color: Theme.of(context).colorScheme.outline,
                       width: 1,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: AppTheme.borderSubtle,
+                      color: Theme.of(context).colorScheme.outline,
                       width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: AppTheme.accentTeal,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 2,
                     ),
                   ),
@@ -173,7 +173,7 @@ class _WalletNameInputWidgetState extends State<WalletNameInputWidget> {
                     ),
                   ),
                   filled: true,
-                  fillColor: AppTheme.primaryLight,
+                  fillColor: Theme.of(context).colorScheme.surface,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 4.w,
                     vertical: 2.h,

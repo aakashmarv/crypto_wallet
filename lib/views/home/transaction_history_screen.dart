@@ -59,20 +59,19 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
         title: Text(
           "Transaction History",
           style: TextStyle(
-            color: AppTheme.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        iconTheme: IconThemeData(color: AppTheme.textPrimary),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface,),
       ),
       body: SafeArea(
         child: Obx(() {
@@ -103,7 +102,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         margin: EdgeInsets.only(bottom: 2.h),
         height: 10.h,
         decoration: BoxDecoration(
-          color: AppTheme.borderSubtle,
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
           borderRadius: BorderRadius.circular(16),
         ),
       ),
@@ -123,7 +122,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             Text(
               "No transactions yet",
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
@@ -132,7 +131,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             Text(
               "Your latest wallet activity will appear here",
               style: TextStyle(
-                color: AppTheme.textSecondary.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
                 fontSize: 10.sp,
               ),
             ),
@@ -170,9 +169,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             margin: EdgeInsets.only(bottom: 1.8.h),
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
-              color: AppTheme.secondaryLight.withOpacity(0.15),
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppTheme.borderSubtle, width: 1),
+              border: Border.all( color: Theme.of(context).colorScheme.outline, width: 1),
             ),
             child: Row(
               children: [
@@ -202,7 +201,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       SizedBox(height: 0.5.h),
@@ -210,7 +209,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         '${tx.hash?.substring(0, 10)}...${tx.hash?.substring(tx.hash!.length - 6)}',
                         style: TextStyle(
                           fontSize: 9.sp,
-                          color: AppTheme.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           letterSpacing: 0.3,
                         ),
                       ),

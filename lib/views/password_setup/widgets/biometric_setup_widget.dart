@@ -53,7 +53,7 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
         // Provide haptic feedback
         HapticFeedback.lightImpact();
 
-        final bool? enabled = await _showBiometricPrompt();
+        final bool? enabled = await _showBiometricDilogBox();
         if (enabled == true) {
           widget.onBiometricToggle(true);
         } else {
@@ -68,13 +68,16 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
     }
   }
 
-  Future<bool?> _showBiometricPrompt() async {
+  Future<bool?> _showBiometricDilogBox() async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return await showDialog<bool>(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              backgroundColor: AppTheme.surfaceElevated,
+              backgroundColor: isDark
+                  ? AppTheme.surfaceElevatedDark
+                  : AppTheme.surfaceElevated,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -91,8 +94,8 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
                   Expanded(
                     child: Text(
                       'Enable $_biometricType',
-                      style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                        color: AppTheme.textPrimary,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -153,14 +156,19 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: isDark
+            ? AppTheme.surfaceElevatedDark
+            : AppTheme.lightTheme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.borderSubtle,
+          color: isDark
+              ? AppTheme.borderSubtleDark
+              : AppTheme.borderSubtle,
           width: 1,
         ),
       ),
@@ -185,9 +193,8 @@ class _BiometricSetupWidgetState extends State<BiometricSetupWidget> {
                   children: [
                     Text(
                       'Enable $_biometricType',
-                      style:
-                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                        color: AppTheme.textPrimary,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

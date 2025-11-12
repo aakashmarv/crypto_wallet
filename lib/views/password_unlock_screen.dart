@@ -156,11 +156,8 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      backgroundColor: Color(0xFFF8F9FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -205,7 +202,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                               style: GoogleFonts.inter(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1a1a1a),
+                                color: Theme.of(context).colorScheme.onSurface,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -217,7 +214,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                             'Enter your password to continue',
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: AppTheme.textSecondary,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),
@@ -225,52 +222,39 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                         // Password Field
                         FadeTransition(
                           opacity: _fadeAnimation,
-                          child: Container(
-                            height: 6.h,
-                            decoration: BoxDecoration(
-                              color: AppTheme.surfaceElevated,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: _error.isEmpty
-                                    ? AppTheme.borderSubtle
-                                    : AppTheme.errorRed,
-                                width: 1,
-                              ),
+                          child: TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 14.sp,
+                              letterSpacing: 2,
                             ),
-                            child: TextField(
-                              controller: _passwordController,
-                              obscureText: true,
-                              style: TextStyle(
-                                color: AppTheme.textPrimary,
-                                fontSize: 14.sp,
-                                letterSpacing: 2,
+                            decoration: InputDecoration(
+                              hintText: 'Enter password',
+                              hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                                letterSpacing: 0.5,
                               ),
-                              decoration: InputDecoration(
-                                hintText: 'Enter password',
-                                hintStyle: TextStyle(
-                                  color: AppTheme.hintTextColor,
-                                  letterSpacing: 0.5,
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.lock_outline_rounded,
-                                  color: AppTheme.textSecondary,
+                              prefixIcon: Icon(
+                                Icons.lock_outline_rounded,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: 6.w,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 13),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.fingerprint,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 6.w,
                                 ),
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(top: 12),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.fingerprint,
-                                    color: AppTheme.textPrimary,
-                                    size: 6.w,
-                                  ),
-                                  onPressed: _authenticateWithFingerprint,
-                                ),
+                                onPressed: _authenticateWithFingerprint,
                               ),
-                              onSubmitted: (_) {
-                                if (_isButtonEnabled) _unlock();
-                              },
                             ),
+                            onSubmitted: (_) {
+                              if (_isButtonEnabled) _unlock();
+                            },
                           ),
                         ),
                         if (_error.isNotEmpty)
@@ -287,26 +271,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                               ),
                             ),
                           ),
-                        SizedBox(height: 1.h),
-                        // Forgot Password
-                        // Align(
-                        //   alignment: Alignment.centerRight,
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       // Navigate to Forgot Password Screen
-                        //       // Get.toNamed(AppRoutes.forgotPassword);
-                        //     },
-                        //     child: Text(
-                        //       'Forgot Password?',
-                        //       style: TextStyle(
-                        //         fontSize: 12.sp,
-                        //         color: AppTheme.accentTeal,
-                        //         fontWeight: FontWeight.w500,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 10.h),
                         // Unlock Button
                         FadeTransition(
                           opacity: _fadeAnimation,
@@ -318,8 +283,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                               boxShadow: _isButtonEnabled
                                   ? [
                                       BoxShadow(
-                                        color: AppTheme.accentTeal
-                                            .withOpacity(0.3),
+                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                                         blurRadius: 12,
                                         offset: Offset(0, 6),
                                       ),
@@ -330,9 +294,9 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                               onPressed: _isButtonEnabled ? _unlock : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: _isButtonEnabled
-                                    ? AppTheme.accentTeal
-                                    : AppTheme.borderSubtle,
-                                disabledBackgroundColor: AppTheme.borderSubtle,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.outline,
+                                disabledBackgroundColor: Theme.of(context).colorScheme.outline,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -346,7 +310,7 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                                         strokeWidth: 2.5,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
+                                              Theme.of(context).colorScheme.onPrimary,),
                                       ),
                                     )
                                   : Text(
@@ -355,8 +319,8 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         color: _isButtonEnabled
-                                            ? Colors.white
-                                            : AppTheme.textSecondary,
+                                            ? Theme.of(context).colorScheme.onPrimary
+                                            : Theme.of(context).colorScheme.onSurfaceVariant,
                                         letterSpacing: 0.5,
                                       ),
                                     ),

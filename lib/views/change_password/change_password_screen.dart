@@ -176,18 +176,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () => Get.back(),
         ),
         title: Text(
           "Change Password",
           style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-            color: AppTheme.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -208,7 +207,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     'Create a strong password to keep your wallet secure',
                     style: GoogleFonts.inter(
                       fontSize: 11.sp,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   SizedBox(height: 4.h),
@@ -270,7 +269,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                   Container(
                     padding: EdgeInsets.all(3.w),
                     decoration: BoxDecoration(
-                      color: AppTheme.secondaryLight.withOpacity(0.3),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -281,7 +280,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                           style: GoogleFonts.inter(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         SizedBox(height: 1.h),
@@ -324,7 +323,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
           style: GoogleFonts.inter(
             fontSize: 13.sp,
             fontWeight: FontWeight.w500,
-            color: AppTheme.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         SizedBox(height: 1.h),
@@ -333,19 +332,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
           obscureText: obscureText,
           style: GoogleFonts.inter(
             fontSize: 12.sp,
-            color: AppTheme.textPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           decoration: InputDecoration(
             filled: true,
             // fillColor: AppTheme.secondaryLight.withOpacity(0.3),
             hintText: '••••••••',
             hintStyle:
-                TextStyle(color: AppTheme.textSecondary.withOpacity(0.5)),
+                TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5)),
             suffixIcon: showVisibilityToggle
                 ? IconButton(
                     icon: Icon(
                       obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 5.w,
                     ),
                     onPressed: () {
@@ -361,14 +360,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppTheme.borderSubtle.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppTheme.accentTeal,
+                color: Theme.of(context).colorScheme.primary,
                 width: 1.5,
               ),
             ),
@@ -387,7 +386,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
               ),
             ),
             contentPadding:
-                EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.6.h),
           ),
           validator: validator,
         ),
@@ -403,14 +402,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
           Icon(
             Icons.check_circle,
             size: 4.w,
-            color: AppTheme.textSecondary.withOpacity(0.6),
+            color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
           ),
           SizedBox(width: 2.w),
           Text(
             text,
             style: GoogleFonts.inter(
               fontSize: 9.sp,
-              color: AppTheme.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

@@ -103,25 +103,29 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final Color bgColor = Theme.of(context).brightness == Brightness.dark
+        ? AppTheme.surfaceElevatedDark
+        : AppTheme.accentTherd;
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 1.5.h),
         decoration: BoxDecoration(
-          color: AppTheme.accentTherd,
+          color: bgColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppTheme.textPrimary, size: 5.w),
+            Icon(icon, color: cs.onSurface, size: 5.w),
             SizedBox(height: 1.h),
             Text(
               label,
               style: TextStyle(
                 fontSize: 9.5.sp,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: cs.onSurface,
               ),
             ),
           ],

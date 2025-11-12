@@ -38,11 +38,14 @@ class MyApp extends StatelessWidget {
 
             // CRITICAL: NEVER REMOVE OR MODIFY
             builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: const TextScaler.linear(1.0),
+              return Scaffold(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                body: MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: const TextScaler.linear(1.0),
+                  ),
+                  child: child!,
                 ),
-                child: child!,
               );
             },
 
@@ -54,31 +57,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Sizer(builder: (context, orientation, screenType) {
-//       return GetMaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         title: 'Ruby wallet & dapp browser',
-//         theme: AppTheme.lightTheme,
-//         darkTheme: AppTheme.lightTheme,
-//         themeMode: ThemeMode.system,
-//         // CRITICAL: NEVER REMOVE OR MODIFY
-//         builder: (context, child) {
-//           return MediaQuery(
-//             data: MediaQuery.of(context).copyWith(
-//               textScaler: const TextScaler.linear(1.0),
-//             ),
-//             child: child!,
-//           );
-//         },
-//         initialRoute: AppRoutes.initial,
-//         getPages: AppRoutes.getRoutes(),
-//       );
-//     });
-//   }
-// }

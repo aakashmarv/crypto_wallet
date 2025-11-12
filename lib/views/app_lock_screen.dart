@@ -32,7 +32,7 @@ class _AppLockScreenState extends State<AppLockScreen> {
 
     if (biometricEnabled) {
       try {
-        bool authenticated = await auth.authenticate(   // ✅ updated
+        bool authenticated = await auth.authenticate(
           localizedReason: 'Please authenticate to access the app',
           options: const AuthenticationOptions(
             biometricOnly: true,

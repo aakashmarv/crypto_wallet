@@ -73,10 +73,10 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
         await _saveNetwork(val == "Ruby" ? "ruby" : "testnet");
       },
       offset: const Offset(0, 40),
-      color: AppTheme.secondaryLight,
+      color: Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppTheme.borderSubtle, width: 1.2),
+        side: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1.2),
       ),
       itemBuilder: (context) => [
         PopupMenuItem(
@@ -84,10 +84,10 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
           child: Row(
             children: [
               Icon(_selected == "Ruby" ? Icons.circle : Icons.circle_outlined,
-                  size: 14, color: AppTheme.successGreen),
+                  size: 14, color: Theme.of(context).colorScheme.primary,),
               SizedBox(width: 2.w),
               Text("Ruby",
-                  style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+                  style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface,)),
             ],
           ),
         ),
@@ -100,10 +100,10 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
                       ? Icons.circle
                       : Icons.circle_outlined,
                   size: 14,
-                  color: AppTheme.successGreen),
+                color: Theme.of(context).colorScheme.primary,),
               SizedBox(width: 2.w),
               Text("Ruby Testnet",
-                  style: GoogleFonts.inter(color: AppTheme.textPrimary)),
+                  style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface)),
             ],
           ),
         ),
@@ -112,25 +112,25 @@ class _NetworkDropdownWidgetState extends State<NetworkDropdownWidget> {
         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: AppTheme.accentTeal, width: 1.2),
+          border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.2),
         ),
         child: Row(
           children: [
-            Icon(Icons.shield_rounded, size: 16, color: AppTheme.accentTeal),
+            Icon(Icons.shield_rounded, size: 16, color: Theme.of(context).colorScheme.primary,),
             SizedBox(width: 1.w),
             Text(
               _selected,
               style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.accentTeal),
+                  color: Theme.of(context).colorScheme.primary),
             ),
             SizedBox(width: 1.w),
             AnimatedRotation(
               turns: _isMenuOpen ? 0.5 : 0,
               duration: const Duration(milliseconds: 200),
               child: Icon(Icons.keyboard_arrow_down,
-                  color: AppTheme.accentTeal, size: 5.w),
+                  color: Theme.of(context).colorScheme.primary,size: 5.w),
             ),
           ],
         ),

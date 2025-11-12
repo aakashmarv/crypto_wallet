@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -13,7 +14,6 @@ import '../../servieces/sharedpreferences_service.dart';
 import '../../servieces/theme_service.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/logger.dart';
-import '../password_setup/widgets/biometric_setup_widget.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -104,20 +104,20 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: Text(
           "Settings",
           style: GoogleFonts.inter(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: cs.onSurface,
           ),
         ),
-        iconTheme: IconThemeData(color: AppTheme.textPrimary),
+        iconTheme: IconThemeData(color: cs.onSurface),
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -133,14 +133,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                   title: "Security Keys",
                   onTap: () => Get.toNamed(AppRoutes.viewKeysScreen),
                 ),
-                _buildDivider(),
+                _buildDivider(context),
                 _buildNavigationTile(
                   context,
                   icon: LucideIcons.notebook,
                   title: "Address Book",
                   onTap: () => Get.toNamed(AppRoutes.addressBook),
                 ),
-                _buildDivider(),
+                _buildDivider(context),
                 // _buildNavigationTile(
                 //   context,
                 //   icon: Icons.link,
@@ -154,20 +154,18 @@ class _SettingsScreenState extends State<SettingsScreen>
                   title: "Change Password",
                   onTap: () => Get.toNamed(AppRoutes.changePassword),
                 ),
-                _buildDivider(),
+                _buildDivider(context),
                 _buildSwitchTile(
                   context,
                   icon: Icons.dark_mode,
-                  title: _isDarkMode ? "Dark Mode" : "Light Mode",
+                  title: _isDarkMode ? "Dark Mode" : "System Mode",
                   value: _isDarkMode,
                   onChanged: (val) async {
                     setState(() => _isDarkMode = val);
-                    await Get.find<ThemeService>()
-                        .toggleTheme(val); // ✅ global theme change
+                    await Get.find<ThemeService>().toggleTheme(val);
                   },
                 ),
-
-                _buildDivider(),
+                _buildDivider(context),
                 _buildSwitchTile(
                   context,
                   icon: LucideIcons.fingerprint,
@@ -181,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                       : null, // allowed now because parameter is nullable
                 ),
 
-                _buildDivider(),
+                _buildDivider(context),
                 _buildNavigationTile(
                   context,
                   icon: LucideIcons.messageCircleQuestionMark,
@@ -190,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     _launchURL("https://rubynodeui.ctskola.io/help-support");
                   },
                 ),
-                _buildDivider(),
+                _buildDivider(context),
                 _buildNavigationTile(
                   context,
                   icon: LucideIcons.shieldAlert,
@@ -199,7 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     _launchURL("https://rubynodeui.ctskola.io/privacy-policy");
                   },
                 ),
-                _buildDivider(),
+                _buildDivider(context),
                 _buildNavigationTile(
                   context,
                   icon: LucideIcons.logOut,
@@ -217,12 +215,13 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Future<bool?> _showBiometricPrompt() async {
+    final cs = Theme.of(context).colorScheme;
     return await showDialog<bool>(
           context: context,
           barrierDismissible: false,
           builder: (context) {
             return AlertDialog(
-              backgroundColor: AppTheme.surfaceElevated,
+              backgroundColor: cs.surface,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
               title: Row(
@@ -231,13 +230,13 @@ class _SettingsScreenState extends State<SettingsScreen>
                     Theme.of(context).platform == TargetPlatform.iOS
                         ? Icons.face
                         : Icons.fingerprint,
-                    color: AppTheme.accentTeal,
+                    color: cs.primary,
                   ),
                   SizedBox(width: 12),
                   Text(
                     "Enable $_biometricType",
                     style: AppTheme.lightTheme.textTheme.titleLarge
-                        ?.copyWith(color: AppTheme.textPrimary),
+                        ?.copyWith(color: cs.onSurface,),
                   ),
                 ],
               ),
@@ -258,8 +257,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                     await Future.delayed(const Duration(milliseconds: 1000));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.accentTeal,
-                    foregroundColor: AppTheme.primaryLight,
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
                   ),
                   child: const Text("Enable"),
                 ),
@@ -284,11 +283,10 @@ class _SettingsScreenState extends State<SettingsScreen>
         }
       } catch (e) {
         setState(() => _isBiometricEnabled = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to setup $_biometricType. Please try again."),
-            backgroundColor: AppTheme.errorRed,
-          ),
+        Fluttertoast.showToast(
+          msg: "Failed to setup $_biometricType. Please try again.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
         );
       }
     } else {
@@ -299,41 +297,42 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   // 🔘 Light Divider
-  Widget _buildDivider() {
+  Widget _buildDivider(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 13.w),
       child: Divider(
-        color: AppTheme.borderSubtle.withOpacity(0.5),
+        color: Theme.of(context).colorScheme.outline.withOpacity(0.4), // CHANGED
         height: 1,
-        thickness: 0.5,
+        thickness: 0.6,
       ),
     );
   }
 
   // 🔘 Logout Confirmation + Clear All Data
   Future<void> _handleLogout() async {
+    final cs = Theme.of(context).colorScheme;
     // 🔹 Step 1: Ask for confirmation
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: cs.surface,
         title: Text(
           'Confirm Logout',
-          style: TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: cs.onSurface,),
         ),
         content: Text(
           'Are you sure you want to log out?\n\nThis will permanently delete all wallet data, passwords, and cached info from this device.',
-          style: TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: cs.onSurfaceVariant,),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child:
-                Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
+                Text('Cancel', style: TextStyle(color: cs.onSurfaceVariant),),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Logout', style: TextStyle(color: Colors.redAccent)),
+            child: Text('Logout', style: TextStyle(color: Colors.redAccent,)),
           ),
         ],
       ),
@@ -384,6 +383,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     required bool value,
     required ValueChanged<bool>? onChanged, // <-- change here
   }) {
+    final cs = Theme.of(context).colorScheme;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2.h),
@@ -392,10 +392,10 @@ class _SettingsScreenState extends State<SettingsScreen>
           Container(
             padding: EdgeInsets.all(2.w),
             decoration: BoxDecoration(
-              color: AppTheme.textPrimary.withOpacity(0.05),
+              color: cs.onSurfaceVariant.withOpacity(0.25),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: AppTheme.black, size: 5.5.w),
+            child: Icon(icon, color: cs.onSurface, size: 5.5.w),
           ),
           SizedBox(width: 3.5.w),
           Expanded(
@@ -404,7 +404,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               style: GoogleFonts.inter(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
-                color: AppTheme.textPrimary,
+                color: cs.onSurface,
               ),
             ),
           ),
@@ -412,9 +412,9 @@ class _SettingsScreenState extends State<SettingsScreen>
             value: value,
             onChanged:
                 onChanged, // <-- pass through; Switch expects void Function(bool)?
-            activeColor: AppTheme.accentTeal,
-            inactiveThumbColor: AppTheme.textSecondary,
-            inactiveTrackColor: AppTheme.borderSubtle,
+            activeColor: cs.primary,
+            inactiveThumbColor: cs.onSurfaceVariant,
+            inactiveTrackColor: cs.outline,
           ),
         ],
       ),
@@ -427,6 +427,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       required String title,
       required VoidCallback onTap,
       bool isDestructive = false}) {
+    final cs = Theme.of(context).colorScheme;
     return InkWell(
       onTap: () {
         HapticFeedback.lightImpact();
@@ -446,12 +447,11 @@ class _SettingsScreenState extends State<SettingsScreen>
               decoration: BoxDecoration(
                 color: isDestructive
                     ? Colors.redAccent.withOpacity(0.15)
-                    : AppTheme.textPrimary.withOpacity(0.05),
+                    : cs.surfaceVariant.withOpacity(0.25),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon,
-                  color:
-                      isDestructive ? Colors.redAccent : AppTheme.textPrimary,
+                  color: isDestructive ? Colors.redAccent : cs.onSurface,
                   size: 5.5.w),
             ),
             SizedBox(width: 3.5.w),
@@ -461,13 +461,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                 style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color:
-                      isDestructive ? Colors.redAccent : AppTheme.textPrimary,
+                  color: isDestructive ? Colors.redAccent : cs.onSurface,
                 ),
               ),
             ),
             Icon(Icons.chevron_right,
-                color: AppTheme.textSecondary.withOpacity(0.5), size: 5.5.w),
+                color: cs.onSurfaceVariant.withOpacity(0.5), size: 5.5.w),
           ],
         ),
       ),

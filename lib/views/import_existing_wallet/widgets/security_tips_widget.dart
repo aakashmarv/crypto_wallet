@@ -81,7 +81,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
         color: AppTheme.secondaryLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme.borderSubtle,
+          color: Theme.of(context).colorScheme.outline,
           width: 1,
         ),
         gradient: LinearGradient(
@@ -120,17 +120,15 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                       children: [
                         Text(
                           'Security Tips',
-                          style: AppTheme.lightTheme.textTheme.titleMedium
-                              ?.copyWith(
-                            color: AppTheme.textPrimary,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
                           'Important security information',
-                          style:
-                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -141,7 +139,7 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
                     duration: const Duration(milliseconds: 300),
                     child: Icon(
                       Icons.keyboard_arrow_down,
-                      color: AppTheme.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 24,
                     ),
                   ),
@@ -208,8 +206,8 @@ class _SecurityTipsWidgetState extends State<SecurityTipsWidget>
               children: [
                 Text(
                   title,
-                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.textPrimary,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

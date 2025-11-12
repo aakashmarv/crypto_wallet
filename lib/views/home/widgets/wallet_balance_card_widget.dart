@@ -43,6 +43,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Obx(() {
       final isLoading = homeController.isLoadingBalance.value;
       final balanceStr = homeController.walletBalance.value;
@@ -64,7 +65,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
               colors: [
-                AppTheme.accentTeal,
+                cs.primary,
                 const Color(0xFF6375FF),
                 const Color(0xFF9BA7FF),
               ],

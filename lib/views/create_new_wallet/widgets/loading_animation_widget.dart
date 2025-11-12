@@ -107,11 +107,14 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
+        color: isDark
+            ? AppTheme.surfaceElevatedDark
+            : AppTheme.surfaceElevated,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: AppTheme.accentTeal.withValues(alpha: 0.3),
@@ -212,8 +215,8 @@ class _LoadingAnimationWidgetState extends State<LoadingAnimationWidget>
           Text(
             widget.message,
             textAlign: TextAlign.center,
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),

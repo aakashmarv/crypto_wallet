@@ -116,7 +116,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
             maxHeight: 70.h,
           ),
           decoration: BoxDecoration(
-            color: AppTheme.surfaceElevated,
+            color: Theme.of(context).colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(20),
             boxShadow: AppTheme.floatingShadow,
           ),
@@ -184,8 +184,8 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
             children: [
               Text(
                 'Verify Backup',
-                style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                  color: AppTheme.textPrimary,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -193,7 +193,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(
                   Icons.close,
-                  color: AppTheme.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: 6.w,
                 ),
               ),
@@ -210,8 +210,8 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                   height: 0.5.h,
                   decoration: BoxDecoration(
                     color: index <= _currentStep
-                        ? AppTheme.accentTeal
-                        : AppTheme.borderSubtle,
+                        ? Theme.of(context).colorScheme.primary // change
+                        : Theme.of(context).colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -258,8 +258,8 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
           // Question
           Text(
             'Select word #${currentWordIndex + 1}',
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
@@ -284,11 +284,13 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                 onPressed: () => _submitAnswer(word),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 4),
-                  backgroundColor: AppTheme.secondaryLight,
-                  foregroundColor: AppTheme.textPrimary,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow, // change
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
                   elevation: 0,
                   side: BorderSide(
-                    color: AppTheme.borderSubtle,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Theme.of(context).colorScheme.outline.withOpacity(0.8) // change
+                        : Theme.of(context).colorScheme.outlineVariant,
                     width: 1,
                   ),
                   shape: RoundedRectangleBorder(
@@ -300,6 +302,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
                   style: AppTheme.monoTextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               );
@@ -311,7 +314,7 @@ class _BackupVerificationDialogState extends State<BackupVerificationDialog>
           Text(
             'Step ${_currentStep + 1} of 3',
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

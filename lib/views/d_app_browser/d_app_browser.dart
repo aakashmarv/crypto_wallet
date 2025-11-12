@@ -263,7 +263,6 @@ class _DAppBrowserState extends State<DAppBrowser>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -290,9 +289,11 @@ class _DAppBrowserState extends State<DAppBrowser>
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.surface
+                      : AppTheme.primaryLight,
                   border: Border.all(
-                    color: AppTheme.borderSubtle,
+                    color: Theme.of(context).colorScheme.outline,
                     width: 0.5,
                   ),
                 ),

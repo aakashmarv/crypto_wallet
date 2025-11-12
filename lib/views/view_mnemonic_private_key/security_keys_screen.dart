@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:cryptovault_pro/utils/helper_util.dart';
 import 'package:cryptovault_pro/utils/logger.dart';
+import 'package:cryptovault_pro/utils/secure_screen_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -22,7 +24,7 @@ class SecurityKeysScreen extends StatefulWidget {
   State<SecurityKeysScreen> createState() => _SecurityKeysScreenState();
 }
 
-class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
+class _SecurityKeysScreenState extends State<SecurityKeysScreen> with SecureScreenMixin {
   bool _mnemonicUnlocked = false;
   bool _privateKeyUnlocked = false;
 
@@ -125,109 +127,111 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
           ),
           padding: EdgeInsets.fromLTRB(
               6.w, 3.h, 6.w, MediaQuery.of(context).viewInsets.bottom + 2.h),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return IntrinsicHeight(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: AppTheme.borderSubtle,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Text(
-                      "Enter Password",
-                      style: GoogleFonts.inter(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    TextField(
-                      controller: controller,
-                      obscureText: obscureText,
-                      autofocus: true,
-                      style: TextStyle(color: AppTheme.textPrimary),
-                      decoration: InputDecoration(
-                        hintText: "Wallet Password",
-                        hintStyle: TextStyle(color: AppTheme.textSecondary),
-                        filled: true,
-                        fillColor: AppTheme.primaryLight,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            obscureText
-                                ? Icons.visibility_off_rounded
-                                : Icons.visibility_rounded,
-                            color: AppTheme.textSecondary,
-                          ),
-                          onPressed: () =>
-                              setState(() => obscureText = !obscureText),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: AppTheme.borderSubtle),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              BorderSide(color: AppTheme.accentTeal, width: 2),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: isLoading ? null : () => Get.back(),
-                          child: Text(
-                            "Cancel",
-                            style: TextStyle(
-                                color: AppTheme.textSecondary, fontSize: 11.sp),
+          child: SingleChildScrollView(
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppTheme.borderSubtle,
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        SizedBox(width: 2.w),
-                        TextButton(
-                          onPressed: isLoading
-                              ? null
-                              : () async {
-                                  setState(() => isLoading = true);
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 300));
-                                  Get.back(result: controller.text.trim());
-                                },
-                          child: isLoading
-                              ? SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppTheme.accentTeal),
+                      ),
+                      SizedBox(height: 3.h),
+                      Text(
+                        "Enter Password",
+                        style: GoogleFonts.inter(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      TextField(
+                        controller: controller,
+                        obscureText: obscureText,
+                        autofocus: true,
+                        style: TextStyle(color: AppTheme.textPrimary),
+                        decoration: InputDecoration(
+                          hintText: "Wallet Password",
+                          hintStyle: TextStyle(color: AppTheme.textSecondary),
+                          filled: true,
+                          fillColor: AppTheme.primaryLight,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscureText
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              color: AppTheme.textSecondary,
+                            ),
+                            onPressed: () =>
+                                setState(() => obscureText = !obscureText),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: AppTheme.borderSubtle),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: AppTheme.accentTeal, width: 2),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: isLoading ? null : () => Get.back(),
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                  color: AppTheme.textSecondary, fontSize: 11.sp),
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextButton(
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    setState(() => isLoading = true);
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 300));
+                                    Get.back(result: controller.text.trim());
+                                  },
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 18,
+                                    width: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppTheme.accentTeal),
+                                    ),
+                                  )
+                                : Text(
+                                    "Verify Password",
+                                    style: TextStyle(
+                                        color: AppTheme.accentTeal,
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                )
-                              : Text(
-                                  "Verify Password",
-                                  style: TextStyle(
-                                      color: AppTheme.accentTeal,
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -345,9 +349,9 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
       margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.borderSubtle),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -367,13 +371,14 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                   style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary)),
+                      color: Theme.of(context).colorScheme.onSurface
+                  )),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.6.h),
                 decoration: BoxDecoration(
                   color: unlocked
-                      ? AppTheme.accentTeal.withOpacity(0.2)
-                      : AppTheme.borderSubtle,
+                      ? Theme.of(context).colorScheme.primary.withOpacity(0.15) // change
+                      : Theme.of(context).colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -381,8 +386,9 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                   style: GoogleFonts.inter(
                     fontSize: 9.sp,
                     fontWeight: FontWeight.w500,
-                    color:
-                        unlocked ? AppTheme.accentTeal : AppTheme.textSecondary,
+                    color: unlocked
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -393,9 +399,9 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
           // VALUE AREA (with correct blur)
           Container(
             decoration: BoxDecoration(
-              color: AppTheme.primaryLight,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.borderSubtle),
+              border: Border.all(color: Theme.of(context).colorScheme.outline,),
             ),
             padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
             child: Stack(
@@ -408,7 +414,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                         value,
                         style: GoogleFonts.jetBrainsMono(
                           fontSize: 10.sp,
-                          color: AppTheme.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                           height: 1.5,
                         ),
                       ),
@@ -421,10 +427,10 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                           child: Opacity(
                             opacity: 0.6,
                             child: Text(
-                              "•••• •••• •••• •••• •••• ••••", // dummy placeholder
+                              "•••• •••• •••• •••• •••• ••••",
                               style: GoogleFonts.jetBrainsMono(
                                 fontSize: 10.sp,
-                                color: AppTheme.textSecondary,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 letterSpacing: 2,
                                 height: 1.5,
                               ),
@@ -481,10 +487,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
                 onTap: unlocked
                     ? () {
                         Clipboard.setData(ClipboardData(text: value));
-                        Get.snackbar("Copied!", "$label copied to clipboard.",
-                            backgroundColor: AppTheme.accentTeal,
-                            colorText: Colors.white,
-                            snackPosition: SnackPosition.BOTTOM);
+                        HelperUtil.toast("copied to clipboard.");
                       }
                     : null,
                 child: Row(
@@ -521,6 +524,7 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
     super.dispose();
   }
 
+
   bool _isPrivateKey(String value) {
     final hexPattern = RegExp(r'^(0x)?[0-9a-fA-F]{64}$');
     return hexPattern.hasMatch(value.trim());
@@ -529,17 +533,17 @@ class _SecurityKeysScreenState extends State<SecurityKeysScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryLight,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: AppTheme.textPrimary),
+          icon: Icon(Icons.arrow_back_rounded, color: Theme.of(context).colorScheme.onSurface,),
           onPressed: () => Get.back(),
         ),
         title: Text("Security Keys",
             style: GoogleFonts.inter(
-                color: AppTheme.textPrimary, fontWeight: FontWeight.w600)),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600)),
       ),
       body: SingleChildScrollView(
         child: Column(children: [

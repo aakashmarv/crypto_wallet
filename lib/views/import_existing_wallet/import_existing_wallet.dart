@@ -130,7 +130,6 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -186,16 +185,18 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
               child: Container(
                 padding: EdgeInsets.all(2.w),
                 decoration: BoxDecoration(
-                  color: AppTheme.secondaryLight,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppTheme.surfaceElevatedDark
+                      : AppTheme.secondaryLight,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppTheme.borderSubtle,
+                    color: Theme.of(context).colorScheme.outline,
                     width: 1,
                   ),
                 ),
                 child: Icon(
                   Icons.arrow_back,
-                  color: AppTheme.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   size: 24,
                 ),
               )),
@@ -203,8 +204,8 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
           Expanded(
             child: Text(
               'Import Wallet',
-              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                color: AppTheme.textPrimary,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -245,12 +246,15 @@ class _ImportExistingWalletState extends State<ImportExistingWallet> {
 
   Widget _buildImportButton() {
     final bool isActive = _isMnemonicValid && !_isImporting;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: isActive ? _onImportStart : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.accentTeal,
+          backgroundColor: isActive
+              ? AppTheme.accentTeal
+              : Theme.of(context).colorScheme.onSurfaceVariant,
           foregroundColor: AppTheme.primaryLight,
           disabledBackgroundColor: AppTheme.borderSubtle,
           disabledForegroundColor: AppTheme.primaryLight,

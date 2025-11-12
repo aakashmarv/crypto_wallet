@@ -58,6 +58,7 @@ class HelperUtil {
       Fluttertoast.showToast(msg: 'Copied to clipboard');
     }
   }
+
   static void toast(String message) {
     Fluttertoast.showToast(
       msg: message,

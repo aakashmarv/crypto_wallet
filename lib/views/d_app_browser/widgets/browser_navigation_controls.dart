@@ -32,10 +32,10 @@ class BrowserNavigationControls extends StatelessWidget {
       height: 6.h,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: AppTheme.borderSubtle,
+            color: Theme.of(context).colorScheme.outline,
             width: 0.5,
           ),
         ),
@@ -45,24 +45,28 @@ class BrowserNavigationControls extends StatelessWidget {
         children: [
           // Back Button
           _buildNavigationButton(
+            context,
             iconData: LucideIcons.chevronLeft,
             onTap: canGoBack ? onBack : null,
             isEnabled: canGoBack,
           ),
           // Forward Button
           _buildNavigationButton(
+            context,
             iconData: LucideIcons.chevronRight,
             onTap: canGoForward ? onForward : null,
             isEnabled: canGoForward,
           ),
           // Home Button
           _buildNavigationButton(
+            context,
             iconData: LucideIcons.house,
             onTap: onHome,
             isEnabled: true,
           ),
           // Bookmark Button
           _buildNavigationButton(
+            context,
             iconData: isBookmarked ? Icons.bookmark : Icons.bookmark_border,
             onTap: onBookmark,
             isEnabled: true,
@@ -110,12 +114,15 @@ class BrowserNavigationControls extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationButton({
+  Widget _buildNavigationButton(
+      BuildContext context,
+      {
     required IconData iconData,
     required VoidCallback? onTap,
     required bool isEnabled,
     Color? color,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -123,8 +130,12 @@ class BrowserNavigationControls extends StatelessWidget {
         height: 4.h,
         decoration: BoxDecoration(
           color: isEnabled
-              ? AppTheme.secondaryLight
-              : AppTheme.secondaryLight.withValues(alpha: 0.5),
+              ? (isDark
+              ? Theme.of(context).colorScheme.surfaceContainerHighest
+              : AppTheme.secondaryLight)
+              : (isDark
+              ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+              : AppTheme.secondaryLight.withOpacity(0.5)),
           borderRadius: BorderRadius.circular(8),
           // border: Border.all(
           //   color: AppTheme.borderSubtle,
@@ -136,8 +147,12 @@ class BrowserNavigationControls extends StatelessWidget {
           size: 5.w,
           color: color ??
               (isEnabled
-                  ? AppTheme.textPrimary
-                  : AppTheme.textSecondary.withValues(alpha: 0.5)),
+                  ? (isDark
+                  ? Colors.white // change
+                  : AppTheme.textPrimary)
+                  : (isDark
+                  ? Colors.white.withOpacity(0.4) // change
+                  : AppTheme.textSecondary.withOpacity(0.5))),
         ),
       ),
     );
