@@ -160,8 +160,11 @@ class _PasswordUnlockScreenState extends State<PasswordUnlockScreen>
             LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  reverse: true,
+                  // reverse: false,
                   physics: const ClampingScrollPhysics(),
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                  ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minHeight: constraints.maxHeight),
                     child: Padding(
